@@ -1,6 +1,5 @@
 package br.com.gabrielferreira.dao;
 
-import br.com.gabrielferreira.conexao.ConexaoBD;
 import br.com.gabrielferreira.modelo.TipoTelefone;
 import static br.com.gabrielferreira.utils.dao.TipoTelefoneEnumDaoUtils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +17,8 @@ public class TipoTelefoneDAO implements Serializable {
     private static final long serialVersionUID = 4476082906382028143L;
     private final transient Connection connection;
 
-    public TipoTelefoneDAO(){
-        connection = ConexaoBD.getConnection();
+    public TipoTelefoneDAO(Connection connection){
+        this.connection = connection;
     }
 
     public List<TipoTelefone> listaDeTipoTelefones(){

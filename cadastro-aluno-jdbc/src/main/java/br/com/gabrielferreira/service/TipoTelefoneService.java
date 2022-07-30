@@ -1,5 +1,6 @@
 package br.com.gabrielferreira.service;
 
+import br.com.gabrielferreira.conexao.ConexaoBD;
 import br.com.gabrielferreira.dao.TipoTelefoneDAO;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.modelo.TipoTelefone;
@@ -11,10 +12,10 @@ public class TipoTelefoneService implements Serializable {
 
     private static final long serialVersionUID = -4873911623755365754L;
 
-    private TipoTelefoneDAO tipoTelefoneDAO;
+    private final TipoTelefoneDAO tipoTelefoneDAO;
 
     public TipoTelefoneService(){
-        tipoTelefoneDAO = new TipoTelefoneDAO();
+        tipoTelefoneDAO = new TipoTelefoneDAO(ConexaoBD.getConnection());
     }
 
     public List<TipoTelefone> listaDeTipoTelefones(){

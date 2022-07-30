@@ -1,0 +1,1 @@
+jdbc:postgresql://localhost:5000/alunojdbc?currentSchema=tu;gabriel;gabriel

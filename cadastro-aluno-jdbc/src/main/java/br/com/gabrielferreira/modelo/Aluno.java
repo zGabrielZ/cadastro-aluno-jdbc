@@ -6,8 +6,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -17,6 +17,7 @@ public class Aluno implements Serializable {
 
     @EqualsAndHashCode.Include
     private Long id;
+
     private String nome;
     private String cpf;
     private Email email;

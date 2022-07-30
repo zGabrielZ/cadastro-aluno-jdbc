@@ -4,8 +4,8 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode

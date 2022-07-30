@@ -4,8 +4,8 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
@@ -15,6 +15,7 @@ public class Email implements Serializable {
 
     @EqualsAndHashCode.Include
     private Long id;
+
     private String endereco;
 
 }

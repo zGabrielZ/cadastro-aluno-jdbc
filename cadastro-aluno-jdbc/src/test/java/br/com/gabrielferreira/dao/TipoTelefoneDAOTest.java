@@ -1,12 +1,9 @@
 package br.com.gabrielferreira.dao;
-import br.com.gabrielferreira.conexao.ConexaoBDTest;
 import br.com.gabrielferreira.modelo.TipoTelefone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.sql.Connection;
 import java.util.List;
 
 class TipoTelefoneDAOTest {
@@ -15,8 +12,7 @@ class TipoTelefoneDAOTest {
 
     @BeforeEach
     public void criarInstanciasTipoTelefone(){
-        Connection connection = ConexaoBDTest.getConnection();
-        tipoTelefoneDAO = new TipoTelefoneDAO(connection);
+        tipoTelefoneDAO = new TipoTelefoneDAO();
     }
 
     @Test

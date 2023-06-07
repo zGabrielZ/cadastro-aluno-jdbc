@@ -2,15 +2,17 @@ package br.com.gabrielferreira.utils.dao;
 
 import lombok.Getter;
 
-public enum TipoTelefoneEnumDaoUtils {
+public enum AlunoEnumDaoUtils {
 
     ID("ID"),
-    DESCRICAO("DESCRICAO");
+    NOME("NOME"),
+    CPF("CPF"),
+    EMAIL_ID("EMAIL_ID");
 
     @Getter
     private final String valor;
 
-    TipoTelefoneEnumDaoUtils(String valor){
+    AlunoEnumDaoUtils(String valor){
         this.valor = valor;
     }
 

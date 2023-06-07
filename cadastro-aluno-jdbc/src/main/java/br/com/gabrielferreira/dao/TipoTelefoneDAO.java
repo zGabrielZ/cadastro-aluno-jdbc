@@ -16,6 +16,7 @@ import java.util.List;
 public class TipoTelefoneDAO implements Serializable {
 
     private static final long serialVersionUID = 4476082906382028143L;
+
     private final transient Connection connection;
 
     public TipoTelefoneDAO(){

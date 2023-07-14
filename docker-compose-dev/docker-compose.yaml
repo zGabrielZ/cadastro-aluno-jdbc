@@ -2,7 +2,7 @@ version: "3.0"
 services:
   postgresdb:
    image: postgres:14.3
-   container_name: postgresdb
+   container_name: postgresdb_aluno_jdbc
    environment:
      - TZ=America/Sao_Paulo
      - POSTGRES_USER=gabriel

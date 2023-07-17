@@ -26,6 +26,7 @@ public class ConexaoBD implements Serializable {
             if(connection == null){
                 ConfigBancoDados configBancoDados = new ConfigBancoDados(ambiente);
                 connection = DriverManager.getConnection(configBancoDados.getUrl(), configBancoDados.getUsuario(), configBancoDados.getSenha());
+                connection.setAutoCommit(false);
             }
         } catch (Exception e){
             log.warn("Ocorreu um erro ao conectar no banco de dados, {}",e.getMessage());

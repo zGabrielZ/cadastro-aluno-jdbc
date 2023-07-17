@@ -1,5 +1,6 @@
 package br.com.gabrielferreira.dao;
 
+import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serial;
@@ -16,13 +17,23 @@ public abstract class GenericoDAO<T> implements Serializable {
 
     private final transient Connection connection;
 
+    protected String insertSQL;
+
+    protected String findByIdSQL;
+
+    protected String deleteByIdSQL;
+
+    protected String updateSQL;
+
     protected GenericoDAO(Connection connection){
         this.connection = connection;
     }
 
     public void inserir(T entidade) throws SQLException {
-        try(PreparedStatement preparedStatement = connection.prepareStatement(insertSQL(), Statement.RETURN_GENERATED_KEYS)) {
-            toInsert(entidade, preparedStatement);
+        validarSql(insertSQL, "É necessário informar o sql do insert");
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
+            toInsertOrUpdate(entidade, null, preparedStatement);
 
             // Executar essa inserção
             preparedStatement.execute();
@@ -30,7 +41,7 @@ public abstract class GenericoDAO<T> implements Serializable {
             // Obter o id do registro salvo
             try(ResultSet rs = preparedStatement.getGeneratedKeys()){
                 while (rs.next()) {
-                    toIdEntity(entidade, rs);
+                    toIdEntityInsert(entidade, rs);
                 }
             }
 
@@ -44,8 +55,10 @@ public abstract class GenericoDAO<T> implements Serializable {
     }
 
     public T buscarPorId(Long id) {
+        validarSql(findByIdSQL, "É necessário informar o sql do buscar por id");
+
         T entidade = null;
-        try(PreparedStatement preparedStatement = connection.prepareStatement(findByIdSQL())) {
+        try(PreparedStatement preparedStatement = connection.prepareStatement(findByIdSQL)) {
             // Setando o id na consulta
             preparedStatement.setLong(1, id);
 
@@ -65,8 +78,10 @@ public abstract class GenericoDAO<T> implements Serializable {
     }
 
     public void atualizar(T entidade, Long id) throws SQLException {
-        try(PreparedStatement preparedStatement = connection.prepareStatement(updateSQL())) {
-            toUpdate(entidade, id, preparedStatement);
+        validarSql(updateSQL, "É necessário informar o sql do update por id");
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
+            toInsertOrUpdate(entidade, id, preparedStatement);
 
             // Executar essa atualização
             preparedStatement.executeUpdate();
@@ -81,7 +96,9 @@ public abstract class GenericoDAO<T> implements Serializable {
     }
 
     public void deletarPorId(Long id) throws SQLException {
-        try(PreparedStatement preparedStatement = connection.prepareStatement(deleteByIdSQL())){
+        validarSql(deleteByIdSQL, "É necessário informar o sql do delete por id");
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(deleteByIdSQL)){
 
             // Setando o id na consulta delete
             preparedStatement.setLong(1, id);
@@ -99,19 +116,15 @@ public abstract class GenericoDAO<T> implements Serializable {
         }
     }
 
-    protected abstract String insertSQL();
+    private void validarSql(String sql, String msg){
+        if (sql == null || sql.isBlank()){
+            throw new RegraDeNegocioException(msg);
+        }
+    }
 
-    protected abstract String findByIdSQL();
-
-    protected abstract String deleteByIdSQL();
-
-    protected abstract String updateSQL();
-
-    protected abstract void toInsert(T entidade, PreparedStatement preparedStatement) throws SQLException;
-
-    protected abstract void toUpdate(T entidade, Long id, PreparedStatement preparedStatement) throws SQLException;
+    protected abstract void toInsertOrUpdate(T entidade, Long id, PreparedStatement preparedStatement) throws SQLException;
 
     protected abstract T toFromModel(ResultSet resultSet) throws SQLException;
 
-    protected abstract void toIdEntity(T entidade, ResultSet rs) throws SQLException;
+    protected abstract void toIdEntityInsert(T entidade, ResultSet rs) throws SQLException;
 }

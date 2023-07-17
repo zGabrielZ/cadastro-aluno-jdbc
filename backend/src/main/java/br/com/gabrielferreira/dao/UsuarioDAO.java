@@ -11,39 +11,26 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
 
     protected UsuarioDAO(Connection connection) {
         super(connection);
+        super.insertSQL = "INSERT INTO USUARIO (NOME, EMAIL, SENHA) VALUES (?, ?, ?)";
+        super.findByIdSQL = "SELECT U.ID as ID, U.NOME as NOME, U.EMAIL as EMAIL, U.SENHA AS SENHA from USUARIO U WHERE U.ID = ?";
+        super.deleteByIdSQL = "DELETE FROM USUARIO WHERE ID = ?";
+        super.updateSQL = "UPDATE USUARIO SET NOME = ?, EMAIL = ?, SENHA = ? WHERE ID = ?";
     }
 
     @Override
-    protected String insertSQL() {
-        return "INSERT INTO USUARIO (NOME, EMAIL, SENHA) VALUES (?, ?, ?)";
-    }
-
-    @Override
-    protected String findByIdSQL() {
-        return "SELECT U.ID as ID, U.NOME as NOME, U.EMAIL as EMAIL from USUARIO U WHERE U.ID = ?";
-    }
-
-    @Override
-    protected String deleteByIdSQL() {
-        return "DELETE FROM USUARIO WHERE ID = ?";
-    }
-
-    @Override
-    protected String updateSQL() {
-        return "UPDATE USUARIO SET NOME = ? WHERE ID = ?";
-    }
-
-    @Override
-    protected void toInsert(Usuario entidade, PreparedStatement preparedStatement) throws SQLException {
+    protected void toInsertOrUpdate(Usuario entidade, Long id, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, entidade.getNome());
         preparedStatement.setString(2, entidade.getEmail());
         preparedStatement.setString(3, entidade.getSenha());
+
+        if(id != null){
+            preparedStatement.setLong(4, id);
+        }
     }
 
     @Override
-    protected void toUpdate(Usuario entidade, Long id, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setString(1, entidade.getNome());
-        preparedStatement.setLong(2, id);
+    protected void toIdEntityInsert(Usuario entidade, ResultSet rs) throws SQLException {
+        entidade.setId(rs.getLong(1));
     }
 
     @Override
@@ -52,11 +39,7 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
                 .id(resultSet.getLong("ID"))
                 .nome(resultSet.getString("NOME"))
                 .email(resultSet.getString("EMAIL"))
+                .senha("SENHA")
                 .build();
-    }
-
-    @Override
-    protected void toIdEntity(Usuario entidade, ResultSet rs) throws SQLException {
-        entidade.setId(rs.getLong(1));
     }
 }

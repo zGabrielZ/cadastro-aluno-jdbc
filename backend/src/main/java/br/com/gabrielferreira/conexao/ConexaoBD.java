@@ -1,9 +1,10 @@
 package br.com.gabrielferreira.conexao;
 
-import br.com.gabrielferreira.conexao.modelo.DadosBanco;
-import br.com.gabrielferreira.utils.ConfigBancoDados;
+import br.com.gabrielferreira.conexao.config.ConfigBancoDados;
+import br.com.gabrielferreira.exceptions.BancoDeDadosException;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,32 +12,28 @@ import java.sql.DriverManager;
 @Slf4j
 public class ConexaoBD implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 3233797159978930910L;
 
     private static Connection connection = null;
 
-    // Já conecta, nao vai ser preciso instanciar
-    static {
-        conectarBancoDeDados();
+    public ConexaoBD(String ambiente) {
+        conectarBancoDeDados(ambiente);
     }
 
-    // Ao chamar o construtor, vai conectar
-    public ConexaoBD() {
-        conectarBancoDeDados();
-    }
-
-    private static void conectarBancoDeDados(){
+    private static void conectarBancoDeDados(String ambiente){
         try {
             if(connection == null){
-                DadosBanco dadosBanco = new ConfigBancoDados().getRecuperarDadosBanco("ConfigBancoDadosDev");
-                connection = DriverManager.getConnection(dadosBanco.getUrl(),dadosBanco.getUsuario(), dadosBanco.getSenha());
+                ConfigBancoDados configBancoDados = new ConfigBancoDados(ambiente);
+                connection = DriverManager.getConnection(configBancoDados.getUrl(), configBancoDados.getUsuario(), configBancoDados.getSenha());
             }
         } catch (Exception e){
-            log.warn("Erro : {}",e.getMessage());
+            log.warn("Ocorreu um erro ao conectar no banco de dados, {}",e.getMessage());
+            throw new BancoDeDadosException("Ocorreu um erro ao conectar no banco de dados");
         }
     }
 
-    public static Connection getConnection(){
+    public Connection getConnection(){
         return connection;
     }
 }

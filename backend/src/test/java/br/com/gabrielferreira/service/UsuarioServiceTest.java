@@ -2,6 +2,7 @@ package br.com.gabrielferreira.service;
 
 import br.com.gabrielferreira.dao.DaoFactory;
 import br.com.gabrielferreira.dao.UsuarioDAO;
+import br.com.gabrielferreira.exceptions.ErroException;
 import br.com.gabrielferreira.modelo.dto.UsuarioAtualizarDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioViewDTO;
@@ -86,6 +87,12 @@ class UsuarioServiceTest {
         assertEquals(usuarioAoAtualizar.getIdGenero(), usuarioResultadoAtualizar.getGenero().getId());
 
         usuarioService.deletarPorId(usuarioResultadoInserir.getId());
+    }
+
+    @Test
+    @DisplayName("Não deve encontrar usuário quando não tiver cadastrado")
+    void naoDeveEncontrarUsuario(){
+        assertThrows(ErroException.class, () -> usuarioService.buscarPorId(-1L));
     }
 
     public UsuarioDTO gerarUsuario(String nome, String email, String senha, LocalDate dataNascimento, String cpf, String nomeSocial, Long idGenero){

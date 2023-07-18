@@ -27,4 +27,8 @@ public class UsuarioDTO implements Serializable {
     private LocalDate dataNascimento;
 
     private String cpf;
+
+    private String nomeSocial;
+
+    private Long idGenero;
 }

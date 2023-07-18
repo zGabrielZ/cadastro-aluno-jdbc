@@ -2,6 +2,7 @@ package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.dao.UsuarioDAO;
 import br.com.gabrielferreira.exceptions.ErroException;
 import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
+import br.com.gabrielferreira.modelo.Genero;
 import br.com.gabrielferreira.modelo.Usuario;
 import br.com.gabrielferreira.modelo.dto.UsuarioAtualizarDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioDTO;
@@ -22,6 +23,8 @@ public class UsuarioService implements Serializable {
     private static final long serialVersionUID = 6730307453958143191L;
 
     private UsuarioDAO usuarioDAO;
+
+    private GeneroService generoService;
 
     public UsuarioViewDTO inserir(UsuarioDTO usuarioDTO){
         Usuario usuario = toUsuario(usuarioDTO);
@@ -50,9 +53,10 @@ public class UsuarioService implements Serializable {
 
     public UsuarioViewDTO atualizar(UsuarioAtualizarDTO usuarioAtualizarDTO, Long id){
         Usuario usuario = buscarUsuarioPorId(id);
+        Genero generoEncontrado = generoService.buscarGeneroPorId(usuarioAtualizarDTO.getIdGenero());
 
         try {
-            toUsuarioAtualizar(usuario, usuarioAtualizarDTO);
+            toUsuarioAtualizar(usuario, generoEncontrado, usuarioAtualizarDTO);
             usuarioDAO.atualizar(usuario, usuario.getId());
         } catch (Exception e){
             log.warn("Erro ao atualizar o usuário, {}", e.getMessage());

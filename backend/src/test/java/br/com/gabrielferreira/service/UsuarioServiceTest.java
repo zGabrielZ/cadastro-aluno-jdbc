@@ -18,76 +18,94 @@ class UsuarioServiceTest {
 
     private UsuarioService usuarioService;
 
-    private final UsuarioDAO usuarioDAO = DaoFactory.criarUsuarioDao(TESTE);
-
     @BeforeEach
     public void criarInstancias(){
-        usuarioService = new UsuarioService(usuarioDAO);
+        UsuarioDAO usuarioDAO = DaoFactory.criarUsuarioDao(TESTE);
+        GeneroService generoService = new GeneroService(DaoFactory.criarGeneroDao(TESTE));
+
+        usuarioService = new UsuarioService(usuarioDAO, generoService);
     }
 
     @Test
     @DisplayName("Deve salvar usuário quando informar os valores corretamente")
     void deveSalvarUsuario(){
-        UsuarioDTO usuarioDTO = gerarUsuario("Gabriel", "gabrielemail@email.com", "123", LocalDate.of(1997, 12, 26), "32890461092");
+        UsuarioDTO usuarioAoSalvar = gerarUsuario("Gabriel", "gabrielemail@email.com", "123",
+                LocalDate.of(1997, 12, 26), "32890461092", "Gabriel Social", 1L);
 
-        UsuarioViewDTO usuarioViewDTO = usuarioService.inserir(usuarioDTO);
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioAoSalvar);
 
-        assertNotNull(usuarioViewDTO.getId());
-        assertNotNull(usuarioViewDTO.getDataNascimento());
-        assertNotNull(usuarioViewDTO.getCpf());
+        assertNotNull(usuarioResultado.getId());
+        assertEquals(usuarioAoSalvar.getNome(), usuarioResultado.getNome());
+        assertEquals(usuarioAoSalvar.getEmail(), usuarioResultado.getEmail());
+        assertNotNull(usuarioAoSalvar.getSenha());
+        assertEquals(usuarioAoSalvar.getDataNascimento(), usuarioResultado.getDataNascimento());
+        assertEquals(usuarioAoSalvar.getCpf(), usuarioResultado.getCpf());
+        assertEquals(usuarioAoSalvar.getNomeSocial(), usuarioResultado.getNomeSocial());
+        assertEquals(usuarioAoSalvar.getIdGenero(), usuarioResultado.getGenero().getId());
 
-        usuarioService.deletarPorId(usuarioViewDTO.getId());
+        usuarioService.deletarPorId(usuarioResultado.getId());
     }
 
     @Test
     @DisplayName("Deve encontrar usuário quando foi salvo")
     void deveEncontrarUsuarioSalvo(){
-        UsuarioDTO usuarioDTO = gerarUsuario("José da Silva", "josesilva@email.com", "123", LocalDate.of(1985, 11, 20), "68721457069");
+        UsuarioDTO usuarioAoSalvar = gerarUsuario("José da Silva", "josesilva@email.com", "123",
+                LocalDate.of(1985, 11, 20), "68721457069", "Jose Social", 1L);
 
-        UsuarioViewDTO usuarioInsert = usuarioService.inserir(usuarioDTO);
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioAoSalvar);
 
-        UsuarioViewDTO usuarioViewDTO = usuarioService.buscarPorId(usuarioInsert.getId());
+        UsuarioViewDTO usuarioResultadoBusca = usuarioService.buscarPorId(usuarioResultado.getId());
 
-        assertEquals(usuarioInsert.getId(), usuarioViewDTO.getId());
-        assertEquals(usuarioInsert.getNome(), usuarioViewDTO.getNome());
-        assertEquals(usuarioInsert.getEmail(), usuarioViewDTO.getEmail());
-        assertEquals(usuarioInsert.getDataNascimento(), usuarioViewDTO.getDataNascimento());
-        assertEquals(usuarioInsert.getCpf(), usuarioViewDTO.getCpf());
+        assertEquals(usuarioResultado.getId(), usuarioResultadoBusca.getId());
+        assertEquals(usuarioResultado.getNome(), usuarioResultadoBusca.getNome());
+        assertEquals(usuarioResultado.getEmail(), usuarioResultadoBusca.getEmail());
+        assertEquals(usuarioResultado.getDataNascimento(), usuarioResultadoBusca.getDataNascimento());
+        assertEquals(usuarioResultado.getCpf(), usuarioResultadoBusca.getCpf());
+        assertEquals(usuarioResultado.getNomeSocial(), usuarioResultadoBusca.getNomeSocial());
+        assertEquals(usuarioResultado.getGenero().getId(), usuarioResultadoBusca.getGenero().getId());
 
-        usuarioService.deletarPorId(usuarioInsert.getId());
+        usuarioService.deletarPorId(usuarioResultado.getId());
     }
 
     @Test
     @DisplayName("Deve atualizar o usuário")
     void deveAtualizarUsuario(){
-        UsuarioDTO usuarioDTO = gerarUsuario("Marcos da Silva", "marcos@email.com", "123", LocalDate.of(2000, 12, 20), "04707182003");
+        UsuarioDTO usuarioAoSalvar = gerarUsuario("Marcos da Silva", "marcos@email.com", "123",
+                LocalDate.of(2000, 12, 20), "04707182003", "Marcos Social", 1L);
 
-        UsuarioViewDTO usuarioInsert = usuarioService.inserir(usuarioDTO);
+        UsuarioViewDTO usuarioResultadoInserir = usuarioService.inserir(usuarioAoSalvar);
 
-        UsuarioAtualizarDTO usuarioAtualizarDTO = gerarUsuarioAtualizar("Mariano da Silva Souza", LocalDate.of(1995, 10, 5));
+        UsuarioAtualizarDTO usuarioAoAtualizar = gerarUsuarioAtualizar("Mariano da Silva Souza", LocalDate.of(1995, 10, 5)
+                , "Marcos Social 2", 2L);
 
-        UsuarioViewDTO usuarioAtualizado = usuarioService.atualizar(usuarioAtualizarDTO, usuarioInsert.getId());
+        UsuarioViewDTO usuarioResultadoAtualizar = usuarioService.atualizar(usuarioAoAtualizar, usuarioResultadoInserir.getId());
 
-        assertEquals(usuarioAtualizarDTO.getNome(), usuarioAtualizado.getNome());
-        assertEquals(usuarioAtualizarDTO.getDataNascimento(), usuarioAtualizado.getDataNascimento());
+        assertEquals(usuarioAoAtualizar.getNome(), usuarioResultadoAtualizar.getNome());
+        assertEquals(usuarioAoAtualizar.getDataNascimento(), usuarioResultadoAtualizar.getDataNascimento());
+        assertEquals(usuarioAoAtualizar.getNomeSocial(), usuarioResultadoAtualizar.getNomeSocial());
+        assertEquals(usuarioAoAtualizar.getIdGenero(), usuarioResultadoAtualizar.getGenero().getId());
 
-        usuarioService.deletarPorId(usuarioInsert.getId());
+        usuarioService.deletarPorId(usuarioResultadoInserir.getId());
     }
 
-    public UsuarioDTO gerarUsuario(String nome, String email, String senha, LocalDate dataNascimento, String cpf){
+    public UsuarioDTO gerarUsuario(String nome, String email, String senha, LocalDate dataNascimento, String cpf, String nomeSocial, Long idGenero){
         return UsuarioDTO.builder()
                 .nome(nome)
                 .email(email)
                 .senha(senha)
                 .dataNascimento(dataNascimento)
                 .cpf(cpf)
+                .nomeSocial(nomeSocial)
+                .idGenero(idGenero)
                 .build();
     }
 
-    public UsuarioAtualizarDTO gerarUsuarioAtualizar(String nome, LocalDate dataNascimento){
+    public UsuarioAtualizarDTO gerarUsuarioAtualizar(String nome, LocalDate dataNascimento, String nomeSocial, Long idGenero){
         return UsuarioAtualizarDTO.builder()
                 .nome(nome)
                 .dataNascimento(dataNascimento)
+                .nomeSocial(nomeSocial)
+                .idGenero(idGenero)
                 .build();
     }
 }

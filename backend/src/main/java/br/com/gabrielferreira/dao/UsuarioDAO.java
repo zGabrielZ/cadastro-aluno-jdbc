@@ -1,5 +1,6 @@
 package br.com.gabrielferreira.dao;
 
+import br.com.gabrielferreira.modelo.Genero;
 import br.com.gabrielferreira.modelo.Usuario;
 
 import java.sql.Connection;
@@ -8,14 +9,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import static br.com.gabrielferreira.utils.dao.UsuarioEnumDao.*;
+
+
 public class UsuarioDAO extends GenericoDAO<Usuario>{
 
     protected UsuarioDAO(Connection connection) {
         super(connection);
-        super.insertSQL = "INSERT INTO USUARIO (NOME, EMAIL, SENHA, DATA_NASCIMENTO, CPF) VALUES (?, ?, ?, ?, ?)";
-        super.findByIdSQL = "SELECT U.ID as ID, U.NOME as NOME, U.EMAIL as EMAIL, U.SENHA AS SENHA, U.DATA_NASCIMENTO as DATA_NASCIMENTO, U.CPF as CPF from USUARIO U WHERE U.ID = ?";
-        super.deleteByIdSQL = "DELETE FROM USUARIO WHERE ID = ?";
-        super.updateSQL = "UPDATE USUARIO SET NOME = ?, EMAIL = ?, SENHA = ?, DATA_NASCIMENTO = ?, CPF = ? WHERE ID = ?";
+        super.insertSQL = INSERT_SQL.getSql();
+        super.findByIdSQL = FIND_BY_ID_SQL.getSql();
+        super.deleteByIdSQL = DELETE_BY_ID_SQL.getSql();
+        super.updateSQL = UPDAYE_BY_ID_SQL.getSql();
     }
 
     @Override
@@ -25,9 +29,11 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
         preparedStatement.setString(3, entidade.getSenha());
         preparedStatement.setObject(4, entidade.getDataNascimento());
         preparedStatement.setString(5, entidade.getCpf());
+        preparedStatement.setString(6, entidade.getNomeSocial());
+        preparedStatement.setLong(7, entidade.getGenero().getId());
 
         if(id != null){
-            preparedStatement.setLong(6, id);
+            preparedStatement.setLong(8, id);
         }
     }
 
@@ -45,12 +51,26 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
                 .senha("SENHA")
                 .dataNascimento(toLocalDateDataNascimento(resultSet.getObject("DATA_NASCIMENTO", LocalDate.class)))
                 .cpf(resultSet.getString("CPF"))
+                .nomeSocial(resultSet.getString("NOME_SOCIAL"))
+                .genero(toGenero(resultSet))
                 .build();
     }
 
     private LocalDate toLocalDateDataNascimento(Object dataNascimento){
         if(dataNascimento instanceof LocalDate dataConvertida){
             return dataConvertida;
+        }
+        return null;
+    }
+
+    private Genero toGenero(ResultSet resultSet) throws SQLException{
+        long idGenero = resultSet.getLong("ID_GENERO");
+        if(idGenero != 0){
+            return Genero.builder()
+                    .id(idGenero)
+                    .descricao(resultSet.getString("DESCRICAO_GENERO"))
+                    .codigo(resultSet.getString("CODIGO_GENERO"))
+                    .build();
         }
         return null;
     }

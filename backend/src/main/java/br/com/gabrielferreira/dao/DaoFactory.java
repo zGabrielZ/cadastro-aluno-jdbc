@@ -10,4 +10,8 @@ public class DaoFactory {
     public static UsuarioDAO criarUsuarioDao(BancoDeDadosAmbienteEnum bancoDeDadosAmbienteEnum){
         return new UsuarioDAO(new ConexaoBD(bancoDeDadosAmbienteEnum.getDescricao()).getConnection());
     }
+
+    public static GeneroDAO criarGeneroDao(BancoDeDadosAmbienteEnum bancoDeDadosAmbienteEnum){
+        return new GeneroDAO(new ConexaoBD(bancoDeDadosAmbienteEnum.getDescricao()).getConnection());
+    }
 }

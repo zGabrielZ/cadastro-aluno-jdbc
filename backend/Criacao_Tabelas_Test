@@ -24,3 +24,26 @@ alter table test.usuario alter column data_nascimento set not null;
 alter table test.usuario add column cpf varchar(11);
 alter table test.usuario alter column cpf set not null;
 alter table TEST.usuario add constraint ck_cpf_unique unique(cpf);
+
+alter table test.usuario add column nome_social varchar(255);
+
+create table test.GENERO (
+ID INT NOT NULL,
+DESCRICAO VARCHAR(255) NOT NULL,
+CODIGO VARCHAR(255) NOT NULL,
+CONSTRAINT GENERO_PK PRIMARY KEY(ID)
+);
+
+CREATE SEQUENCE test.GENERO_SEQUENCE_ID
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+START 1;
+
+ALTER TABLE test.GENERO ALTER COLUMN ID SET DEFAULT NEXTVAL('test.GENERO_SEQUENCE_ID'::regclass);
+
+ALTER TABLE test.usuario add column ID_GENERO INT;
+ALTER TABLE test.usuario ADD FOREIGN KEY (ID_GENERO) REFERENCES test.GENERO(ID);
+
+INSERT INTO test.genero (descricao, codigo) VALUES ('Masculino', 'MASCULINO');
+INSERT INTO test.genero (descricao, codigo) VALUES ('Feminino', 'FEMININO');

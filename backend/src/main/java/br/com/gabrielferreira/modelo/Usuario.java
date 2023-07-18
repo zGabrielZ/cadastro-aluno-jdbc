@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -24,4 +25,8 @@ public class Usuario implements Serializable {
     private String email;
 
     private String senha;
+
+    private String cpf;
+
+    private LocalDate dataNascimento;
 }

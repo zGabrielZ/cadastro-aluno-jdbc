@@ -12,6 +12,8 @@ public class UsuarioDTOFactory {
                 .id(usuario.getId())
                 .nome(usuario.getNome())
                 .email(usuario.getEmail())
+                .dataNascimento(usuario.getDataNascimento())
+                .cpf(usuario.getCpf())
                 .build();
     }
 }

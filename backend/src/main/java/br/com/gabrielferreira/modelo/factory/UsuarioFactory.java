@@ -13,12 +13,15 @@ public class UsuarioFactory {
                 .nome(usuarioDTO.getNome())
                 .email(usuarioDTO.getEmail())
                 .senha(usuarioDTO.getSenha())
+                .dataNascimento(usuarioDTO.getDataNascimento())
+                .cpf(usuarioDTO.getCpf())
                 .build();
     }
 
     public static void toUsuarioAtualizar(Usuario usuario, UsuarioAtualizarDTO usuarioAtualizarDTO){
         if(usuario != null){
             usuario.setNome(usuarioAtualizarDTO.getNome());
+            usuario.setDataNascimento(usuarioAtualizarDTO.getDataNascimento());
         }
     }
 }

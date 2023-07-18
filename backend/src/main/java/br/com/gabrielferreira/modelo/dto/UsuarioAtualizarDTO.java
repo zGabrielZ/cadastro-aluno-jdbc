@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -18,4 +19,6 @@ public class UsuarioAtualizarDTO implements Serializable {
     private static final long serialVersionUID = 6730307453958143191L;
 
     private String nome;
+
+    private LocalDate dataNascimento;
 }

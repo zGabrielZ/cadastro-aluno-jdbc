@@ -17,3 +17,10 @@ START 1;
 ALTER TABLE test.USUARIO ALTER COLUMN ID SET DEFAULT NEXTVAL('test.USUARIO_SEQUENCE_ID'::regclass);
 
 alter table TEST.usuario add constraint ck_email_unique unique(email);
+
+alter table test.usuario add column data_nascimento DATE;
+alter table test.usuario alter column data_nascimento set not null;
+
+alter table test.usuario add column cpf varchar(11);
+alter table test.usuario alter column cpf set not null;
+alter table TEST.usuario add constraint ck_cpf_unique unique(cpf);

@@ -1,6 +1,7 @@
 package br.com.gabrielferreira.validate;
 
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
+import br.com.gabrielferreira.modelo.Perfil;
 import br.com.gabrielferreira.modelo.Usuario;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ public class ValidarUsuarioService {
         validarDataNascimento(usuario.getDataNascimento());
         validarCpf(usuario);
         validarNomeSocial(usuario);
+        validarPerfil(usuario.getPerfil());
     }
 
     private static void validarNome(Usuario usuario){
@@ -82,6 +84,12 @@ public class ValidarUsuarioService {
         if(usuario.getNomeSocial() != null && !usuario.getNomeSocial().isBlank()){
             usuario.setNomeSocial(usuario.getNomeSocial().trim());
             validarTamanho(usuario.getNomeSocial(), 1, 255, "É necessário informar o nome social do usuário até 255 caracteres");
+        }
+    }
+
+    private static void validarPerfil(Perfil perfil){
+        if(perfil == null || perfil.getId() == null){
+            throw new RegraDeNegocioException("É necessário informar o perfil do usuário");
         }
     }
 

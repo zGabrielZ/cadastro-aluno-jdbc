@@ -4,6 +4,7 @@ import br.com.gabrielferreira.modelo.Usuario;
 import br.com.gabrielferreira.modelo.dto.UsuarioViewDTO;
 
 import static br.com.gabrielferreira.modelo.dto.factory.GeneroDTOFactory.*;
+import static br.com.gabrielferreira.modelo.dto.factory.PerfilDTOFactory.*;
 
 public class UsuarioDTOFactory {
 
@@ -18,6 +19,7 @@ public class UsuarioDTOFactory {
                 .cpf(usuario.getCpf())
                 .nomeSocial(usuario.getNomeSocial())
                 .genero(toGeneroViewDTO(usuario.getGenero()))
+                .perfil(toPerfilViewDTO(usuario.getPerfil()))
                 .build();
     }
 }

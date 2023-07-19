@@ -34,8 +34,10 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
             preparedStatement.setNull(7, Types.INTEGER);
         }
 
+        preparedStatement.setLong(8, entidade.getPerfil().getId());
+
         if(id != null){
-            preparedStatement.setLong(8, id);
+            preparedStatement.setLong(9, id);
         }
     }
 

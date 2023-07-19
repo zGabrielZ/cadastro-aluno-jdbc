@@ -46,6 +46,8 @@ public class UsuarioService implements Serializable {
                     throw new RegraDeNegocioException("Este CPF informado já foi cadastrado");
                 } else if(sqlException.getMessage().contains("usuario_id_genero_fkey")){
                     throw new RegraDeNegocioException("Gênero informado não encontrado");
+                } else if(sqlException.getMessage().contains("usuario_id_perfil_fkey")){
+                    throw new RegraDeNegocioException("Perfil informado não encontrado");
                 }
             }
             throw new ErroException("Erro ao salvar o usuário, tente mais tarde.");

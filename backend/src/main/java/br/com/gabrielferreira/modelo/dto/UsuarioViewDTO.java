@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -31,4 +33,8 @@ public class UsuarioViewDTO implements Serializable {
     private String nomeSocial;
 
     private GeneroViewDTO genero;
+
+    private PerfilViewDTO perfil;
+
+    private List<TelefoneViewDTO> telefones = new ArrayList<>();
 }

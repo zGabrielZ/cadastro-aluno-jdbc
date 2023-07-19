@@ -6,6 +6,7 @@ import br.com.gabrielferreira.modelo.dto.UsuarioAtualizarDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioDTO;
 
 import static br.com.gabrielferreira.modelo.factory.GeneroFactory.*;
+import static br.com.gabrielferreira.modelo.factory.PerfilFactory.*;
 
 
 public class UsuarioFactory {
@@ -21,6 +22,7 @@ public class UsuarioFactory {
                 .cpf(usuarioDTO.getCpf())
                 .nomeSocial(usuarioDTO.getNomeSocial())
                 .genero(toGenero(usuarioDTO.getIdGenero()))
+                .perfil(toPerfil(usuarioDTO.getIdPerfil()))
                 .build();
     }
 

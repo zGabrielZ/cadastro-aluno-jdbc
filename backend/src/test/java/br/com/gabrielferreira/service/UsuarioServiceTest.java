@@ -31,7 +31,7 @@ class UsuarioServiceTest {
     @DisplayName("Deve salvar usuário quando informar os valores corretamente")
     void deveSalvarUsuario(){
         UsuarioDTO usuarioAoSalvar = gerarUsuario("Gabriel", "gabrielemail@email.com", "Gab123@",
-                LocalDate.of(1997, 12, 26), "32890461092", "Gabriel Social", 1L);
+                LocalDate.of(1997, 12, 26), "32890461092", "Gabriel Social", 1L, 1L);
 
         UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioAoSalvar);
 
@@ -51,7 +51,7 @@ class UsuarioServiceTest {
     @DisplayName("Deve encontrar usuário quando foi salvo")
     void deveEncontrarUsuarioSalvo(){
         UsuarioDTO usuarioAoSalvar = gerarUsuario("José da Silva", "josesilva@email.com", "Jos123@",
-                LocalDate.of(1985, 11, 20), "68721457069", "Jose Social", 1L);
+                LocalDate.of(1985, 11, 20), "68721457069", "Jose Social", 1L, 1L);
 
         UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioAoSalvar);
 
@@ -72,7 +72,7 @@ class UsuarioServiceTest {
     @DisplayName("Deve atualizar o usuário")
     void deveAtualizarUsuario(){
         UsuarioDTO usuarioAoSalvar = gerarUsuario("Marcos da Silva", "marcos@email.com", "Mar123@",
-                LocalDate.of(2000, 12, 20), "04707182003", "Marcos Social", 1L);
+                LocalDate.of(2000, 12, 20), "04707182003", "Marcos Social", 1L, 1L);
 
         UsuarioViewDTO usuarioResultadoInserir = usuarioService.inserir(usuarioAoSalvar);
 
@@ -95,7 +95,7 @@ class UsuarioServiceTest {
         assertThrows(RegistroNaoEncontradoException.class, () -> usuarioService.buscarPorId(-1L));
     }
 
-    public UsuarioDTO gerarUsuario(String nome, String email, String senha, LocalDate dataNascimento, String cpf, String nomeSocial, Long idGenero){
+    public UsuarioDTO gerarUsuario(String nome, String email, String senha, LocalDate dataNascimento, String cpf, String nomeSocial, Long idGenero, Long idPerfil){
         return UsuarioDTO.builder()
                 .nome(nome)
                 .email(email)
@@ -104,6 +104,7 @@ class UsuarioServiceTest {
                 .cpf(cpf)
                 .nomeSocial(nomeSocial)
                 .idGenero(idGenero)
+                .idPerfil(idPerfil)
                 .build();
     }
 

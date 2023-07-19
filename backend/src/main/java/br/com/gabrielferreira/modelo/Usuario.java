@@ -5,12 +5,14 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"genero", "perfil"})
+@ToString(exclude = {"genero", "perfil", "telefones"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Usuario implements Serializable {
 
@@ -35,4 +37,10 @@ public class Usuario implements Serializable {
     private Genero genero;
 
     private Perfil perfil;
+
+    private List<Telefone> telefones = new ArrayList<>();
+
+    public void adicionarTelefones(Telefone telefone){
+        telefones.add(telefone);
+    }
 }

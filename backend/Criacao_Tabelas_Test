@@ -47,3 +47,26 @@ ALTER TABLE test.usuario ADD FOREIGN KEY (ID_GENERO) REFERENCES test.GENERO(ID);
 
 INSERT INTO test.genero (descricao, codigo) VALUES ('Masculino', 'MASCULINO');
 INSERT INTO test.genero (descricao, codigo) VALUES ('Feminino', 'FEMININO');
+
+create table test.PERFIL (
+ID INT NOT NULL,
+DESCRICAO VARCHAR(255) NOT NULL,
+CODIGO VARCHAR(255) NOT NULL,
+CONSTRAINT PERFIL_PK PRIMARY KEY(ID)
+);
+
+CREATE SEQUENCE test.PERFIL_SEQUENCE_ID
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+START 1;
+
+ALTER TABLE test.PERFIL ALTER COLUMN ID SET DEFAULT NEXTVAL('test.PERFIL_SEQUENCE_ID'::regclass);
+
+ALTER TABLE test.usuario add column ID_PERFIL INT;
+ALTER TABLE test.usuario ADD FOREIGN KEY (ID_PERFIL) REFERENCES test.PERFIL(ID);
+
+
+INSERT INTO test.perfil (descricao, codigo) VALUES ('Administrador', 'ADMINISTRADOR');
+INSERT INTO test.perfil (descricao, codigo) VALUES ('Aluno', 'ALUNO');
+INSERT INTO test.perfil (descricao, codigo) VALUES ('Professor', 'PROFESSOR');

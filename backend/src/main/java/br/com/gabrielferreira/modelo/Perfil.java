@@ -4,15 +4,14 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"genero", "perfil"})
+@ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Usuario implements Serializable {
+public class Perfil implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -8629710608419903368L;
@@ -20,19 +19,7 @@ public class Usuario implements Serializable {
     @EqualsAndHashCode.Include
     private Long id;
 
-    private String nome;
+    private String descricao;
 
-    private String email;
-
-    private String senha;
-
-    private String cpf;
-
-    private LocalDate dataNascimento;
-
-    private String nomeSocial;
-
-    private Genero genero;
-
-    private Perfil perfil;
+    private String codigo;
 }

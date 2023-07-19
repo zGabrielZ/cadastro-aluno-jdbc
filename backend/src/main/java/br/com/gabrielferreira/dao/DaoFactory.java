@@ -14,4 +14,8 @@ public class DaoFactory {
     public static GeneroDAO criarGeneroDao(BancoDeDadosAmbienteEnum bancoDeDadosAmbienteEnum){
         return new GeneroDAO(new ConexaoBD(bancoDeDadosAmbienteEnum.getDescricao()).getConnection());
     }
+
+    public static PerfilDAO criarPerfilDao(BancoDeDadosAmbienteEnum bancoDeDadosAmbienteEnum){
+        return new PerfilDAO(new ConexaoBD(bancoDeDadosAmbienteEnum.getDescricao()).getConnection());
+    }
 }

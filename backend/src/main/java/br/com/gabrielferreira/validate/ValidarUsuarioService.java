@@ -79,7 +79,7 @@ public class ValidarUsuarioService {
     }
 
     private static void validarNomeSocial(Usuario usuario){
-        if(usuario.getNomeSocial() != null || !usuario.getNomeSocial().isBlank()){
+        if(usuario.getNomeSocial() != null && !usuario.getNomeSocial().isBlank()){
             usuario.setNomeSocial(usuario.getNomeSocial().trim());
             validarTamanho(usuario.getNomeSocial(), 1, 255, "É necessário informar o nome social do usuário até 255 caracteres");
         }

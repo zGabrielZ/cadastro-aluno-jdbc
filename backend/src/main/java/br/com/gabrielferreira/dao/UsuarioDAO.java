@@ -3,10 +3,7 @@ package br.com.gabrielferreira.dao;
 import br.com.gabrielferreira.modelo.Genero;
 import br.com.gabrielferreira.modelo.Usuario;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 
 import static br.com.gabrielferreira.utils.dao.UsuarioEnumDao.*;
@@ -30,7 +27,12 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
         preparedStatement.setObject(4, entidade.getDataNascimento());
         preparedStatement.setString(5, entidade.getCpf());
         preparedStatement.setString(6, entidade.getNomeSocial());
-        preparedStatement.setLong(7, entidade.getGenero().getId());
+
+        if(entidade.getGenero() != null){
+            preparedStatement.setLong(7, entidade.getGenero().getId());
+        } else {
+            preparedStatement.setNull(7, Types.INTEGER);
+        }
 
         if(id != null){
             preparedStatement.setLong(8, id);

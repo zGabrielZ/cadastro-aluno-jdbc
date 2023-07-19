@@ -1,7 +1,7 @@
 package br.com.gabrielferreira.service;
 
 import br.com.gabrielferreira.dao.DaoFactory;
-import br.com.gabrielferreira.exceptions.ErroException;
+import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.modelo.dto.GeneroViewDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +31,6 @@ class GeneroServiceTest {
     @Test
     @DisplayName("Não deve encontrar gênero quando não tiver cadastrado")
     void naoDeveEncontrarGenero(){
-        assertThrows(ErroException.class, () -> generoService.buscarPorId(-1L));
+        assertThrows(RegistroNaoEncontradoException.class, () -> generoService.buscarPorId(-1L));
     }
 }

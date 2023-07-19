@@ -1,6 +1,7 @@
 package br.com.gabrielferreira.dao;
 
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serial;
@@ -15,6 +16,7 @@ public abstract class GenericoDAO<T> implements Serializable {
 
     private static final String MSG_ROLLBACK = "Rollback realizado !";
 
+    @Getter
     private final transient Connection connection;
 
     protected String insertSQL;
@@ -47,14 +49,14 @@ public abstract class GenericoDAO<T> implements Serializable {
 
             // Salvar no banco de dados
             connection.commit();
-        } catch (Exception e){
+        } catch (SQLException e){
             log.warn("Erro ao salvar registro : {}",e.getMessage());
-            connection.rollback();
-            log.info(MSG_ROLLBACK);
+            gerarRollback();
+            throw new SQLException(e.getMessage());
         }
     }
 
-    public T buscarPorId(Long id) {
+    public T buscarPorId(Long id) throws SQLException {
         validarSql(findByIdSQL, "É necessário informar o sql do buscar por id");
 
         T entidade = null;
@@ -71,8 +73,9 @@ public abstract class GenericoDAO<T> implements Serializable {
                 }
             }
 
-        } catch (Exception e){
+        } catch (SQLException e){
             log.warn("Erro ao buscar registro por id : {}", e.getMessage());
+            throw new SQLException(e.getMessage());
         }
         return entidade;
     }
@@ -90,8 +93,8 @@ public abstract class GenericoDAO<T> implements Serializable {
             connection.commit();
         } catch (Exception e){
             log.warn("Erro ao atualizar registro : {}",e.getMessage());
-            connection.rollback();
-            log.info(MSG_ROLLBACK);
+            gerarRollback();
+            throw new SQLException(e.getMessage());
         }
     }
 
@@ -111,14 +114,24 @@ public abstract class GenericoDAO<T> implements Serializable {
 
         } catch (Exception e){
             log.warn("Erro ao deletar registro : {}",e.getMessage());
-            connection.rollback();
-            log.info(MSG_ROLLBACK);
+            gerarRollback();
+            throw new SQLException(e.getMessage());
         }
     }
 
     private void validarSql(String sql, String msg){
         if (sql == null || sql.isBlank()){
             throw new RegraDeNegocioException(msg);
+        }
+    }
+
+    private void gerarRollback() throws SQLException {
+        try {
+            connection.rollback();
+            log.info(MSG_ROLLBACK);
+        } catch (SQLException e){
+            log.warn("Ocorreu erro ao gerar o rollback, {}", e.getMessage());
+            throw new SQLException(e.getMessage());
         }
     }
 

@@ -2,6 +2,7 @@ package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.dao.UsuarioDAO;
 import br.com.gabrielferreira.exceptions.ErroException;
 import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
+import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.modelo.Genero;
 import br.com.gabrielferreira.modelo.Usuario;
 import br.com.gabrielferreira.modelo.dto.UsuarioAtualizarDTO;
@@ -11,9 +12,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.SQLException;
 
 import static br.com.gabrielferreira.modelo.factory.UsuarioFactory.*;
 import static br.com.gabrielferreira.modelo.dto.factory.UsuarioDTOFactory.*;
+import static br.com.gabrielferreira.validate.ValidarUsuarioService.*;
+import static br.com.gabrielferreira.utils.StringCriptografar.*;
 
 @Slf4j
 @AllArgsConstructor
@@ -28,11 +32,22 @@ public class UsuarioService implements Serializable {
 
     public UsuarioViewDTO inserir(UsuarioDTO usuarioDTO){
         Usuario usuario = toUsuario(usuarioDTO);
+        validarCamposNaoInformadosCadastro(usuario);
+        usuario.setSenha(criptarCampo(usuario.getSenha()));
 
         try {
             usuarioDAO.inserir(usuario);
         } catch (Exception e){
             log.warn("Erro ao inserir o usuário, {}", e.getMessage());
+            if(e instanceof SQLException sqlException){
+                if(sqlException.getMessage().contains("ck_email_unique")){
+                    throw new RegraDeNegocioException("Este e-mail informado já foi cadastrado");
+                } else if(sqlException.getMessage().contains("ck_cpf_unique")){
+                    throw new RegraDeNegocioException("Este CPF informado já foi cadastrado");
+                } else if(sqlException.getMessage().contains("usuario_id_genero_fkey")){
+                    throw new RegraDeNegocioException("Gênero informado não encontrado");
+                }
+            }
             throw new ErroException("Erro ao salvar o usuário, tente mais tarde.");
         }
 
@@ -40,14 +55,7 @@ public class UsuarioService implements Serializable {
     }
 
     public UsuarioViewDTO buscarPorId(Long id){
-        Usuario usuario;
-        try {
-           usuario = buscarUsuarioPorId(id);
-        } catch (Exception e){
-            log.warn("Erro ao buscar o usuário, {}", e.getMessage());
-            throw new ErroException("Erro ao buscar o usuário, tente mais tarde.");
-        }
-
+        Usuario usuario = buscarUsuarioPorId(id);
         return toUsuarioViewDTO(usuario);
     }
 
@@ -78,10 +86,15 @@ public class UsuarioService implements Serializable {
     }
 
     private Usuario buscarUsuarioPorId(Long id){
-        Usuario usuario = usuarioDAO.buscarPorId(id);
-        if(usuario == null){
-            throw new RegistroNaoEncontradoException("Usuário não encontrado");
+        try {
+            Usuario usuario = usuarioDAO.buscarPorId(id);
+            if(usuario == null){
+                throw new ErroException("Usuário não encontrado");
+            }
+            return usuario;
+        } catch (Exception e){
+            log.warn("Erro ao buscar o usuário, {}", e.getMessage());
+            throw new RegistroNaoEncontradoException(e.getMessage());
         }
-        return usuario;
     }
 }

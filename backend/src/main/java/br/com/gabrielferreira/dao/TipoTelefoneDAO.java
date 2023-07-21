@@ -1,5 +1,6 @@
 package br.com.gabrielferreira.dao;
-import br.com.gabrielferreira.modelo.Perfil;
+
+import br.com.gabrielferreira.modelo.TipoTelefone;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -7,49 +8,49 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static br.com.gabrielferreira.utils.dao.PerfilEnumDao.*;
+import static br.com.gabrielferreira.utils.dao.TipoTelefoneEnumDao.*;
 
 @Slf4j
-public class PerfilDAO extends GenericoDAO<Perfil>{
+public class TipoTelefoneDAO extends GenericoDAO<TipoTelefone>{
 
-    protected PerfilDAO(Connection connection) {
+    protected TipoTelefoneDAO(Connection connection) {
         super(connection);
         super.findByIdSQL = FIND_BY_ID_SQL.getSql();
     }
 
-    public Perfil buscarPerfilPorCodigo(String codigo) throws SQLException {
-        Perfil perfil = null;
+    public TipoTelefone buscarTipoTelefonePorCodigo(String codigo) throws SQLException {
+        TipoTelefone tipoTelefone = null;
         try(PreparedStatement preparedStatement = getConnection().prepareStatement(FIND_BY_CODIGO_SQL.getSql())) {
             preparedStatement.setString(1, codigo);
             preparedStatement.execute();
 
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()){
-                    perfil = toFromModel(resultSet);
+                    tipoTelefone = toFromModel(resultSet);
                 }
             }
 
         } catch (SQLException e){
-            log.warn("Erro ao buscar perfil por código : {}", e.getMessage());
+            log.warn("Erro ao buscar tipo telefone por código : {}", e.getMessage());
             throw new SQLException(e.getMessage());
         }
 
-        return perfil;
+        return tipoTelefone;
     }
 
     @Override
-    protected void toInsertOrUpdate(Perfil entidade, Long id, PreparedStatement preparedStatement) {
+    protected void toInsertOrUpdate(TipoTelefone entidade, Long id, PreparedStatement preparedStatement) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected void toIdEntityInsert(Perfil entidade, ResultSet rs) {
+    protected void toIdEntityInsert(TipoTelefone entidade, ResultSet rs) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected Perfil toFromModel(ResultSet resultSet) throws SQLException {
-        return Perfil.builder()
+    protected TipoTelefone toFromModel(ResultSet resultSet) throws SQLException{
+        return TipoTelefone.builder()
                 .id(resultSet.getLong("ID"))
                 .descricao(resultSet.getString("DESCRICAO"))
                 .codigo(resultSet.getString("CODIGO"))

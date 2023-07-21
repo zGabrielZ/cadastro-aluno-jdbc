@@ -27,6 +27,19 @@ public class GeneroService implements Serializable {
         return toGeneroViewDTO(genero);
     }
 
+    public Genero buscarGeneroPorCodigo(String codigo){
+        try {
+            Genero genero = generoDAO.buscarGeneroPorCodigo(codigo);
+            if(genero == null){
+                throw new ErroException("Gênero não encontrado");
+            }
+            return genero;
+        } catch (Exception e){
+            log.warn("Erro ao buscar o gênero, {}", e.getMessage());
+            throw new RegistroNaoEncontradoException(e.getMessage());
+        }
+    }
+
     public Genero buscarGeneroPorId(Long id){
         try {
             Genero genero = generoDAO.buscarPorId(id);

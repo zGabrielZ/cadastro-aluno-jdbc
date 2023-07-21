@@ -10,8 +10,4 @@ public class StringCriptografar {
         String salt = BCrypt.gensalt();
         return BCrypt.hashpw(campo, salt);
     }
-
-    public static boolean verificarCampo(String campo, String campoHashed) {
-        return BCrypt.checkpw(campo, campoHashed);
-    }
 }

@@ -40,7 +40,4 @@ public class Usuario implements Serializable {
 
     private List<Telefone> telefones = new ArrayList<>();
 
-    public void adicionarTelefones(Telefone telefone){
-        telefones.add(telefone);
-    }
 }

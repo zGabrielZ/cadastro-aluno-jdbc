@@ -18,4 +18,12 @@ public class DaoFactory {
     public static PerfilDAO criarPerfilDao(BancoDeDadosAmbienteEnum bancoDeDadosAmbienteEnum){
         return new PerfilDAO(new ConexaoBD(bancoDeDadosAmbienteEnum.getDescricao()).getConnection());
     }
+
+    public static TelefoneDAO criarTelefoneDao(BancoDeDadosAmbienteEnum bancoDeDadosAmbienteEnum){
+        return new TelefoneDAO(new ConexaoBD(bancoDeDadosAmbienteEnum.getDescricao()).getConnection());
+    }
+
+    public static TipoTelefoneDAO criarTipoTelefoneDao(BancoDeDadosAmbienteEnum bancoDeDadosAmbienteEnum){
+        return new TipoTelefoneDAO(new ConexaoBD(bancoDeDadosAmbienteEnum.getDescricao()).getConnection());
+    }
 }

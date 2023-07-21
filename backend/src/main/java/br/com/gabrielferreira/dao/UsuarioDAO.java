@@ -2,6 +2,7 @@ package br.com.gabrielferreira.dao;
 
 import br.com.gabrielferreira.modelo.Genero;
 import br.com.gabrielferreira.modelo.Usuario;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import static br.com.gabrielferreira.utils.dao.UsuarioEnumDao.*;
 
 
+@Slf4j
 public class UsuarioDAO extends GenericoDAO<Usuario>{
 
     protected UsuarioDAO(Connection connection) {
@@ -17,6 +19,18 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
         super.findByIdSQL = FIND_BY_ID_SQL.getSql();
         super.deleteByIdSQL = DELETE_BY_ID_SQL.getSql();
         super.updateSQL = UPDAYE_BY_ID_SQL.getSql();
+    }
+
+    public void deletarTelefonesPorIdUsuario(Long id) throws SQLException {
+        try(PreparedStatement preparedStatement = getConnection().prepareStatement(DELETE_TELEFONE_BY_ID_SQL.getSql())){
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+            getConnection().commit();
+        } catch (Exception e){
+            log.warn("Erro ao deletar o telefone do usuário : {}",e.getMessage());
+            gerarRollback();
+            throw new SQLException(e.getMessage());
+        }
     }
 
     @Override

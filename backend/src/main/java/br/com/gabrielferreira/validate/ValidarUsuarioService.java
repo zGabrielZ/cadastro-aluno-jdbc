@@ -8,9 +8,10 @@ import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 import static br.com.gabrielferreira.utils.DataUtils.*;
-import static br.com.gabrielferreira.utils.MascaraUtils.*;
 import static br.com.gabrielferreira.validate.ValidarCPF.*;
 import static br.com.gabrielferreira.utils.StringUtils.*;
+
+import static br.com.gabrielferreira.utils.ConstantesUtils.*;
 
 public class ValidarUsuarioService {
 
@@ -62,12 +63,19 @@ public class ValidarUsuarioService {
     private static void validarCpf(Usuario usuario){
         validarCampoVazio(usuario.getCpf(), "É necessário informar o CPF do usuário");
         usuario.setCpf(usuario.getCpf().trim());
-        usuario.setCpf(limparMascaraCpf(usuario.getCpf()));
 
         validarTamanho(usuario.getCpf(), 1, 11, "É necessário informar o cpf do usuário até 11 caracteres");
+        validarCpfValido(usuario.getCpf());
+    }
 
-        if(!isCPFValido(usuario.getCpf())){
-            throw new RegraDeNegocioException("CPF do usuãrio informado é inválido");
+    private static void validarCpfValido(String cpf){
+        boolean isNaoPossuiDigito = isNaoPossuiDigito(cpf);
+        if(isNaoPossuiDigito){
+            throw new RegraDeNegocioException("Digite o CPF com apenas dígitos do usuário");
+        }
+
+        if(!isCPFValido(cpf)){
+            throw new RegraDeNegocioException("CPF do usuário informado é inválido");
         }
     }
 
@@ -116,17 +124,5 @@ public class ValidarUsuarioService {
             throw new RegraDeNegocioException(stringBuilder.toString());
         }
 
-    }
-
-    private static void validarCampoVazio(String campo, String msg){
-        if(campo == null || campo.isBlank()){
-            throw new RegraDeNegocioException(msg);
-        }
-    }
-
-    private static void validarTamanho(String campo, int inicio, int fim, String msg){
-        if(!(campo.length() >= inicio && campo.length() <= fim)){
-            throw new RegraDeNegocioException(msg);
-        }
     }
 }

@@ -15,7 +15,8 @@ public enum UsuarioEnumDao {
                     "LEFT JOIN PERFIL P ON P.ID = U.ID_PERFIL " +
                     "WHERE U.ID = ?"),
     DELETE_BY_ID_SQL("DELETE FROM USUARIO WHERE ID = ?"),
-    UPDAYE_BY_ID_SQL("UPDATE USUARIO SET NOME = ?, EMAIL = ?, SENHA = ?, DATA_NASCIMENTO = ?, CPF = ?, NOME_SOCIAL = ?, ID_GENERO = ?, ID_PERFIL = ? WHERE ID = ?");
+    UPDAYE_BY_ID_SQL("UPDATE USUARIO SET NOME = ?, EMAIL = ?, SENHA = ?, DATA_NASCIMENTO = ?, CPF = ?, NOME_SOCIAL = ?, ID_GENERO = ?, ID_PERFIL = ? WHERE ID = ?"),
+    DELETE_TELEFONE_BY_ID_SQL("DELETE FROM TELEFONE WHERE ID_USUARIO = ?");
 
     private final String sql;
 

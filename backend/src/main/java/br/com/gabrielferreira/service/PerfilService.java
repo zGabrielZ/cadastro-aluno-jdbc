@@ -27,6 +27,19 @@ public class PerfilService implements Serializable {
         return toPerfilViewDTO(perfil);
     }
 
+    public Perfil buscarPerfilPorCodigo(String codigo){
+        try {
+            Perfil perfil = perfilDAO.buscarPerfilPorCodigo(codigo);
+            if(perfil == null){
+                throw new ErroException("Perfil não encontrado");
+            }
+            return perfil;
+        } catch (Exception e){
+            log.warn("Erro ao buscar o perfil, {}", e.getMessage());
+            throw new RegistroNaoEncontradoException(e.getMessage());
+        }
+    }
+
     public Perfil buscarPerfilPorId(Long id){
         try {
             Perfil perfil = perfilDAO.buscarPorId(id);

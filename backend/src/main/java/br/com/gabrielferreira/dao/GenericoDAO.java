@@ -125,7 +125,7 @@ public abstract class GenericoDAO<T> implements Serializable {
         }
     }
 
-    private void gerarRollback() throws SQLException {
+    protected void gerarRollback() throws SQLException {
         try {
             connection.rollback();
             log.info(MSG_ROLLBACK);

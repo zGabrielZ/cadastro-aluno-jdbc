@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class ConexaoTest {
+class ConexaoBDTest {
 
     @Test
     @DisplayName("Deve não conectar no banco de dados quando informar ambiente incorreto")

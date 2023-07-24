@@ -13,11 +13,11 @@ import static br.com.gabrielferreira.utils.StringUtils.*;
 
 import static br.com.gabrielferreira.utils.ConstantesUtils.*;
 
-public class ValidarUsuarioService {
+public class ValidarUsuario {
 
-    private ValidarUsuarioService(){}
+    private ValidarUsuario(){}
 
-    public static void validarCamposNaoInformadosCadastro(Usuario usuario){
+    public static void validarCamposNaoInformadosCadastroUsuario(Usuario usuario){
         validarNome(usuario);
         validarEmail(usuario);
         validarSenha(usuario);

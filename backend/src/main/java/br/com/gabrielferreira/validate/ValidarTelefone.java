@@ -3,25 +3,33 @@ package br.com.gabrielferreira.validate;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.modelo.Telefone;
 import br.com.gabrielferreira.modelo.TipoTelefone;
-import br.com.gabrielferreira.modelo.Usuario;
+
+import java.util.Collections;
+import java.util.List;
 
 import static br.com.gabrielferreira.utils.ConstantesUtils.*;
 import static br.com.gabrielferreira.utils.StringUtils.*;
 
-public class ValidarTelefoneService {
+public class ValidarTelefone {
 
-    private ValidarTelefoneService(){}
+    private ValidarTelefone(){}
 
-    public static void validarCamposNaoInformadosCadastro(Telefone telefone){
+    public static void validarCamposNaoInformadosCadastroTelefone(Telefone telefone){
         validarDdd(telefone);
         validarNumero(telefone);
         validarTipoTelefone(telefone.getTipoTelefone());
     }
 
-    public static void validarUsuario(Usuario usuario){
-        if(usuario == null || usuario.getId() == null){
-            throw new RegraDeNegocioException("É necessário informar o usuário");
-        }
+    public static void validarNumeroDDDRepetido(List<String> telefones){
+        telefones.forEach(telefone -> {
+            int duplicados = Collections.frequency(telefones, telefone);
+
+            if (duplicados > 1) {
+                String ddd = telefone.substring(0, 2);
+                String numero = telefone.substring(2);
+                throw new RegraDeNegocioException(String.format("Este DDD %s e número %s já foi inserido, você está repetindo números", ddd, numero));
+            }
+        });
     }
 
     private static void validarDdd(Telefone telefone){

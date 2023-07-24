@@ -9,9 +9,7 @@ import br.com.gabrielferreira.modelo.TipoTelefone;
 import br.com.gabrielferreira.modelo.dto.TelefoneDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioViewDTO;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -22,6 +20,7 @@ import java.util.List;
 import static br.com.gabrielferreira.utils.BancoDeDadosAmbienteEnum.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UsuarioServiceTest {
 
     private UsuarioService usuarioService;
@@ -32,12 +31,14 @@ class UsuarioServiceTest {
 
     private TipoTelefone tipoTelefoneResidencial;
 
+    private TipoTelefone tipoTelefoneCelular;
+
     @BeforeEach
     public void criarInstancias(){
         UsuarioDAO usuarioDAO = DaoFactory.criarUsuarioDao(TESTE);
         GeneroService generoService = new GeneroService(DaoFactory.criarGeneroDao(TESTE));
         TipoTelefoneService tipoTelefoneService = new TipoTelefoneService(DaoFactory.criarTipoTelefoneDao(TESTE));
-        TelefoneService telefoneService = new TelefoneService(DaoFactory.criarTelefoneDao(TESTE), tipoTelefoneService);
+        TelefoneService telefoneService = new TelefoneService(tipoTelefoneService);
         usuarioService = new UsuarioService(usuarioDAO, telefoneService);
 
         PerfilService perfilService = new PerfilService(DaoFactory.criarPerfilDao(TESTE));
@@ -45,10 +46,12 @@ class UsuarioServiceTest {
         perfilAluno = perfilService.buscarPerfilPorCodigo("ALUNO");
 
         tipoTelefoneResidencial = tipoTelefoneService.buscarTipoTelefonePorCodigo("RESIDENCIAL");
+        tipoTelefoneCelular = tipoTelefoneService.buscarTipoTelefonePorCodigo("CELULAR");
     }
 
     @Test
     @DisplayName("Deve validar o nome quando for cadastrar o usuário")
+    @Order(1)
     void deveValidarNomeCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -70,6 +73,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar o tamanho do nome quando for cadastrar o usuário")
+    @Order(2)
     void deveValidarNomeTamanhoCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -91,6 +95,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar o email quando for cadastrar o usuário")
+    @Order(3)
     void deveValidarEmailCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -112,6 +117,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar o tamanho do email quando for cadastrar o usuário")
+    @Order(4)
     void deveValidarEmailTamanhoCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -134,6 +140,7 @@ class UsuarioServiceTest {
     @ParameterizedTest
     @ValueSource(strings = {"teste.com.br", "teste", "teste123.com", "teste123321email.com"})
     @DisplayName("Deve validar o email válido quando for cadastrar o usuário")
+    @Order(5)
     void deveValidarEmailValidoCadastroUsuario(String email){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -155,6 +162,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar a senha quando for cadastrar o usuário")
+    @Order(6)
     void deveValidarSenhaCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -176,6 +184,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar o tamanho da senha quando for cadastrar o usuário")
+    @Order(7)
     void deveValidarSenhaTamanhoCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -198,6 +207,7 @@ class UsuarioServiceTest {
     @ParameterizedTest
     @ValueSource(strings = {"t1@", "T1@", "Tt@", "Tt1"})
     @DisplayName("Deve validar a senha fraca quando for cadastrar o usuário")
+    @Order(8)
     void deveValidarSenhaFracaCadastroUsuario(String senha){
         UsuarioDTO usuarioDTO = UsuarioDTO.builder()
                 .nome("Teste 123")
@@ -214,6 +224,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar a data de nascimento quando for cadastrar o usuário")
+    @Order(9)
     void deveValidarDataNascimentoCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -235,6 +246,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar a data de nascimento após data atual quando for cadastrar o usuário")
+    @Order(10)
     void deveValidarDataNascimentoDepoisDataAtualCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -256,6 +268,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar o cpf quando for cadastrar o usuário")
+    @Order(11)
     void deveValidarCpfCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -277,6 +290,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar o cpf sem dígito quando for cadastrar o usuário")
+    @Order(12)
     void deveValidarCpfSemDigitoCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -298,6 +312,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar o cpf inválido quando for cadastrar o usuário")
+    @Order(13)
     void deveValidarCpfInvalidoCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -319,6 +334,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar o tamanho do nome social quando for cadastrar o usuário")
+    @Order(14)
     void deveValidarNomeSocialTamanhoCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -340,6 +356,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar o perfil quando for cadastrar o usuário")
+    @Order(15)
     void deveValidarPerfilCadastroUsuario(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -360,73 +377,8 @@ class UsuarioServiceTest {
     }
 
     @Test
-    @DisplayName("Deve cadastrar usuário sem nome social e sem gênero e sem telefones")
-    void deveCadastrarUsuarioSemNomeSocialSemGeneroSemTelefones(){
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
-                .nome("Teste 123")
-                .email("teste@email.com")
-                .senha("Teste123@")
-                .dataNascimento(LocalDate.of(1990, 12, 20))
-                .cpf("80523545010")
-                .nomeSocial(null)
-                .idGenero(null)
-                .idPerfil(perfilAluno.getId())
-                .telefones(new ArrayList<>())
-                .build();
-
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
-
-        assertNotNull(usuarioResultado.getId());
-        assertEquals(usuarioDTO.getNome(), usuarioResultado.getNome());
-        assertEquals(usuarioDTO.getEmail(), usuarioResultado.getEmail());
-        assertEquals(usuarioDTO.getDataNascimento(), usuarioResultado.getDataNascimento());
-        assertEquals(usuarioDTO.getCpf(), usuarioResultado.getCpf());
-        assertNull(usuarioResultado.getNomeSocial());
-        assertNull(usuarioResultado.getGenero());
-        assertEquals(usuarioDTO.getIdPerfil(), usuarioResultado.getPerfil().getId());
-        assertTrue(usuarioDTO.getTelefones().isEmpty());
-
-        usuarioService.deletarPorId(usuarioResultado.getId());
-    }
-
-    @Test
-    @DisplayName("Deve cadastrar usuário com nome social e com gênero e com telefones")
-    void deveCadastrarUsuarioComNomeSocialComGeneroComTelefones(){
-        List<TelefoneDTO> telefones = new ArrayList<>();
-        telefones.add(TelefoneDTO.builder().ddd("11").numero("36228681").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
-
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
-                .nome("Teste 123")
-                .email("teste@email.com")
-                .senha("Teste123@")
-                .dataNascimento(LocalDate.of(1990, 12, 20))
-                .cpf("80523545010")
-                .nomeSocial("Teste social")
-                .idGenero(generoMasculino.getId())
-                .idPerfil(perfilAluno.getId())
-                .telefones(telefones)
-                .build();
-
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
-
-        assertNotNull(usuarioResultado.getId());
-        assertEquals(usuarioDTO.getNome(), usuarioResultado.getNome());
-        assertEquals(usuarioDTO.getEmail(), usuarioResultado.getEmail());
-        assertEquals(usuarioDTO.getDataNascimento(), usuarioResultado.getDataNascimento());
-        assertEquals(usuarioDTO.getCpf(), usuarioResultado.getCpf());
-        assertEquals(usuarioDTO.getNomeSocial(), usuarioResultado.getNomeSocial());
-        assertEquals(usuarioDTO.getIdGenero(), usuarioResultado.getGenero().getId());
-        assertEquals(usuarioDTO.getIdPerfil(), usuarioResultado.getPerfil().getId());
-        assertEquals(usuarioDTO.getTelefones().get(0).getDdd(), usuarioDTO.getTelefones().get(0).getDdd());
-        assertEquals(usuarioDTO.getTelefones().get(0).getNumero(), usuarioDTO.getTelefones().get(0).getNumero());
-        assertEquals(usuarioDTO.getTelefones().get(0).getIdTipoTelefone(), usuarioDTO.getTelefones().get(0).getIdTipoTelefone());
-
-        usuarioService.deletarTelefonesPorIdUsuario(usuarioResultado.getId());
-        usuarioService.deletarPorId(usuarioResultado.getId());
-    }
-
-    @Test
     @DisplayName("Deve validar cadastro de usuário quando ocorrer e-mail já cadastrado")
+    @Order(16)
     void deveValidarCadastroUsuarioEmailRepetido(){
         UsuarioDTO usuarioDTO = UsuarioDTO.builder()
                 .nome("Teste 123")
@@ -466,6 +418,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar cadastro de usuário quando ocorrer cpf já cadastrado")
+    @Order(17)
     void deveValidarCadastroUsuarioCpfRepetido(){
         UsuarioDTO usuarioDTO = UsuarioDTO.builder()
                 .nome("Teste 123")
@@ -505,6 +458,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar cadastro de usuário quando não encontrar gênero")
+    @Order(18)
     void deveValidarCadastroUsuarioGeneroNaoEncontrado(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -528,6 +482,7 @@ class UsuarioServiceTest {
 
     @Test
     @DisplayName("Deve validar cadastro de usuário quando não encontrar perfil")
+    @Order(19)
     void deveValidarCadastroUsuarioPerfilNaoEncontrado(){
         try {
             UsuarioDTO usuarioDTO = UsuarioDTO.builder()
@@ -547,6 +502,348 @@ class UsuarioServiceTest {
         } catch (Exception e){
             assertTrue(e.getMessage().contains("Perfil informado não encontrado"));
         }
+    }
+
+    @Test
+    @DisplayName("Deve validar o ddd quando for cadastrar o telefone")
+    @Order(20)
+    void deveValidarDDDCadastroTelefone() {
+        try {
+            List<TelefoneDTO> telefones = new ArrayList<>();
+            telefones.add(TelefoneDTO.builder().ddd(null).numero("38508777").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial("Teste social")
+                    .idGenero(generoMasculino.getId())
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(telefones)
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção da ddd nulo");
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("É necessário informar o ddd do telefone do usuário"));
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"1", "111", "1111"})
+    @DisplayName("Deve validar o tamanho do ddd quando for cadastrar o telefone")
+    @Order(21)
+    void deveValidarDDDTamanhoCadastroTelefone(String ddd){
+        try {
+            List<TelefoneDTO> telefones = new ArrayList<>();
+            telefones.add(TelefoneDTO.builder().ddd(ddd).numero("38508777").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial("Teste social")
+                    .idGenero(generoMasculino.getId())
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(telefones)
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do tamanho ddd");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("É necessário informar o ddd do telefone do usuário até 2 caracteres"));
+        }
+    }
+
+    @Test
+    @DisplayName("Deve validar o número quando for cadastrar o telefone")
+    @Order(22)
+    void deveValidarNumeroCadastroTelefone(){
+        try {
+            List<TelefoneDTO> telefones = new ArrayList<>();
+            telefones.add(TelefoneDTO.builder().ddd("11").numero(null).idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial("Teste social")
+                    .idGenero(generoMasculino.getId())
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(telefones)
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do número nulo");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("É necessário informar o número do telefone do usuário"));
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"1", "11", "111", "1111", "22222", "333333", "7777777", "7777777888"})
+    @DisplayName("Deve validar o tamanho do número quando for cadastrar o telefone")
+    @Order(23)
+    void deveValidarNumeroTamanhoCadastroTelefone(String numero){
+        try {
+            List<TelefoneDTO> telefones = new ArrayList<>();
+            telefones.add(TelefoneDTO.builder().ddd("11").numero(numero).idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial("Teste social")
+                    .idGenero(generoMasculino.getId())
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(telefones)
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do tamanho número");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("É necessário informar o número do telefone do usuário até 255 caracteres"));
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"3583954A", "abcdefgf", "3583-9545", "abcdefgff"})
+    @DisplayName("Deve validar o número válido quando for cadastrar o telefone")
+    @Order(24)
+    void deveValidarNumeroValidoCadastroTelefone(String numero){
+        try {
+            List<TelefoneDTO> telefones = new ArrayList<>();
+            telefones.add(TelefoneDTO.builder().ddd("11").numero(numero).idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial("Teste social")
+                    .idGenero(generoMasculino.getId())
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(telefones)
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do dígito número");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("Digite um número com apenas dígitos do telefone para o usuário"));
+        }
+    }
+
+    @Test
+    @DisplayName("Deve validar o tipo de telefone quando for cadastrar o telefone")
+    @Order(25)
+    void deveValidarTipoTelefoneCadastroTelefone(){
+        try {
+            List<TelefoneDTO> telefones = new ArrayList<>();
+            telefones.add(TelefoneDTO.builder().ddd("11").numero("35839545").idTipoTelefone(null).build());
+
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial("Teste social")
+                    .idGenero(generoMasculino.getId())
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(telefones)
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do tipo de telefone nulo");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("É necessário informar o tipo de telefone"));
+        }
+    }
+
+    @Test
+    @DisplayName("Deve validar quando tiver numero de telefone e ddd repetidos")
+    @Order(26)
+    void deveValidarNumeroDDDRepetidos(){
+        try {
+            List<TelefoneDTO> telefones = new ArrayList<>();
+            telefones.add(TelefoneDTO.builder().ddd("11").numero("35839545").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+            telefones.add(TelefoneDTO.builder().ddd("11").numero("35839545").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial("Teste social")
+                    .idGenero(generoMasculino.getId())
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(telefones)
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do número repetido");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("Este DDD 11 e número 35839545 já foi inserido, você está repetindo números"));
+        }
+    }
+
+    @Test
+    @DisplayName("Deve validar o número residencial com o tipo de telefone celular")
+    @Order(27)
+    void deveValidarTipoTelefoneComNumeroDiferenteComTipoTelefoneCelularCadastroTelefone() {
+        try {
+            List<TelefoneDTO> telefones = new ArrayList<>();
+            telefones.add(TelefoneDTO.builder().ddd("11").numero("35839545").idTipoTelefone(tipoTelefoneCelular.getId()).build());
+
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial("Teste social")
+                    .idGenero(generoMasculino.getId())
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(telefones)
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do tipo de telefone diferente com número residencial");
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Você está inserindo um telefone para o tipo de telefone como celular"));
+        }
+    }
+
+    @Test
+    @DisplayName("Deve validar o número celular com o tipo de telefone residencial")
+    @Order(28)
+    void deveValidarTipoTelefoneComNumeroDiferenteComTipoTelefoneResidencialCadastroTelefone() {
+        try {
+            List<TelefoneDTO> telefones = new ArrayList<>();
+            telefones.add(TelefoneDTO.builder().ddd("11").numero("358395459").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial("Teste social")
+                    .idGenero(generoMasculino.getId())
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(telefones)
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do tipo de telefone diferente com número celular");
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Você está inserindo um celular para o tipo de telefone como residencial"));
+        }
+    }
+
+    @Test
+    @DisplayName("Deve validar o tipo de telefone quando não for encontrado")
+    @Order(29)
+    void deveValidarTipoTelefoneQuandoNaoForEncontradoCadastroTelefone() {
+        try {
+            List<TelefoneDTO> telefones = new ArrayList<>();
+            telefones.add(TelefoneDTO.builder().ddd("11").numero("358395459").idTipoTelefone(-1L).build());
+
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial("Teste social")
+                    .idGenero(generoMasculino.getId())
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(telefones)
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do tipo de telefone não encontrado");
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Tipo de telefone informado não encontrado"));
+        }
+    }
+
+    @Test
+    @DisplayName("Deve cadastrar usuário sem nome social e sem gênero e sem telefones")
+    @Order(30)
+    void deveCadastrarUsuarioSemNomeSocialSemGeneroSemTelefones(){
+        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                .nome("Teste 123")
+                .email("teste@email.com")
+                .senha("Teste123@")
+                .dataNascimento(LocalDate.of(1990, 12, 20))
+                .cpf("80523545010")
+                .nomeSocial(null)
+                .idGenero(null)
+                .idPerfil(perfilAluno.getId())
+                .telefones(new ArrayList<>())
+                .build();
+
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+
+        assertNotNull(usuarioResultado.getId());
+        assertEquals(usuarioDTO.getNome(), usuarioResultado.getNome());
+        assertEquals(usuarioDTO.getEmail(), usuarioResultado.getEmail());
+        assertEquals(usuarioDTO.getDataNascimento(), usuarioResultado.getDataNascimento());
+        assertEquals(usuarioDTO.getCpf(), usuarioResultado.getCpf());
+        assertNull(usuarioResultado.getNomeSocial());
+        assertNull(usuarioResultado.getGenero());
+        assertEquals(usuarioDTO.getIdPerfil(), usuarioResultado.getPerfil().getId());
+        assertTrue(usuarioDTO.getTelefones().isEmpty());
+
+        usuarioService.deletarPorId(usuarioResultado.getId());
+    }
+
+    @Test
+    @DisplayName("Deve cadastrar usuário com nome social e com gênero e com telefones")
+    @Order(31)
+    void deveCadastrarUsuarioComNomeSocialComGeneroComTelefones(){
+        List<TelefoneDTO> telefones = new ArrayList<>();
+        telefones.add(TelefoneDTO.builder().ddd("11").numero("36228681").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+
+        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                .nome("Teste 123")
+                .email("teste@email.com")
+                .senha("Teste123@")
+                .dataNascimento(LocalDate.of(1990, 12, 20))
+                .cpf("80523545010")
+                .nomeSocial("Teste social")
+                .idGenero(generoMasculino.getId())
+                .idPerfil(perfilAluno.getId())
+                .telefones(telefones)
+                .build();
+
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+
+        assertNotNull(usuarioResultado.getId());
+        assertEquals(usuarioDTO.getNome(), usuarioResultado.getNome());
+        assertEquals(usuarioDTO.getEmail(), usuarioResultado.getEmail());
+        assertEquals(usuarioDTO.getDataNascimento(), usuarioResultado.getDataNascimento());
+        assertEquals(usuarioDTO.getCpf(), usuarioResultado.getCpf());
+        assertEquals(usuarioDTO.getNomeSocial(), usuarioResultado.getNomeSocial());
+        assertEquals(usuarioDTO.getIdGenero(), usuarioResultado.getGenero().getId());
+        assertEquals(usuarioDTO.getIdPerfil(), usuarioResultado.getPerfil().getId());
+        assertEquals(usuarioDTO.getTelefones().get(0).getDdd(), usuarioDTO.getTelefones().get(0).getDdd());
+        assertEquals(usuarioDTO.getTelefones().get(0).getNumero(), usuarioDTO.getTelefones().get(0).getNumero());
+        assertEquals(usuarioDTO.getTelefones().get(0).getIdTipoTelefone(), usuarioDTO.getTelefones().get(0).getIdTipoTelefone());
+
+        usuarioService.deletarTelefonesPorIdUsuario(usuarioResultado.getId());
+        usuarioService.deletarPorId(usuarioResultado.getId());
     }
 
     private String gerarStringGrande(){

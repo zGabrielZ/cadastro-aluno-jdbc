@@ -1,6 +1,7 @@
 package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.dao.UsuarioDAO;
 import br.com.gabrielferreira.exceptions.*;
+import br.com.gabrielferreira.modelo.Telefone;
 import br.com.gabrielferreira.modelo.Usuario;
 import br.com.gabrielferreira.modelo.dto.TelefoneViewDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioDTO;
@@ -15,8 +16,11 @@ import java.util.List;
 
 import static br.com.gabrielferreira.modelo.factory.UsuarioFactory.*;
 import static br.com.gabrielferreira.modelo.dto.factory.UsuarioDTOFactory.*;
-import static br.com.gabrielferreira.validate.ValidarUsuarioService.*;
+import static br.com.gabrielferreira.validate.ValidarTelefone.*;
+import static br.com.gabrielferreira.validate.ValidarUsuario.*;
 import static br.com.gabrielferreira.utils.StringCriptografar.*;
+import static br.com.gabrielferreira.modelo.factory.TelefoneFactory.*;
+import static br.com.gabrielferreira.modelo.dto.factory.TelefoneDTOFactory.*;
 
 @Slf4j
 @AllArgsConstructor
@@ -33,13 +37,25 @@ public class UsuarioService implements Serializable {
         List<TelefoneViewDTO> telefoneViewDTOList = new ArrayList<>();
 
         Usuario usuario = toUsuario(usuarioDTO);
-        validarCamposNaoInformadosCadastro(usuario);
+        validarCamposNaoInformadosCadastroUsuario(usuario);
         usuario.setSenha(criptarCampo(usuario.getSenha()));
 
-        inserirUsuario(usuario);
+        if(usuarioDTO.getTelefones().isEmpty()){
+            inserirUsuario(usuario);
+        } else {
+            List<Telefone> telefones = toTelefones(usuarioDTO.getTelefones());
 
-        if (!usuarioDTO.getTelefones().isEmpty()) {
-            telefoneViewDTOList = telefoneService.inserir(usuario, usuarioDTO.getTelefones());
+            List<String> numeroDDD = new ArrayList<>();
+            for (Telefone telefone : telefones) {
+                validarCamposNaoInformadosCadastroTelefone(telefone);
+                telefoneService.validarTipoTelefoneComNumero(telefone.getNumero(), telefone.getTipoTelefone());
+                numeroDDD.add(telefone.getDdd().concat(telefone.getNumero()));
+            }
+
+            validarNumeroDDDRepetido(numeroDDD);
+
+            inserirUsuarioComTelefones(usuario, telefones);
+            telefoneViewDTOList = toTelefonesViewDTO(telefones);
         }
 
         UsuarioViewDTO usuarioViewDTO = toUsuarioViewDTO(usuario);
@@ -113,19 +129,34 @@ public class UsuarioService implements Serializable {
             usuarioDAO.inserir(usuario);
         } catch (Exception e){
             log.warn("Erro ao inserir o usuário, {}", e.getMessage());
-            if(e instanceof SQLException sqlException){
-                if(sqlException.getMessage().contains("ck_email_unique")){
-                    throw new UsuarioException("Este e-mail informado já foi cadastrado");
-                } else if(sqlException.getMessage().contains("ck_cpf_unique")){
-                    throw new UsuarioException("Este CPF informado já foi cadastrado");
-                } else if(sqlException.getMessage().contains("usuario_id_genero_fkey")){
-                    throw new UsuarioException("Gênero informado não encontrado");
-                } else if(sqlException.getMessage().contains("usuario_id_perfil_fkey")){
-                    throw new UsuarioException("Perfil informado não encontrado");
-                }
-            }
-
-            throw new ErroException("Erro ao salvar o usuário, tente mais tarde.");
+            incluirException(e);
         }
+    }
+
+    private void inserirUsuarioComTelefones(Usuario usuario, List<Telefone> telefones){
+        try {
+            usuarioDAO.inserirUsuarioComTelefones(usuario, telefones);
+        } catch (Exception e){
+            log.warn("Erro ao inserir o usuário, {}", e.getMessage());
+            incluirException(e);
+        }
+    }
+
+    private void incluirException(Exception e){
+        if(e instanceof SQLException sqlException){
+            if(sqlException.getMessage().contains("ck_email_unique")){
+                throw new UsuarioException("Este e-mail informado já foi cadastrado");
+            } else if(sqlException.getMessage().contains("ck_cpf_unique")){
+                throw new UsuarioException("Este CPF informado já foi cadastrado");
+            } else if(sqlException.getMessage().contains("usuario_id_genero_fkey")){
+                throw new UsuarioException("Gênero informado não encontrado");
+            } else if(sqlException.getMessage().contains("usuario_id_perfil_fkey")){
+                throw new UsuarioException("Perfil informado não encontrado");
+            } else if(sqlException.getMessage().contains("telefone_id_tipo_telefone_fkey")){
+                throw new TelefoneException("Tipo de telefone informado não encontrado");
+            }
+        }
+
+        throw new ErroException("Erro ao salvar o usuário, tente mais tarde.");
     }
 }

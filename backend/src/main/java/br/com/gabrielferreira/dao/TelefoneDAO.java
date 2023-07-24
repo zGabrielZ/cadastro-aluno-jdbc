@@ -12,6 +12,22 @@ public class TelefoneDAO extends GenericoDAO<Telefone>{
         super.insertSQL = INSERT_SQL.getSql();
     }
 
+    public void inserirTelefone(Telefone telefone) throws SQLException {
+        try(PreparedStatement preparedStatement = getConnection().prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
+            toInsertOrUpdate(telefone, null, preparedStatement);
+
+            // Executar essa inserção
+            preparedStatement.execute();
+
+            // Obter o id do registro salvo
+            try(ResultSet rs = preparedStatement.getGeneratedKeys()){
+                while (rs.next()) {
+                    toIdEntityInsert(telefone, rs);
+                }
+            }
+        }
+    }
+
     @Override
     protected void toInsertOrUpdate(Telefone entidade, Long id, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, entidade.getDdd());

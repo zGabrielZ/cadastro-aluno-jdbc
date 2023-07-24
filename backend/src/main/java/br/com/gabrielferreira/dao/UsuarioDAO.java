@@ -1,11 +1,13 @@
 package br.com.gabrielferreira.dao;
 
 import br.com.gabrielferreira.modelo.Genero;
+import br.com.gabrielferreira.modelo.Telefone;
 import br.com.gabrielferreira.modelo.Usuario;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.List;
 
 import static br.com.gabrielferreira.utils.dao.UsuarioEnumDao.*;
 
@@ -13,12 +15,46 @@ import static br.com.gabrielferreira.utils.dao.UsuarioEnumDao.*;
 @Slf4j
 public class UsuarioDAO extends GenericoDAO<Usuario>{
 
-    protected UsuarioDAO(Connection connection) {
+    private final TelefoneDAO telefoneDAO;
+
+    protected UsuarioDAO(Connection connection, TelefoneDAO telefoneDAO) {
         super(connection);
+        this.telefoneDAO = telefoneDAO;
         super.insertSQL = INSERT_SQL.getSql();
         super.findByIdSQL = FIND_BY_ID_SQL.getSql();
         super.deleteByIdSQL = DELETE_BY_ID_SQL.getSql();
         super.updateSQL = UPDAYE_BY_ID_SQL.getSql();
+    }
+
+    public void inserirUsuarioComTelefones(Usuario usuario, List<Telefone> telefones) throws SQLException {
+        try {
+            inserirUsuario(usuario);
+
+            for (Telefone telefone : telefones) {
+                telefone.setUsuario(usuario);
+                telefoneDAO.inserirTelefone(telefone);
+            }
+        } catch (SQLException e){
+            log.warn("Erro ao salvar usuário e telefone : {}",e.getMessage());
+            gerarRollback();
+            throw new SQLException(e.getMessage());
+        }
+    }
+
+    private void inserirUsuario(Usuario usuario) throws SQLException {
+        try(PreparedStatement preparedStatement = getConnection().prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
+            toInsertOrUpdate(usuario, null, preparedStatement);
+
+            // Executar essa inserção
+            preparedStatement.execute();
+
+            // Obter o id do registro salvo
+            try(ResultSet rs = preparedStatement.getGeneratedKeys()){
+                while (rs.next()) {
+                    toIdEntityInsert(usuario, rs);
+                }
+            }
+        }
     }
 
     public void deletarTelefonesPorIdUsuario(Long id) throws SQLException {

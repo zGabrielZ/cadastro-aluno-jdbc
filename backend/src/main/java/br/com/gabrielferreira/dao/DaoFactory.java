@@ -8,7 +8,8 @@ public class DaoFactory {
     private DaoFactory(){}
 
     public static UsuarioDAO criarUsuarioDao(BancoDeDadosAmbienteEnum bancoDeDadosAmbienteEnum){
-        return new UsuarioDAO(new ConexaoBD(bancoDeDadosAmbienteEnum.getDescricao()).getConnection());
+        TelefoneDAO telefoneDAO = criarTelefoneDao(bancoDeDadosAmbienteEnum);
+        return new UsuarioDAO(new ConexaoBD(bancoDeDadosAmbienteEnum.getDescricao()).getConnection(), telefoneDAO);
     }
 
     public static GeneroDAO criarGeneroDao(BancoDeDadosAmbienteEnum bancoDeDadosAmbienteEnum){

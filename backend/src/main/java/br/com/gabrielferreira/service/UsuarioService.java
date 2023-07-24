@@ -36,32 +36,10 @@ public class UsuarioService implements Serializable {
         validarCamposNaoInformadosCadastro(usuario);
         usuario.setSenha(criptarCampo(usuario.getSenha()));
 
-        try {
-            usuarioDAO.inserir(usuario);
+        inserirUsuario(usuario);
 
-            if(!usuarioDTO.getTelefones().isEmpty()){
-                telefoneViewDTOList = telefoneService.inserir(usuario, usuarioDTO.getTelefones());
-            }
-
-        } catch (Exception e){
-            log.warn("Erro ao inserir o usuário, {}", e.getMessage());
-            if(e instanceof SQLException sqlException){
-                if(sqlException.getMessage().contains("ck_email_unique")){
-                    throw new UsuarioException("Este e-mail informado já foi cadastrado");
-                } else if(sqlException.getMessage().contains("ck_cpf_unique")){
-                    throw new UsuarioException("Este CPF informado já foi cadastrado");
-                } else if(sqlException.getMessage().contains("usuario_id_genero_fkey")){
-                    throw new UsuarioException("Gênero informado não encontrado");
-                } else if(sqlException.getMessage().contains("usuario_id_perfil_fkey")){
-                    throw new UsuarioException("Perfil informado não encontrado");
-                }
-            } else if(e instanceof TelefoneException telefoneException){
-                throw new UsuarioException(telefoneException.getMessage());
-            } else if(e instanceof ErroException erroException){
-                throw new ErroException(erroException.getMessage());
-            } else {
-                throw new ErroException("Erro ao salvar o usuário, tente mais tarde.");
-            }
+        if (!usuarioDTO.getTelefones().isEmpty()) {
+            telefoneViewDTOList = telefoneService.inserir(usuario, usuarioDTO.getTelefones());
         }
 
         UsuarioViewDTO usuarioViewDTO = toUsuarioViewDTO(usuario);
@@ -127,6 +105,27 @@ public class UsuarioService implements Serializable {
         } catch (Exception e){
             log.warn("Erro ao buscar o usuário, {}", e.getMessage());
             throw new RegistroNaoEncontradoException(e.getMessage());
+        }
+    }
+
+    private void inserirUsuario(Usuario usuario){
+        try {
+            usuarioDAO.inserir(usuario);
+        } catch (Exception e){
+            log.warn("Erro ao inserir o usuário, {}", e.getMessage());
+            if(e instanceof SQLException sqlException){
+                if(sqlException.getMessage().contains("ck_email_unique")){
+                    throw new UsuarioException("Este e-mail informado já foi cadastrado");
+                } else if(sqlException.getMessage().contains("ck_cpf_unique")){
+                    throw new UsuarioException("Este CPF informado já foi cadastrado");
+                } else if(sqlException.getMessage().contains("usuario_id_genero_fkey")){
+                    throw new UsuarioException("Gênero informado não encontrado");
+                } else if(sqlException.getMessage().contains("usuario_id_perfil_fkey")){
+                    throw new UsuarioException("Perfil informado não encontrado");
+                }
+            }
+
+            throw new ErroException("Erro ao salvar o usuário, tente mais tarde.");
         }
     }
 }

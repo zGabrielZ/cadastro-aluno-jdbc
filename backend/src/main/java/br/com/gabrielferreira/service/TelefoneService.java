@@ -48,20 +48,8 @@ public class TelefoneService implements Serializable {
 
         validarNumeroDDDRepetido(numeroDDD);
 
-        try {
-            for (Telefone telefone : telefones) {
-                telefoneDAO.inserir(telefone);
-            }
-        } catch (Exception e){
-            log.warn("Erro ao inserir o telefone, {}", e.getMessage());
-            if(e instanceof SQLException sqlException){
-                if(sqlException.getMessage().contains("telefone_id_usuario_fkey")){
-                    throw new TelefoneException("Usuário informado não encontrado");
-                } else if(sqlException.getMessage().contains("telefone_id_tipo_telefone_fkey")){
-                    throw new TelefoneException("Tipo de telefone informado não encontrado");
-                }
-            }
-            throw new ErroException("Erro ao salvar o telefone, tente mais tarde.");
+        for (Telefone telefone : telefones) {
+            inserirTelefone(telefone);
         }
 
         return toTelefonesViewDTO(telefones);
@@ -90,5 +78,21 @@ public class TelefoneService implements Serializable {
                 throw new RegraDeNegocioException(String.format("Este DDD %s e número %s já foi inserido, você está repetindo números", ddd, numero));
             }
         });
+    }
+
+    private void inserirTelefone(Telefone telefone){
+        try {
+            telefoneDAO.inserir(telefone);
+        } catch (Exception e){
+            log.warn("Erro ao inserir o telefone, {}", e.getMessage());
+            if(e instanceof SQLException sqlException){
+                if(sqlException.getMessage().contains("telefone_id_usuario_fkey")){
+                    throw new TelefoneException("Usuário informado não encontrado");
+                } else if(sqlException.getMessage().contains("telefone_id_tipo_telefone_fkey")){
+                    throw new TelefoneException("Tipo de telefone informado não encontrado");
+                }
+            }
+            throw new ErroException("Erro ao salvar o telefone, tente mais tarde.");
+        }
     }
 }

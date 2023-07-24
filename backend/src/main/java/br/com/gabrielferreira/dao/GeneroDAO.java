@@ -1,6 +1,7 @@
 package br.com.gabrielferreira.dao;
 
 import br.com.gabrielferreira.modelo.Genero;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -11,11 +12,35 @@ import java.sql.SQLException;
 import static br.com.gabrielferreira.utils.dao.GeneroEnumDao.*;
 
 @Slf4j
-public class GeneroDAO extends GenericoDAO<Genero>{
+public class GeneroDAO {
 
-    protected GeneroDAO(Connection connection) {
-        super(connection);
-        super.findByIdSQL = FIND_BY_ID_SQL.getSql();
+    @Getter
+    private final Connection connection;
+
+    public GeneroDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    public Genero buscarPorId(Long id) throws SQLException {
+        Genero genero = null;
+        try(PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL.getSql())) {
+            // Setando o id na consulta
+            preparedStatement.setLong(1, id);
+
+            // Executar a consulta
+            preparedStatement.execute();
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()){
+                    genero = toFromModel(resultSet);
+                }
+            }
+
+        } catch (SQLException e){
+            log.warn("Erro ao buscar gênero por id : {}", e.getMessage());
+            throw new SQLException(e.getMessage());
+        }
+        return genero;
     }
 
     public Genero buscarGeneroPorCodigo(String codigo) throws SQLException {
@@ -38,18 +63,7 @@ public class GeneroDAO extends GenericoDAO<Genero>{
         return genero;
     }
 
-    @Override
-    protected void toInsertOrUpdate(Genero entidade, Long id, PreparedStatement preparedStatement) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void toIdEntityInsert(Genero entidade, ResultSet rs) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected Genero toFromModel(ResultSet resultSet) throws SQLException {
+    private Genero toFromModel(ResultSet resultSet) throws SQLException {
         return Genero.builder()
                 .id(resultSet.getLong("ID"))
                 .descricao(resultSet.getString("DESCRICAO"))

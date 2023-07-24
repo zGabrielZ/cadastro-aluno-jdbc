@@ -1,6 +1,7 @@
 package br.com.gabrielferreira.dao;
 
 import br.com.gabrielferreira.modelo.TipoTelefone;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -11,11 +12,35 @@ import java.sql.SQLException;
 import static br.com.gabrielferreira.utils.dao.TipoTelefoneEnumDao.*;
 
 @Slf4j
-public class TipoTelefoneDAO extends GenericoDAO<TipoTelefone>{
+public class TipoTelefoneDAO {
 
-    protected TipoTelefoneDAO(Connection connection) {
-        super(connection);
-        super.findByIdSQL = FIND_BY_ID_SQL.getSql();
+    @Getter
+    private final Connection connection;
+
+    public TipoTelefoneDAO(Connection connection){
+        this.connection = connection;
+    }
+
+    public TipoTelefone buscarPorId(Long id) throws SQLException {
+        TipoTelefone tipoTelefone = null;
+        try(PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL.getSql())) {
+            // Setando o id na consulta
+            preparedStatement.setLong(1, id);
+
+            // Executar a consulta
+            preparedStatement.execute();
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()){
+                    tipoTelefone = toFromModel(resultSet);
+                }
+            }
+
+        } catch (SQLException e){
+            log.warn("Erro ao buscar tipo de telefone por id : {}", e.getMessage());
+            throw new SQLException(e.getMessage());
+        }
+        return tipoTelefone;
     }
 
     public TipoTelefone buscarTipoTelefonePorCodigo(String codigo) throws SQLException {
@@ -38,18 +63,7 @@ public class TipoTelefoneDAO extends GenericoDAO<TipoTelefone>{
         return tipoTelefone;
     }
 
-    @Override
-    protected void toInsertOrUpdate(TipoTelefone entidade, Long id, PreparedStatement preparedStatement) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void toIdEntityInsert(TipoTelefone entidade, ResultSet rs) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected TipoTelefone toFromModel(ResultSet resultSet) throws SQLException{
+    private TipoTelefone toFromModel(ResultSet resultSet) throws SQLException{
         return TipoTelefone.builder()
                 .id(resultSet.getLong("ID"))
                 .descricao(resultSet.getString("DESCRICAO"))

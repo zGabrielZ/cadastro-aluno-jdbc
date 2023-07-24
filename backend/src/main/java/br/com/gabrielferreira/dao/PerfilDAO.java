@@ -1,5 +1,6 @@
 package br.com.gabrielferreira.dao;
 import br.com.gabrielferreira.modelo.Perfil;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -10,11 +11,35 @@ import java.sql.SQLException;
 import static br.com.gabrielferreira.utils.dao.PerfilEnumDao.*;
 
 @Slf4j
-public class PerfilDAO extends GenericoDAO<Perfil>{
+public class PerfilDAO {
 
-    protected PerfilDAO(Connection connection) {
-        super(connection);
-        super.findByIdSQL = FIND_BY_ID_SQL.getSql();
+    @Getter
+    private final Connection connection;
+
+    public PerfilDAO(Connection connection){
+        this.connection = connection;
+    }
+
+    public Perfil buscarPorId(Long id) throws SQLException {
+        Perfil perfil = null;
+        try(PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL.getSql())) {
+            // Setando o id na consulta
+            preparedStatement.setLong(1, id);
+
+            // Executar a consulta
+            preparedStatement.execute();
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()){
+                    perfil = toFromModel(resultSet);
+                }
+            }
+
+        } catch (SQLException e){
+            log.warn("Erro ao buscar perfil por id : {}", e.getMessage());
+            throw new SQLException(e.getMessage());
+        }
+        return perfil;
     }
 
     public Perfil buscarPerfilPorCodigo(String codigo) throws SQLException {
@@ -37,18 +62,7 @@ public class PerfilDAO extends GenericoDAO<Perfil>{
         return perfil;
     }
 
-    @Override
-    protected void toInsertOrUpdate(Perfil entidade, Long id, PreparedStatement preparedStatement) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void toIdEntityInsert(Perfil entidade, ResultSet rs) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected Perfil toFromModel(ResultSet resultSet) throws SQLException {
+    private Perfil toFromModel(ResultSet resultSet) throws SQLException {
         return Perfil.builder()
                 .id(resultSet.getLong("ID"))
                 .descricao(resultSet.getString("DESCRICAO"))

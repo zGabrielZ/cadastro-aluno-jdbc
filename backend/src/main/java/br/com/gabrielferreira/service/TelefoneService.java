@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 
 import static br.com.gabrielferreira.modelo.factory.TelefoneFactory.*;
 import static br.com.gabrielferreira.modelo.dto.factory.TelefoneDTOFactory.*;
@@ -33,16 +33,19 @@ public class TelefoneService implements Serializable {
     private TipoTelefoneService tipoTelefoneService;
 
 
-    // FIXME: VALIDAR NUMERO REPETIDO
     public List<TelefoneViewDTO> inserir(Usuario usuario, List<TelefoneDTO> telefonesDtos){
         validarUsuario(usuario);
         List<Telefone> telefones = toTelefones(telefonesDtos);
 
+        List<String> numeroDDD = new ArrayList<>();
         telefones.forEach(telefone -> {
             validarCamposNaoInformadosCadastro(telefone);
             validarTipoTelefoneComNumero(telefone.getNumero(), telefone.getTipoTelefone());
             telefone.setUsuario(usuario);
+            numeroDDD.add(telefone.getDdd().concat(telefone.getNumero()));
         });
+
+        validarNumeroDDDRepetido(numeroDDD);
 
         try {
             for (Telefone telefone : telefones) {
@@ -74,5 +77,17 @@ public class TelefoneService implements Serializable {
         if(numero.length() == COMPRIMENTO_NUMERO_CELULAR && tipoTelefone.getId().equals(tipoTelefoneResidencial.getId())){
             throw new RegraDeNegocioException("Você está inserindo um celular para o tipo de telefone como residencial");
         }
+    }
+
+    private void validarNumeroDDDRepetido(List<String> telefones){
+        telefones.forEach(telefone -> {
+            int duplicados = Collections.frequency(telefones, telefone);
+
+            if (duplicados > 1) {
+                String ddd = telefone.substring(0, 2);
+                String numero = telefone.substring(2);
+                throw new RegraDeNegocioException(String.format("Este DDD %s e número %s já foi inserido, você está repetindo números", ddd, numero));
+            }
+        });
     }
 }

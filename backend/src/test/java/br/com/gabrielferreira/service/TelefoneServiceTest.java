@@ -162,6 +162,21 @@ class TelefoneServiceTest {
     }
 
     @Test
+    @DisplayName("Deve validar quando tiver numero de telefone e ddd repetidos")
+    void deveValidarNumeroDDDRepetidos(){
+        try {
+            List<TelefoneDTO> telefoneDTOS = new ArrayList<>();
+            telefoneDTOS.add(TelefoneDTO.builder().ddd("11").numero("35839545").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+            telefoneDTOS.add(TelefoneDTO.builder().ddd("11").numero("35839545").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+            Usuario usuario = Usuario.builder().id(1L).build();
+            telefoneService.inserir(usuario, telefoneDTOS);
+            fail("Deveria ter lançado a exceção do número repetido");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("Este DDD 11 e número 35839545 já foi inserido, você está repetindo números"));
+        }
+    }
+
+    @Test
     @DisplayName("Deve validar quando não encontrar usuário")
     void deveValidarQuandoNaoEncontrarUsuario(){
         try {

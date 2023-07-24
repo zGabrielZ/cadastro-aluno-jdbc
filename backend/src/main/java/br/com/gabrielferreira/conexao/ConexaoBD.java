@@ -23,8 +23,8 @@ public class ConexaoBD implements Serializable {
 
     private static void conectarBancoDeDados(String ambiente){
         try {
+            ConfigBancoDados configBancoDados = new ConfigBancoDados(ambiente);
             if(connection == null){
-                ConfigBancoDados configBancoDados = new ConfigBancoDados(ambiente);
                 connection = DriverManager.getConnection(configBancoDados.getUrl(), configBancoDados.getUsuario(), configBancoDados.getSenha());
                 connection.setAutoCommit(false);
             }

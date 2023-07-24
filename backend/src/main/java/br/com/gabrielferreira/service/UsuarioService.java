@@ -1,8 +1,6 @@
 package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.dao.UsuarioDAO;
-import br.com.gabrielferreira.exceptions.ErroException;
-import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
-import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
+import br.com.gabrielferreira.exceptions.*;
 import br.com.gabrielferreira.modelo.Usuario;
 import br.com.gabrielferreira.modelo.dto.TelefoneViewDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioDTO;
@@ -49,16 +47,16 @@ public class UsuarioService implements Serializable {
             log.warn("Erro ao inserir o usuário, {}", e.getMessage());
             if(e instanceof SQLException sqlException){
                 if(sqlException.getMessage().contains("ck_email_unique")){
-                    throw new RegraDeNegocioException("Este e-mail informado já foi cadastrado");
+                    throw new UsuarioException("Este e-mail informado já foi cadastrado");
                 } else if(sqlException.getMessage().contains("ck_cpf_unique")){
-                    throw new RegraDeNegocioException("Este CPF informado já foi cadastrado");
+                    throw new UsuarioException("Este CPF informado já foi cadastrado");
                 } else if(sqlException.getMessage().contains("usuario_id_genero_fkey")){
-                    throw new RegraDeNegocioException("Gênero informado não encontrado");
+                    throw new UsuarioException("Gênero informado não encontrado");
                 } else if(sqlException.getMessage().contains("usuario_id_perfil_fkey")){
-                    throw new RegraDeNegocioException("Perfil informado não encontrado");
+                    throw new UsuarioException("Perfil informado não encontrado");
                 }
-            } else if(e instanceof RegraDeNegocioException regraDeNegocioException){
-                throw new RegraDeNegocioException(regraDeNegocioException.getMessage());
+            } else if(e instanceof TelefoneException telefoneException){
+                throw new UsuarioException(telefoneException.getMessage());
             } else if(e instanceof ErroException erroException){
                 throw new ErroException(erroException.getMessage());
             } else {

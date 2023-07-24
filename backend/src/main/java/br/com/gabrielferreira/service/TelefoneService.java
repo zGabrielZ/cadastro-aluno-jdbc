@@ -2,6 +2,7 @@ package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.dao.TelefoneDAO;
 import br.com.gabrielferreira.exceptions.ErroException;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
+import br.com.gabrielferreira.exceptions.TelefoneException;
 import br.com.gabrielferreira.modelo.Telefone;
 import br.com.gabrielferreira.modelo.TipoTelefone;
 import br.com.gabrielferreira.modelo.Usuario;
@@ -55,9 +56,9 @@ public class TelefoneService implements Serializable {
             log.warn("Erro ao inserir o telefone, {}", e.getMessage());
             if(e instanceof SQLException sqlException){
                 if(sqlException.getMessage().contains("telefone_id_usuario_fkey")){
-                    throw new RegraDeNegocioException("Usuário informado não encontrado");
+                    throw new TelefoneException("Usuário informado não encontrado");
                 } else if(sqlException.getMessage().contains("telefone_id_tipo_telefone_fkey")){
-                    throw new RegraDeNegocioException("Tipo de telefone informado não encontrado");
+                    throw new TelefoneException("Tipo de telefone informado não encontrado");
                 }
             }
             throw new ErroException("Erro ao salvar o telefone, tente mais tarde.");

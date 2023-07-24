@@ -425,6 +425,130 @@ class UsuarioServiceTest {
         usuarioService.deletarPorId(usuarioResultado.getId());
     }
 
+    @Test
+    @DisplayName("Deve validar cadastro de usuário quando ocorrer e-mail já cadastrado")
+    void deveValidarCadastroUsuarioEmailRepetido(){
+        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                .nome("Teste 123")
+                .email("teste@email.com")
+                .senha("Teste123@")
+                .dataNascimento(LocalDate.of(1990, 12, 20))
+                .cpf("80523545010")
+                .nomeSocial(null)
+                .idGenero(null)
+                .idPerfil(perfilAluno.getId())
+                .telefones(new ArrayList<>())
+                .build();
+
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+
+        UsuarioDTO usuarioDTO2 = UsuarioDTO.builder()
+                .nome("Teste 12334")
+                .email("teste@email.com")
+                .senha("Teste1234@")
+                .dataNascimento(LocalDate.of(1990, 12, 20))
+                .cpf("93504688084")
+                .nomeSocial(null)
+                .idGenero(null)
+                .idPerfil(perfilAluno.getId())
+                .telefones(new ArrayList<>())
+                .build();
+
+        try {
+            usuarioService.inserir(usuarioDTO2);
+            fail("Deveria ter lançado a exceção do email já cadastrado");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("Este e-mail informado já foi cadastrado"));
+        }
+
+        usuarioService.deletarPorId(usuarioResultado.getId());
+    }
+
+    @Test
+    @DisplayName("Deve validar cadastro de usuário quando ocorrer cpf já cadastrado")
+    void deveValidarCadastroUsuarioCpfRepetido(){
+        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                .nome("Teste 123")
+                .email("teste123@email.com")
+                .senha("Teste123@")
+                .dataNascimento(LocalDate.of(1990, 12, 20))
+                .cpf("80523545010")
+                .nomeSocial(null)
+                .idGenero(null)
+                .idPerfil(perfilAluno.getId())
+                .telefones(new ArrayList<>())
+                .build();
+
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+
+        UsuarioDTO usuarioDTO2 = UsuarioDTO.builder()
+                .nome("Teste 12334")
+                .email("teste1234@email.com")
+                .senha("Teste1234@")
+                .dataNascimento(LocalDate.of(1990, 12, 20))
+                .cpf("80523545010")
+                .nomeSocial(null)
+                .idGenero(null)
+                .idPerfil(perfilAluno.getId())
+                .telefones(new ArrayList<>())
+                .build();
+
+        try {
+            usuarioService.inserir(usuarioDTO2);
+            fail("Deveria ter lançado a exceção do cpf já cadastrado");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("Este CPF informado já foi cadastrado"));
+        }
+
+        usuarioService.deletarPorId(usuarioResultado.getId());
+    }
+
+    @Test
+    @DisplayName("Deve validar cadastro de usuário quando não encontrar gênero")
+    void deveValidarCadastroUsuarioGeneroNaoEncontrado(){
+        try {
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste123@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial(null)
+                    .idGenero(-1L)
+                    .idPerfil(perfilAluno.getId())
+                    .telefones(new ArrayList<>())
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do gênero não encontrado");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("Gênero informado não encontrado"));
+        }
+    }
+
+    @Test
+    @DisplayName("Deve validar cadastro de usuário quando não encontrar perfil")
+    void deveValidarCadastroUsuarioPerfilNaoEncontrado(){
+        try {
+            UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                    .nome("Teste 123")
+                    .email("teste123@email.com")
+                    .senha("Teste123@")
+                    .dataNascimento(LocalDate.of(1990, 12, 20))
+                    .cpf("80523545010")
+                    .nomeSocial(null)
+                    .idGenero(null)
+                    .idPerfil(-1L)
+                    .telefones(new ArrayList<>())
+                    .build();
+
+            usuarioService.inserir(usuarioDTO);
+            fail("Deveria ter lançado a exceção do perfil não encontrado");
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("Perfil informado não encontrado"));
+        }
+    }
+
     private String gerarStringGrande(){
         return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a ultricies elit. Etiam iaculis sem in lorem aliquet fermentum. " +
                 "In et sodales diam, eu pharetra magna. Donec vel lorem tempor, facilisis augue in, aliquam tellus. " +

@@ -114,6 +114,15 @@ public class UsuarioService {
         }
     }
 
+    public void deletarTudo(){
+        try {
+            usuarioDAO.deleteTudo();
+        } catch (Exception e){
+            gerarLogWarn("Erro ao deletar tudo no usuário, {}", e);
+            throw new ErroException("Erro ao deletar tudo no usuário, tente mais tarde.");
+        }
+    }
+
     private Usuario buscarUsuarioPorId(Long id){
         try {
             Usuario usuario = usuarioDAO.buscarPorId(id);

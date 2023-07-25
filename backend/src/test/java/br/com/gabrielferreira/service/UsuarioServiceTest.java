@@ -28,6 +28,8 @@ class UsuarioServiceTest {
 
     private UsuarioService usuarioService;
 
+    private TelefoneService telefoneService;
+
     private Genero generoMasculino;
 
     private Perfil perfilAluno;
@@ -41,7 +43,7 @@ class UsuarioServiceTest {
         UsuarioDAO usuarioDAO = DaoFactory.criarUsuarioDao(TESTE);
         GeneroService generoService = new GeneroService(DaoFactory.criarGeneroDao(TESTE));
         TipoTelefoneService tipoTelefoneService = new TipoTelefoneService(DaoFactory.criarTipoTelefoneDao(TESTE));
-        TelefoneService telefoneService = new TelefoneService(DaoFactory.criarTelefoneDao(TESTE), tipoTelefoneService);
+        telefoneService = new TelefoneService(DaoFactory.criarTelefoneDao(TESTE), tipoTelefoneService);
         usuarioService = new UsuarioService(usuarioDAO, telefoneService, generoService);
 
         PerfilService perfilService = new PerfilService(DaoFactory.criarPerfilDao(TESTE));
@@ -976,6 +978,36 @@ class UsuarioServiceTest {
         assertEquals(generoMasculino.getId(), usuarioAtualizadoResultado.getGenero().getId());
 
         usuarioService.deletarPorId(usuarioResultado.getId());
+    }
+
+    @Test
+    @DisplayName("Deve deletar tudo de telefone e usuário")
+    @Order(38)
+    void deveDeletarUsuarioETelefone(){
+        List<TelefoneDTO> telefones = new ArrayList<>();
+        telefones.add(TelefoneDTO.builder().ddd("11").numero("36228681").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+
+        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                .nome("Teste 123")
+                .email("teste@email.com")
+                .senha("Teste123@")
+                .dataNascimento(LocalDate.of(1990, 12, 20))
+                .cpf("80523545010")
+                .nomeSocial("Teste social")
+                .idGenero(generoMasculino.getId())
+                .idPerfil(perfilAluno.getId())
+                .telefones(telefones)
+                .build();
+
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+        telefoneService.deletarTudo();
+        usuarioService.deletarTudo();
+
+        try {
+            usuarioService.buscarPorId(usuarioResultado.getId());
+        } catch (Exception e){
+            assertTrue(e.getMessage().contains("Usuário não encontrado"));
+        }
     }
 
     private String gerarStringGrande(){

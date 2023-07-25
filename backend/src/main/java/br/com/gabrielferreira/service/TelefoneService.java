@@ -26,6 +26,15 @@ public class TelefoneService {
         return toTelefonesViewDTO(telefones);
     }
 
+    public void deletarTudo(){
+        try {
+            telefoneDAO.deleteTudo();
+        } catch (Exception e){
+            gerarLogWarn("Erro ao deletar tudo no telefone, {}", e);
+            throw new ErroException("Erro ao deletar tudo no telefone, tente mais tarde.");
+        }
+    }
+
     public void validarTipoTelefoneComNumero(String numero, TipoTelefone tipoTelefone){
         TipoTelefone tipoTelefoneCelular = tipoTelefoneService.buscarTipoTelefonePorCodigo("CELULAR");
 

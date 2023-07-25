@@ -125,6 +125,20 @@ public class UsuarioDAO {
         }
     }
 
+    public void deleteTudo() throws SQLException {
+        try(PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL.getSql())){
+            // Executar a consulta do delete
+            preparedStatement.executeUpdate();
+
+            // Salvar no banco de dados
+            connection.commit();
+        } catch (SQLException e){
+            gerarLogWarn("Erro ao deletar tudo do usuário : {}", e);
+            gerarRollback();
+            throw new SQLException(e.getMessage());
+        }
+    }
+
     private void inserirUsuario(Usuario usuario) throws SQLException {
         try(PreparedStatement preparedStatement = getConnection().prepareStatement(INSERT_SQL.getSql(), Statement.RETURN_GENERATED_KEYS)) {
             toInsertOrUpdate(usuario, null, preparedStatement);

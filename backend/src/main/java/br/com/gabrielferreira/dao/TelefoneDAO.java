@@ -57,6 +57,20 @@ public class TelefoneDAO {
         return telefones;
     }
 
+    public void deleteTudo() throws SQLException {
+        try(PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL.getSql())){
+            // Executar a consulta do delete
+            preparedStatement.executeUpdate();
+
+            // Salvar no banco de dados
+            connection.commit();
+        } catch (SQLException e){
+            gerarLogWarn("Erro ao deletar tudo do telefone : {}", e);
+            gerarRollback();
+            throw new SQLException(e.getMessage());
+        }
+    }
+
     private void toInsertOrUpdate(Telefone entidade, Long id, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, entidade.getDdd());
         preparedStatement.setString(2, entidade.getNumero());
@@ -85,5 +99,15 @@ public class TelefoneDAO {
                 .descricao(resultSet.getString("DESCRICAO_TIPO_TELEFONE"))
                 .codigo(resultSet.getString("CODIGO_TIPO_TELEFONE"))
                 .build();
+    }
+
+    private void gerarRollback() throws SQLException {
+        try {
+            connection.rollback();
+            gerarLogInfo("Rollback do telefone realizado !");
+        } catch (SQLException e){
+            gerarLogWarn("Ocorreu erro ao gerar o rollback, {}", e);
+            throw new SQLException(e.getMessage());
+        }
     }
 }

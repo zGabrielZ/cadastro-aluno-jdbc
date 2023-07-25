@@ -5,15 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.io.FileInputStream;
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Properties;
 
 @Slf4j
-public class ConfigBancoDados implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 8580433007347756622L;
+public class ConfigBancoDados {
 
     @Getter
     @Setter

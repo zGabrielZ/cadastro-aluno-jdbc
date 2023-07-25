@@ -8,8 +8,6 @@ import br.com.gabrielferreira.modelo.dto.UsuarioDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioViewDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import java.io.Serial;
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +22,7 @@ import static br.com.gabrielferreira.modelo.dto.factory.TelefoneDTOFactory.*;
 
 @Slf4j
 @AllArgsConstructor
-public class UsuarioService implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 6730307453958143191L;
+public class UsuarioService {
 
     private UsuarioDAO usuarioDAO;
 

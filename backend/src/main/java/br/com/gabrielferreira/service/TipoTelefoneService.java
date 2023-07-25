@@ -7,17 +7,11 @@ import br.com.gabrielferreira.modelo.dto.TipoTelefoneViewDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 import static br.com.gabrielferreira.modelo.dto.factory.TipoTelefoneDTOFactory.*;
 
 @Slf4j
 @AllArgsConstructor
-public class TipoTelefoneService implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 6730307453958143191L;
+public class TipoTelefoneService {
 
     private TipoTelefoneDAO tipoTelefoneDAO;
 

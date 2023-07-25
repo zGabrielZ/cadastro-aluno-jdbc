@@ -6,8 +6,6 @@ import br.com.gabrielferreira.modelo.Usuario;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -16,13 +14,10 @@ import static br.com.gabrielferreira.utils.dao.UsuarioEnumDao.*;
 
 
 @Slf4j
-public class UsuarioDAO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 89885484378280620L;
+public class UsuarioDAO {
 
     @Getter
-    private final transient Connection connection;
+    private final Connection connection;
 
     private final TelefoneDAO telefoneDAO;
 

@@ -8,17 +8,11 @@ import br.com.gabrielferreira.modelo.dto.GeneroViewDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 import static br.com.gabrielferreira.modelo.dto.factory.GeneroDTOFactory.*;
 
 @Slf4j
 @AllArgsConstructor
-public class GeneroService implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 6730307453958143191L;
+public class GeneroService {
 
     private GeneroDAO generoDAO;
 

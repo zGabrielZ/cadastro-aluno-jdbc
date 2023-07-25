@@ -3,17 +3,11 @@ package br.com.gabrielferreira.conexao;
 import br.com.gabrielferreira.conexao.config.ConfigBancoDados;
 import br.com.gabrielferreira.exceptions.BancoDeDadosException;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.Serial;
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 @Slf4j
-public class ConexaoBD implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 3233797159978930910L;
+public class ConexaoBD {
 
     private static Connection connection = null;
 

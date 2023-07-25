@@ -8,17 +8,11 @@ import br.com.gabrielferreira.modelo.dto.PerfilViewDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 import static br.com.gabrielferreira.modelo.dto.factory.PerfilDTOFactory.*;
 
 @Slf4j
 @AllArgsConstructor
-public class PerfilService implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 6730307453958143191L;
+public class PerfilService {
 
     private PerfilDAO perfilDAO;
 

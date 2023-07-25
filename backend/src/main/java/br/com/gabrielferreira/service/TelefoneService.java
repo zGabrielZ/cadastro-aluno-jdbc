@@ -4,15 +4,9 @@ import br.com.gabrielferreira.modelo.TipoTelefone;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 @Slf4j
 @AllArgsConstructor
-public class TelefoneService implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 6730307453958143191L;
+public class TelefoneService {
 
     private static final Long COMPRIMENTO_NUMERO_RESIDENCIAL = 8L;
     private static final Long COMPRIMENTO_NUMERO_CELULAR = 9L;

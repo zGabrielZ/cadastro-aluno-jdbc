@@ -107,7 +107,7 @@ public class UsuarioDAO {
             // Salvar no banco de dados
             connection.commit();
 
-        } catch (Exception e){
+        } catch (SQLException e){
             log.warn("Erro ao deletar usuário : {}",e.getMessage());
             gerarRollback();
             throw new SQLException(e.getMessage());
@@ -119,7 +119,7 @@ public class UsuarioDAO {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             getConnection().commit();
-        } catch (Exception e){
+        } catch (SQLException e){
             log.warn("Erro ao deletar o telefone do usuário : {}",e.getMessage());
             gerarRollback();
             throw new SQLException(e.getMessage());

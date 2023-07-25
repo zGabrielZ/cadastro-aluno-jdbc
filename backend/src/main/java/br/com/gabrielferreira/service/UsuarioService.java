@@ -58,10 +58,14 @@ public class UsuarioService {
         return usuarioViewDTO;
     }
 
-//    public UsuarioViewDTO buscarPorId(Long id){
-//        Usuario usuario = buscarUsuarioPorId(id);
-//        return toUsuarioViewDTO(usuario);
-//    }
+    public UsuarioViewDTO buscarPorId(Long id){
+        Usuario usuario = buscarUsuarioPorId(id);
+        List<TelefoneViewDTO> telefones = telefoneService.buscarTelefonesPorIdUsuario(usuario.getId());
+
+        UsuarioViewDTO usuarioViewDTO = toUsuarioViewDTO(usuario);
+        usuarioViewDTO.setTelefones(telefones);
+        return usuarioViewDTO;
+    }
 //
 //    public UsuarioViewDTO atualizar(UsuarioAtualizarDTO usuarioAtualizarDTO, Long id){
 //        Usuario usuario = buscarUsuarioPorId(id);

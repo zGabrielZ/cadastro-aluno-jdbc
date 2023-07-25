@@ -1,9 +1,11 @@
 package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.dao.UsuarioDAO;
 import br.com.gabrielferreira.exceptions.*;
+import br.com.gabrielferreira.modelo.Genero;
 import br.com.gabrielferreira.modelo.Telefone;
 import br.com.gabrielferreira.modelo.Usuario;
 import br.com.gabrielferreira.modelo.dto.TelefoneViewDTO;
+import br.com.gabrielferreira.modelo.dto.UsuarioAtualizarDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioViewDTO;
 import lombok.AllArgsConstructor;
@@ -26,6 +28,8 @@ public class UsuarioService {
     private UsuarioDAO usuarioDAO;
 
     private TelefoneService telefoneService;
+
+    private GeneroService generoService;
 
     public UsuarioViewDTO inserir(UsuarioDTO usuarioDTO){
         List<TelefoneViewDTO> telefoneViewDTOList = new ArrayList<>();
@@ -65,22 +69,23 @@ public class UsuarioService {
         usuarioViewDTO.setTelefones(telefones);
         return usuarioViewDTO;
     }
-//
-//    public UsuarioViewDTO atualizar(UsuarioAtualizarDTO usuarioAtualizarDTO, Long id){
-//        Usuario usuario = buscarUsuarioPorId(id);
-//        Genero generoEncontrado = generoService.buscarGeneroPorId(usuarioAtualizarDTO.getIdGenero());
-//
-//        try {
-//            toUsuarioAtualizar(usuario, generoEncontrado, usuarioAtualizarDTO);
-//            usuarioDAO.atualizar(usuario, usuario.getId());
-//        } catch (Exception e){
-//            log.warn("Erro ao atualizar o usuário, {}", e.getMessage());
-//            throw new ErroException("Erro ao atualizar o usuário, tente mais tarde.");
-//        }
-//
-//        return toUsuarioViewDTO(usuario);
-//    }
-//
+
+    public UsuarioViewDTO atualizar(UsuarioAtualizarDTO usuarioAtualizarDTO, Long id){
+        Usuario usuario = buscarUsuarioPorId(id);
+        Genero generoEncontrado = generoService.buscarGeneroPorId(usuarioAtualizarDTO.getIdGenero());
+
+        try {
+            toUsuarioAtualizar(usuario, generoEncontrado, usuarioAtualizarDTO);
+            validarCamposNaoInformadosAtualizarUsuario(usuario);
+            usuarioDAO.atualizar(usuario, usuario.getId());
+        } catch (Exception e){
+            gerarLogWarn("Erro ao atualizar o usuário, {}", e);
+            throw new ErroException("Erro ao atualizar o usuário, tente mais tarde.");
+        }
+
+        return toUsuarioViewDTO(usuario);
+    }
+
     public void deletarPorId(Long id){
         Usuario usuario;
         try {

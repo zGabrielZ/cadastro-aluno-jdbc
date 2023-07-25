@@ -9,6 +9,7 @@ import br.com.gabrielferreira.modelo.Genero;
 import br.com.gabrielferreira.modelo.Perfil;
 import br.com.gabrielferreira.modelo.TipoTelefone;
 import br.com.gabrielferreira.modelo.dto.TelefoneDTO;
+import br.com.gabrielferreira.modelo.dto.UsuarioAtualizarDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioDTO;
 import br.com.gabrielferreira.modelo.dto.UsuarioViewDTO;
 import org.junit.jupiter.api.*;
@@ -41,7 +42,7 @@ class UsuarioServiceTest {
         GeneroService generoService = new GeneroService(DaoFactory.criarGeneroDao(TESTE));
         TipoTelefoneService tipoTelefoneService = new TipoTelefoneService(DaoFactory.criarTipoTelefoneDao(TESTE));
         TelefoneService telefoneService = new TelefoneService(DaoFactory.criarTelefoneDao(TESTE), tipoTelefoneService);
-        usuarioService = new UsuarioService(usuarioDAO, telefoneService);
+        usuarioService = new UsuarioService(usuarioDAO, telefoneService, generoService);
 
         PerfilService perfilService = new PerfilService(DaoFactory.criarPerfilDao(TESTE));
         generoMasculino = generoService.buscarGeneroPorCodigo("MASCULINO");
@@ -940,6 +941,41 @@ class UsuarioServiceTest {
     @Order(36)
     void naoDeveEncontrarUsuarioPorIdQuandoForDeletarTelefones(){
         assertThrows(ErroException.class, () -> usuarioService.deletarTelefonesPorIdUsuario(-100L));
+    }
+
+    @Test
+    @DisplayName("Deve atualizar usuário")
+    @Order(37)
+    void deveAtualizarUsuario(){
+        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                .nome("Teste 123")
+                .email("teste@email.com")
+                .senha("Teste123@")
+                .dataNascimento(LocalDate.of(1990, 12, 20))
+                .cpf("80523545010")
+                .nomeSocial(null)
+                .idGenero(null)
+                .idPerfil(perfilAluno.getId())
+                .telefones(new ArrayList<>())
+                .build();
+
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+
+        UsuarioAtualizarDTO usuarioAtualizarDTO = UsuarioAtualizarDTO.builder()
+                        .nome("Teste 123 Atualizado")
+                        .dataNascimento(LocalDate.of(2000, 12, 20))
+                        .nomeSocial("Teste 123 social atualizando")
+                        .idGenero(generoMasculino.getId())
+                        .build();
+
+        UsuarioViewDTO usuarioAtualizadoResultado = usuarioService.atualizar(usuarioAtualizarDTO, usuarioResultado.getId());
+        assertEquals(usuarioResultado.getId(), usuarioAtualizadoResultado.getId());
+        assertEquals("Teste 123 Atualizado", usuarioAtualizadoResultado.getNome());
+        assertEquals(LocalDate.of(2000, 12, 20), usuarioAtualizadoResultado.getDataNascimento());
+        assertEquals("Teste 123 social atualizando", usuarioAtualizadoResultado.getNomeSocial());
+        assertEquals(generoMasculino.getId(), usuarioAtualizadoResultado.getGenero().getId());
+
+        usuarioService.deletarPorId(usuarioResultado.getId());
     }
 
     private String gerarStringGrande(){

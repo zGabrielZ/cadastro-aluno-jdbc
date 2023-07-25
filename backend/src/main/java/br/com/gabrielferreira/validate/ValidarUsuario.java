@@ -27,6 +27,12 @@ public class ValidarUsuario {
         validarPerfil(usuario.getPerfil());
     }
 
+    public static void validarCamposNaoInformadosAtualizarUsuario(Usuario usuario){
+        validarNome(usuario);
+        validarDataNascimento(usuario.getDataNascimento());
+        validarNomeSocial(usuario);
+    }
+
     private static void validarNome(Usuario usuario){
         validarCampoVazio(usuario.getNome(), "É necessário informar o nome do usuário");
         usuario.setNome(usuario.getNome().trim());

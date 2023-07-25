@@ -77,23 +77,23 @@ public class UsuarioDAO {
         }
         return usuario;
     }
-//
-//    public void atualizar(Usuario usuario, Long id) throws SQLException {
-//        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDAYE_BY_ID_SQL.getSql())) {
-//            toInsertOrUpdate(usuario, id, preparedStatement);
-//
-//            // Executar essa atualização
-//            preparedStatement.executeUpdate();
-//
-//            // Salvar no banco de dados
-//            connection.commit();
-//        } catch (Exception e){
-//            log.warn("Erro ao atualizar usuário : {}",e.getMessage());
-//            gerarRollback();
-//            throw new SQLException(e.getMessage());
-//        }
-//    }
-//
+
+    public void atualizar(Usuario usuario, Long id) throws SQLException {
+        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDAYE_BY_ID_SQL.getSql())) {
+            toInsertOrUpdate(usuario, id, preparedStatement);
+
+            // Executar essa atualização
+            preparedStatement.executeUpdate();
+
+            // Salvar no banco de dados
+            connection.commit();
+        } catch (Exception e){
+            gerarLogWarn("Erro ao atualizar usuário : {}", e);
+            gerarRollback();
+            throw new SQLException(e.getMessage());
+        }
+    }
+
     public void deletarPorId(Long id) throws SQLException {
         try(PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID_SQL.getSql())){
 

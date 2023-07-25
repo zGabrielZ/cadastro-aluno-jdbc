@@ -1,10 +1,13 @@
 package br.com.gabrielferreira.dao;
-
 import br.com.gabrielferreira.modelo.Genero;
+import br.com.gabrielferreira.modelo.Perfil;
 import br.com.gabrielferreira.modelo.Telefone;
 import br.com.gabrielferreira.modelo.Usuario;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -13,17 +16,32 @@ import static br.com.gabrielferreira.utils.dao.UsuarioEnumDao.*;
 
 
 @Slf4j
-public class UsuarioDAO extends GenericoDAO<Usuario>{
+public class UsuarioDAO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 89885484378280620L;
+
+    @Getter
+    private final transient Connection connection;
 
     private final TelefoneDAO telefoneDAO;
 
-    protected UsuarioDAO(Connection connection, TelefoneDAO telefoneDAO) {
-        super(connection);
+    public UsuarioDAO(Connection connection, TelefoneDAO telefoneDAO){
+        this.connection = connection;
         this.telefoneDAO = telefoneDAO;
-        super.insertSQL = INSERT_SQL.getSql();
-        super.findByIdSQL = FIND_BY_ID_SQL.getSql();
-        super.deleteByIdSQL = DELETE_BY_ID_SQL.getSql();
-        super.updateSQL = UPDAYE_BY_ID_SQL.getSql();
+    }
+
+    public void inserir(Usuario usuario) throws SQLException {
+        try {
+            inserirUsuario(usuario);
+
+            // Salvar no banco de dados
+            connection.commit();
+        } catch (SQLException e){
+            log.warn("Erro ao salvar usuário : {}",e.getMessage());
+            gerarRollback();
+            throw new SQLException(e.getMessage());
+        }
     }
 
     public void inserirUsuarioComTelefones(Usuario usuario, List<Telefone> telefones) throws SQLException {
@@ -34,6 +52,9 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
                 telefone.setUsuario(usuario);
                 telefoneDAO.inserirTelefone(telefone);
             }
+
+            // Salvar no banco de dados
+            connection.commit();
         } catch (SQLException e){
             log.warn("Erro ao salvar usuário e telefone : {}",e.getMessage());
             gerarRollback();
@@ -41,19 +62,60 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
         }
     }
 
-    private void inserirUsuario(Usuario usuario) throws SQLException {
-        try(PreparedStatement preparedStatement = getConnection().prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
-            toInsertOrUpdate(usuario, null, preparedStatement);
+    public Usuario buscarPorId(Long id) throws SQLException {
+        Usuario usuario = null;
+        try(PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL.getSql())) {
+            // Setando o id na consulta
+            preparedStatement.setLong(1, id);
 
-            // Executar essa inserção
+            // Executar a consulta
             preparedStatement.execute();
 
-            // Obter o id do registro salvo
-            try(ResultSet rs = preparedStatement.getGeneratedKeys()){
-                while (rs.next()) {
-                    toIdEntityInsert(usuario, rs);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()){
+                    usuario = toFromModel(resultSet);
                 }
             }
+
+        } catch (SQLException e){
+            log.warn("Erro ao buscar usuário por id : {}", e.getMessage());
+            throw new SQLException(e.getMessage());
+        }
+        return usuario;
+    }
+//
+//    public void atualizar(Usuario usuario, Long id) throws SQLException {
+//        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDAYE_BY_ID_SQL.getSql())) {
+//            toInsertOrUpdate(usuario, id, preparedStatement);
+//
+//            // Executar essa atualização
+//            preparedStatement.executeUpdate();
+//
+//            // Salvar no banco de dados
+//            connection.commit();
+//        } catch (Exception e){
+//            log.warn("Erro ao atualizar usuário : {}",e.getMessage());
+//            gerarRollback();
+//            throw new SQLException(e.getMessage());
+//        }
+//    }
+//
+    public void deletarPorId(Long id) throws SQLException {
+        try(PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID_SQL.getSql())){
+
+            // Setando o id na consulta delete
+            preparedStatement.setLong(1, id);
+
+            // Executar a consulta do delete
+            preparedStatement.executeUpdate();
+
+            // Salvar no banco de dados
+            connection.commit();
+
+        } catch (Exception e){
+            log.warn("Erro ao deletar usuário : {}",e.getMessage());
+            gerarRollback();
+            throw new SQLException(e.getMessage());
         }
     }
 
@@ -69,8 +131,23 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
         }
     }
 
-    @Override
-    protected void toInsertOrUpdate(Usuario entidade, Long id, PreparedStatement preparedStatement) throws SQLException {
+    private void inserirUsuario(Usuario usuario) throws SQLException {
+        try(PreparedStatement preparedStatement = getConnection().prepareStatement(INSERT_SQL.getSql(), Statement.RETURN_GENERATED_KEYS)) {
+            toInsertOrUpdate(usuario, null, preparedStatement);
+
+            // Executar essa inserção
+            preparedStatement.execute();
+
+            // Obter o id do registro salvo
+            try(ResultSet rs = preparedStatement.getGeneratedKeys()){
+                while (rs.next()) {
+                    usuario.setId(rs.getLong(1));
+                }
+            }
+        }
+    }
+
+    private void toInsertOrUpdate(Usuario entidade, Long id, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, entidade.getNome());
         preparedStatement.setString(2, entidade.getEmail());
         preparedStatement.setString(3, entidade.getSenha());
@@ -91,22 +168,21 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
         }
     }
 
-    @Override
-    protected void toIdEntityInsert(Usuario entidade, ResultSet rs) throws SQLException {
-        entidade.setId(rs.getLong(1));
-    }
+    private Usuario toFromModel(ResultSet resultSet) throws SQLException {
+        LocalDate dataNascimento = toLocalDateDataNascimento(resultSet.getObject("DATA_NASCIMENTO", LocalDate.class));
+        Genero genero = toGenero(resultSet);
+        Perfil perfil = toPerfil(resultSet);
 
-    @Override
-    protected Usuario toFromModel(ResultSet resultSet) throws SQLException {
         return Usuario.builder()
                 .id(resultSet.getLong("ID"))
                 .nome(resultSet.getString("NOME"))
                 .email(resultSet.getString("EMAIL"))
-                .senha("SENHA")
-                .dataNascimento(toLocalDateDataNascimento(resultSet.getObject("DATA_NASCIMENTO", LocalDate.class)))
+                .senha(resultSet.getString("EMAIL"))
+                .dataNascimento(dataNascimento)
                 .cpf(resultSet.getString("CPF"))
                 .nomeSocial(resultSet.getString("NOME_SOCIAL"))
-                .genero(toGenero(resultSet))
+                .genero(genero)
+                .perfil(perfil)
                 .build();
     }
 
@@ -127,5 +203,27 @@ public class UsuarioDAO extends GenericoDAO<Usuario>{
                     .build();
         }
         return null;
+    }
+
+    private Perfil toPerfil(ResultSet resultSet) throws SQLException{
+        long idPerfil = resultSet.getLong("ID_PERFIL");
+        if(idPerfil != 0){
+            return Perfil.builder()
+                    .id(idPerfil)
+                    .descricao(resultSet.getString("DESCRICAO_PERFIL"))
+                    .codigo(resultSet.getString("CODIGO_PERFIL"))
+                    .build();
+        }
+        return null;
+    }
+
+    private void gerarRollback() throws SQLException {
+        try {
+            connection.rollback();
+            log.info("Rollback do usuário realizado !");
+        } catch (SQLException e){
+            log.warn("Ocorreu erro ao gerar o rollback, {}", e.getMessage());
+            throw new SQLException(e.getMessage());
+        }
     }
 }

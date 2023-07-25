@@ -3,11 +3,11 @@ package br.com.gabrielferreira.conexao.config;
 import br.com.gabrielferreira.exceptions.BancoDeDadosException;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-@Slf4j
+import static br.com.gabrielferreira.utils.LogUtils.*;
+
 public class ConfigBancoDados {
 
     @Getter
@@ -37,7 +37,7 @@ public class ConfigBancoDados {
             this.setSenha(properties.getProperty("password"));
 
         } catch (Exception e){
-            log.warn("Ocorreu um erro ao recuperar os dados do banco de dados, {}", e.getMessage());
+            gerarLogWarn("Ocorreu um erro ao recuperar os dados do banco de dados, {}", e);
             throw new BancoDeDadosException("Ocorreu um erro ao recuperar os dados do banco de dados");
         }
     }

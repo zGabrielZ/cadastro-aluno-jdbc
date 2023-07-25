@@ -6,11 +6,10 @@ import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.modelo.Genero;
 import br.com.gabrielferreira.modelo.dto.GeneroViewDTO;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import static br.com.gabrielferreira.modelo.dto.factory.GeneroDTOFactory.*;
+import static br.com.gabrielferreira.utils.LogUtils.*;
 
-@Slf4j
 @AllArgsConstructor
 public class GeneroService {
 
@@ -29,7 +28,7 @@ public class GeneroService {
             }
             return genero;
         } catch (Exception e){
-            log.warn("Erro ao buscar o gênero, {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar o gênero, {}", e);
             throw new RegistroNaoEncontradoException(e.getMessage());
         }
     }
@@ -42,7 +41,7 @@ public class GeneroService {
             }
             return genero;
         } catch (Exception e){
-            log.warn("Erro ao buscar o gênero, {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar o gênero, {}", e);
             throw new RegistroNaoEncontradoException(e.getMessage());
         }
     }

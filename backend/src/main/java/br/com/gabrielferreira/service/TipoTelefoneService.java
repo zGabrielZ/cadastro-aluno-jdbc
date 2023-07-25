@@ -5,11 +5,10 @@ import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.modelo.TipoTelefone;
 import br.com.gabrielferreira.modelo.dto.TipoTelefoneViewDTO;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import static br.com.gabrielferreira.modelo.dto.factory.TipoTelefoneDTOFactory.*;
+import static br.com.gabrielferreira.utils.LogUtils.*;
 
-@Slf4j
 @AllArgsConstructor
 public class TipoTelefoneService {
 
@@ -28,7 +27,7 @@ public class TipoTelefoneService {
             }
             return tipoTelefone;
         } catch (Exception e){
-            log.warn("Erro ao buscar o tipo de telefone, {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar o tipo de telefone, {}", e);
             throw new RegistroNaoEncontradoException(e.getMessage());
         }
     }
@@ -41,7 +40,7 @@ public class TipoTelefoneService {
             }
             return tipoTelefone;
         } catch (Exception e){
-            log.warn("Erro ao buscar o tipo de telefone, {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar o tipo de telefone, {}", e);
             throw new RegistroNaoEncontradoException(e.getMessage());
         }
     }

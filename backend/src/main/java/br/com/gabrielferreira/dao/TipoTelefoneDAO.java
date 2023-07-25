@@ -2,7 +2,6 @@ package br.com.gabrielferreira.dao;
 
 import br.com.gabrielferreira.modelo.TipoTelefone;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,8 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static br.com.gabrielferreira.utils.dao.TipoTelefoneEnumDao.*;
+import static br.com.gabrielferreira.utils.LogUtils.*;
 
-@Slf4j
 public class TipoTelefoneDAO {
 
     @Getter
@@ -37,7 +36,7 @@ public class TipoTelefoneDAO {
             }
 
         } catch (SQLException e){
-            log.warn("Erro ao buscar tipo de telefone por id : {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar tipo de telefone por id : {}", e);
             throw new SQLException(e.getMessage());
         }
         return tipoTelefone;
@@ -56,7 +55,7 @@ public class TipoTelefoneDAO {
             }
 
         } catch (SQLException e){
-            log.warn("Erro ao buscar tipo telefone por código : {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar tipo telefone por código : {}", e);
             throw new SQLException(e.getMessage());
         }
 

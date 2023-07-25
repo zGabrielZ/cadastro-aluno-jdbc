@@ -4,16 +4,15 @@ import br.com.gabrielferreira.modelo.Perfil;
 import br.com.gabrielferreira.modelo.Telefone;
 import br.com.gabrielferreira.modelo.Usuario;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
 
 import static br.com.gabrielferreira.utils.dao.UsuarioEnumDao.*;
+import static br.com.gabrielferreira.utils.LogUtils.*;
 
 
-@Slf4j
 public class UsuarioDAO {
 
     @Getter
@@ -33,7 +32,7 @@ public class UsuarioDAO {
             // Salvar no banco de dados
             connection.commit();
         } catch (SQLException e){
-            log.warn("Erro ao salvar usuário : {}",e.getMessage());
+            gerarLogWarn("Erro ao salvar usuário : {}", e);
             gerarRollback();
             throw new SQLException(e.getMessage());
         }
@@ -51,7 +50,7 @@ public class UsuarioDAO {
             // Salvar no banco de dados
             connection.commit();
         } catch (SQLException e){
-            log.warn("Erro ao salvar usuário e telefone : {}",e.getMessage());
+            gerarLogWarn("Erro ao salvar usuário e telefone : {}", e);
             gerarRollback();
             throw new SQLException(e.getMessage());
         }
@@ -73,7 +72,7 @@ public class UsuarioDAO {
             }
 
         } catch (SQLException e){
-            log.warn("Erro ao buscar usuário por id : {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar usuário por id : {}", e);
             throw new SQLException(e.getMessage());
         }
         return usuario;
@@ -108,7 +107,7 @@ public class UsuarioDAO {
             connection.commit();
 
         } catch (SQLException e){
-            log.warn("Erro ao deletar usuário : {}",e.getMessage());
+            gerarLogWarn("Erro ao deletar usuário : {}", e);
             gerarRollback();
             throw new SQLException(e.getMessage());
         }
@@ -120,7 +119,7 @@ public class UsuarioDAO {
             preparedStatement.executeUpdate();
             getConnection().commit();
         } catch (SQLException e){
-            log.warn("Erro ao deletar o telefone do usuário : {}",e.getMessage());
+            gerarLogWarn("Erro ao deletar o telefone do usuário : {}", e);
             gerarRollback();
             throw new SQLException(e.getMessage());
         }
@@ -215,9 +214,9 @@ public class UsuarioDAO {
     private void gerarRollback() throws SQLException {
         try {
             connection.rollback();
-            log.info("Rollback do usuário realizado !");
+            gerarLogInfo("Rollback do usuário realizado !");
         } catch (SQLException e){
-            log.warn("Ocorreu erro ao gerar o rollback, {}", e.getMessage());
+            gerarLogWarn("Ocorreu erro ao gerar o rollback, {}", e);
             throw new SQLException(e.getMessage());
         }
     }

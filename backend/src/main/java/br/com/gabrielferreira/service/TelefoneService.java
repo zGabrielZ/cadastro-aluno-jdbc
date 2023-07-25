@@ -6,12 +6,11 @@ import br.com.gabrielferreira.modelo.Telefone;
 import br.com.gabrielferreira.modelo.TipoTelefone;
 import br.com.gabrielferreira.modelo.dto.TelefoneViewDTO;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 import static br.com.gabrielferreira.modelo.dto.factory.TelefoneDTOFactory.*;
+import static br.com.gabrielferreira.utils.LogUtils.*;
 
-@Slf4j
 @AllArgsConstructor
 public class TelefoneService {
 
@@ -44,7 +43,7 @@ public class TelefoneService {
         try {
             return telefoneDAO.buscarTelefonesPorIdUsuario(idUsuario);
         } catch (Exception e){
-            log.warn("Erro ao buscar o telefones por id usuário, {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar o telefones por id usuário, {}", e);
             throw new ErroException(e.getMessage());
         }
     }

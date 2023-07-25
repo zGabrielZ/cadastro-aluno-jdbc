@@ -1,7 +1,6 @@
 package br.com.gabrielferreira.dao;
 import br.com.gabrielferreira.modelo.Perfil;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,8 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static br.com.gabrielferreira.utils.dao.PerfilEnumDao.*;
+import static br.com.gabrielferreira.utils.LogUtils.*;
 
-@Slf4j
 public class PerfilDAO {
 
     @Getter
@@ -36,7 +35,7 @@ public class PerfilDAO {
             }
 
         } catch (SQLException e){
-            log.warn("Erro ao buscar perfil por id : {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar perfil por id : {}", e);
             throw new SQLException(e.getMessage());
         }
         return perfil;
@@ -55,7 +54,7 @@ public class PerfilDAO {
             }
 
         } catch (SQLException e){
-            log.warn("Erro ao buscar perfil por código : {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar perfil por código : {}", e);
             throw new SQLException(e.getMessage());
         }
 

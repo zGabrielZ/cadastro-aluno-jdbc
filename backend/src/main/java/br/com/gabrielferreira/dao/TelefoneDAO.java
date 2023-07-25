@@ -1,15 +1,14 @@
 package br.com.gabrielferreira.dao;
 import br.com.gabrielferreira.modelo.*;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static br.com.gabrielferreira.utils.dao.TelefoneEnumDao.*;
+import static br.com.gabrielferreira.utils.LogUtils.*;
 
-@Slf4j
 public class TelefoneDAO {
 
     @Getter
@@ -52,7 +51,7 @@ public class TelefoneDAO {
             }
 
         } catch (SQLException e){
-            log.warn("Erro ao buscar telefones por id usuário : {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar telefones por id usuário : {}", e);
             throw new SQLException(e.getMessage());
         }
         return telefones;

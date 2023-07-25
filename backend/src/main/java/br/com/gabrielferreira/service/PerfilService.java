@@ -6,11 +6,11 @@ import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.modelo.Perfil;
 import br.com.gabrielferreira.modelo.dto.PerfilViewDTO;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import static br.com.gabrielferreira.modelo.dto.factory.PerfilDTOFactory.*;
+import static br.com.gabrielferreira.utils.LogUtils.*;
 
-@Slf4j
+
 @AllArgsConstructor
 public class PerfilService {
 
@@ -29,7 +29,7 @@ public class PerfilService {
             }
             return perfil;
         } catch (Exception e){
-            log.warn("Erro ao buscar o perfil, {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar o perfil, {}", e);
             throw new RegistroNaoEncontradoException(e.getMessage());
         }
     }
@@ -42,7 +42,7 @@ public class PerfilService {
             }
             return perfil;
         } catch (Exception e){
-            log.warn("Erro ao buscar o perfil, {}", e.getMessage());
+            gerarLogWarn("Erro ao buscar o perfil, {}", e);
             throw new RegistroNaoEncontradoException(e.getMessage());
         }
     }

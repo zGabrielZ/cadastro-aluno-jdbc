@@ -2,11 +2,11 @@ package br.com.gabrielferreira.conexao;
 
 import br.com.gabrielferreira.conexao.config.ConfigBancoDados;
 import br.com.gabrielferreira.exceptions.BancoDeDadosException;
-import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-@Slf4j
+import static br.com.gabrielferreira.utils.LogUtils.*;
+
 public class ConexaoBD {
 
     private static Connection connection = null;
@@ -23,7 +23,7 @@ public class ConexaoBD {
                 connection.setAutoCommit(false);
             }
         } catch (Exception e){
-            log.warn("Ocorreu um erro ao conectar no banco de dados, {}",e.getMessage());
+            gerarLogWarn("Ocorreu um erro ao conectar no banco de dados, {}", e);
             throw new BancoDeDadosException("Ocorreu um erro ao conectar no banco de dados");
         }
     }

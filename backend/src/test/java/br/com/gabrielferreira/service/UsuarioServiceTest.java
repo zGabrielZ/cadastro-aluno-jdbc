@@ -2,6 +2,7 @@ package br.com.gabrielferreira.service;
 
 import br.com.gabrielferreira.dao.DaoFactory;
 import br.com.gabrielferreira.dao.UsuarioDAO;
+import br.com.gabrielferreira.exceptions.ErroException;
 import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.modelo.Genero;
@@ -925,6 +926,13 @@ class UsuarioServiceTest {
 
         usuarioService.deletarTelefonesPorIdUsuario(usuarioResultado.getId());
         usuarioService.deletarPorId(usuarioResultado.getId());
+    }
+
+    @Test
+    @DisplayName("Não deve encontrar usuário por id quando for deletar")
+    @Order(35)
+    void naoDeveEncontrarUsuarioPorIdQuandoForDeletar(){
+        assertThrows(ErroException.class, () -> usuarioService.deletarPorId(-1L));
     }
 
     private String gerarStringGrande(){

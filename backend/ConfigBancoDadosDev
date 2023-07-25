@@ -1,1 +1,0 @@
-jdbc:postgresql://localhost:5000/alunojdbc?currentSchema=public;gabriel;gabriel

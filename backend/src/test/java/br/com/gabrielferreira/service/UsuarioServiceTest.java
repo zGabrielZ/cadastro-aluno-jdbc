@@ -935,6 +935,13 @@ class UsuarioServiceTest {
         assertThrows(ErroException.class, () -> usuarioService.deletarPorId(-1L));
     }
 
+    @Test
+    @DisplayName("Não deve encontrar usuário por id quando for deletarTelefones")
+    @Order(36)
+    void naoDeveEncontrarUsuarioPorIdQuandoForDeletarTelefones(){
+        assertThrows(ErroException.class, () -> usuarioService.deletarTelefonesPorIdUsuario(-100L));
+    }
+
     private String gerarStringGrande(){
         return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a ultricies elit. Etiam iaculis sem in lorem aliquet fermentum. " +
                 "In et sodales diam, eu pharetra magna. Donec vel lorem tempor, facilisis augue in, aliquam tellus. " +

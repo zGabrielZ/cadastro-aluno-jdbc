@@ -1,6 +1,7 @@
 package br.com.gabrielferreira.dao;
 
 import br.com.gabrielferreira.modelo.TipoTelefone;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -11,14 +12,11 @@ import java.sql.SQLException;
 import static br.com.gabrielferreira.utils.dao.TipoTelefoneEnumDao.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
+@AllArgsConstructor
 public class TipoTelefoneDAO {
 
     @Getter
     private final Connection connection;
-
-    public TipoTelefoneDAO(Connection connection){
-        this.connection = connection;
-    }
 
     public TipoTelefone buscarPorId(Long id) throws SQLException {
         TipoTelefone tipoTelefone = null;

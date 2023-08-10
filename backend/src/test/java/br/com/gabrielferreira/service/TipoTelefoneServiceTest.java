@@ -1,12 +1,13 @@
 package br.com.gabrielferreira.service;
 
-import br.com.gabrielferreira.dao.DaoFactory;
+import br.com.gabrielferreira.conexao.ConexaoBD;
+import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosTestImpl;
+import br.com.gabrielferreira.dao.TipoTelefoneDAO;
 import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.modelo.TipoTelefone;
 import br.com.gabrielferreira.modelo.dto.TipoTelefoneViewDTO;
 import org.junit.jupiter.api.*;
 
-import static br.com.gabrielferreira.utils.BancoDeDadosAmbienteEnum.TESTE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -16,7 +17,9 @@ class TipoTelefoneServiceTest {
 
     @BeforeEach
     public void criarInstancias(){
-        tipoTelefoneService = new TipoTelefoneService(DaoFactory.criarTipoTelefoneDao(TESTE));
+        ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
+        TipoTelefoneDAO tipoTelefoneDAO = new TipoTelefoneDAO(conexaoBD.getConnection());
+        tipoTelefoneService = new TipoTelefoneService(tipoTelefoneDAO);
     }
 
     @Test

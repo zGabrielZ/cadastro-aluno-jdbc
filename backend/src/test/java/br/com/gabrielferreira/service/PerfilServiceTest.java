@@ -1,12 +1,13 @@
 package br.com.gabrielferreira.service;
 
-import br.com.gabrielferreira.dao.DaoFactory;
+import br.com.gabrielferreira.conexao.ConexaoBD;
+import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosTestImpl;
+import br.com.gabrielferreira.dao.PerfilDAO;
 import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.modelo.Perfil;
 import br.com.gabrielferreira.modelo.dto.PerfilViewDTO;
 import org.junit.jupiter.api.*;
 
-import static br.com.gabrielferreira.utils.BancoDeDadosAmbienteEnum.TESTE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -16,7 +17,9 @@ class PerfilServiceTest {
 
     @BeforeEach
     public void criarInstancias(){
-        perfilService = new PerfilService(DaoFactory.criarPerfilDao(TESTE));
+        ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
+        PerfilDAO perfilDAO = new PerfilDAO(conexaoBD.getConnection());
+        perfilService = new PerfilService(perfilDAO);
     }
 
     @Test

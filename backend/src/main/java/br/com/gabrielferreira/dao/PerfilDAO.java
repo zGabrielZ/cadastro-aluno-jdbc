@@ -1,5 +1,6 @@
 package br.com.gabrielferreira.dao;
 import br.com.gabrielferreira.modelo.Perfil;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -10,14 +11,11 @@ import java.sql.SQLException;
 import static br.com.gabrielferreira.utils.dao.PerfilEnumDao.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
+@AllArgsConstructor
 public class PerfilDAO {
 
     @Getter
-    private final Connection connection;
-
-    public PerfilDAO(Connection connection){
-        this.connection = connection;
-    }
+    private Connection connection;
 
     public Perfil buscarPorId(Long id) throws SQLException {
         Perfil perfil = null;

@@ -3,6 +3,7 @@ import br.com.gabrielferreira.modelo.Genero;
 import br.com.gabrielferreira.modelo.Perfil;
 import br.com.gabrielferreira.modelo.Telefone;
 import br.com.gabrielferreira.modelo.Usuario;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.*;
@@ -12,18 +13,13 @@ import java.util.List;
 import static br.com.gabrielferreira.utils.dao.UsuarioEnumDao.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
-
+@AllArgsConstructor
 public class UsuarioDAO {
 
     @Getter
     private final Connection connection;
 
     private final TelefoneDAO telefoneDAO;
-
-    public UsuarioDAO(Connection connection, TelefoneDAO telefoneDAO){
-        this.connection = connection;
-        this.telefoneDAO = telefoneDAO;
-    }
 
     public void inserir(Usuario usuario) throws SQLException {
         try {

@@ -1,5 +1,6 @@
 package br.com.gabrielferreira.dao;
 import br.com.gabrielferreira.modelo.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.*;
@@ -9,14 +10,11 @@ import java.util.List;
 import static br.com.gabrielferreira.utils.dao.TelefoneEnumDao.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
+@AllArgsConstructor
 public class TelefoneDAO {
 
     @Getter
-    private final Connection connection;
-
-    public TelefoneDAO(Connection connection){
-        this.connection = connection;
-    }
+    private Connection connection;
 
     public void inserirTelefone(Telefone telefone) throws SQLException {
         try(PreparedStatement preparedStatement = getConnection().prepareStatement(INSERT_SQL.getSql(), Statement.RETURN_GENERATED_KEYS)) {

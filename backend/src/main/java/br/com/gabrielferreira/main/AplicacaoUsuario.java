@@ -1,5 +1,7 @@
 package br.com.gabrielferreira.main;
 
+import br.com.gabrielferreira.conexao.ConexaoBD;
+import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosDevImpl;
 import br.com.gabrielferreira.dao.*;
 import br.com.gabrielferreira.exceptions.ErroException;
 import br.com.gabrielferreira.modelo.Genero;
@@ -17,8 +19,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static br.com.gabrielferreira.utils.BancoDeDadosAmbienteEnum.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
 @Generated
@@ -29,19 +29,20 @@ public class AplicacaoUsuario {
     private static final DateTimeFormatter DATA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static void main(String[] args) {
-        TipoTelefoneDAO tipoTelefoneDAO = DaoFactory.criarTipoTelefoneDao(DESENVOLVIMENTO);
+        ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosDevImpl());
+        TipoTelefoneDAO tipoTelefoneDAO = new TipoTelefoneDAO(conexaoBD.getConnection());
         TipoTelefoneService tipoTelefoneService = new TipoTelefoneService(tipoTelefoneDAO);
 
-        TelefoneDAO telefoneDAO = DaoFactory.criarTelefoneDao(DESENVOLVIMENTO);
+        TelefoneDAO telefoneDAO = new TelefoneDAO(conexaoBD.getConnection());
         TelefoneService telefoneService = new TelefoneService(telefoneDAO, tipoTelefoneService);
 
-        GeneroDAO generoDAO = DaoFactory.criarGeneroDao(DESENVOLVIMENTO);
+        GeneroDAO generoDAO = new GeneroDAO(conexaoBD.getConnection());
         GeneroService generoService = new GeneroService(generoDAO);
 
-        UsuarioDAO usuarioDAO = DaoFactory.criarUsuarioDao(DESENVOLVIMENTO);
+        UsuarioDAO usuarioDAO = new UsuarioDAO(conexaoBD.getConnection(), telefoneDAO);
         UsuarioService usuarioService = new UsuarioService(usuarioDAO, telefoneService, generoService);
 
-        PerfilDAO perfilDAO = DaoFactory.criarPerfilDao(DESENVOLVIMENTO);
+        PerfilDAO perfilDAO = new PerfilDAO(conexaoBD.getConnection());
         PerfilService perfilService = new PerfilService(perfilDAO);
 
         Genero generoMasculino = generoService.buscarGeneroPorCodigo("MASCULINO");

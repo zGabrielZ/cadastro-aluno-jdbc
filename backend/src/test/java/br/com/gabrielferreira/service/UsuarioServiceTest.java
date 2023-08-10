@@ -1,7 +1,8 @@
 package br.com.gabrielferreira.service;
 
-import br.com.gabrielferreira.dao.DaoFactory;
-import br.com.gabrielferreira.dao.UsuarioDAO;
+import br.com.gabrielferreira.conexao.ConexaoBD;
+import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosTestImpl;
+import br.com.gabrielferreira.dao.*;
 import br.com.gabrielferreira.exceptions.ErroException;
 import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
@@ -20,7 +21,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.gabrielferreira.utils.BancoDeDadosAmbienteEnum.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -40,13 +40,23 @@ class UsuarioServiceTest {
 
     @BeforeEach
     public void criarInstancias(){
-        UsuarioDAO usuarioDAO = DaoFactory.criarUsuarioDao(TESTE);
-        GeneroService generoService = new GeneroService(DaoFactory.criarGeneroDao(TESTE));
-        TipoTelefoneService tipoTelefoneService = new TipoTelefoneService(DaoFactory.criarTipoTelefoneDao(TESTE));
-        telefoneService = new TelefoneService(DaoFactory.criarTelefoneDao(TESTE), tipoTelefoneService);
+        ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
+
+        TelefoneDAO telefoneDAO = new TelefoneDAO(conexaoBD.getConnection());
+        UsuarioDAO usuarioDAO = new UsuarioDAO(conexaoBD.getConnection(), telefoneDAO);
+
+        GeneroDAO generoDAO = new GeneroDAO(conexaoBD.getConnection());
+        GeneroService generoService = new GeneroService(generoDAO);
+
+        TipoTelefoneDAO tipoTelefoneDAO = new TipoTelefoneDAO(conexaoBD.getConnection());
+        TipoTelefoneService tipoTelefoneService = new TipoTelefoneService(tipoTelefoneDAO);
+
+        PerfilDAO perfilDAO = new PerfilDAO(conexaoBD.getConnection());
+        PerfilService perfilService = new PerfilService(perfilDAO);
+
+        telefoneService = new TelefoneService(telefoneDAO, tipoTelefoneService);
         usuarioService = new UsuarioService(usuarioDAO, telefoneService, generoService);
 
-        PerfilService perfilService = new PerfilService(DaoFactory.criarPerfilDao(TESTE));
         generoMasculino = generoService.buscarGeneroPorCodigo("MASCULINO");
         perfilAluno = perfilService.buscarPerfilPorCodigo("ALUNO");
 

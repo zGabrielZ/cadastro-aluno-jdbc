@@ -1,6 +1,7 @@
 package br.com.gabrielferreira.dao;
 
 import br.com.gabrielferreira.modelo.Genero;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -11,14 +12,11 @@ import java.sql.SQLException;
 import static br.com.gabrielferreira.utils.dao.GeneroEnumDao.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
+@AllArgsConstructor
 public class GeneroDAO {
 
     @Getter
-    private final Connection connection;
-
-    public GeneroDAO(Connection connection) {
-        this.connection = connection;
-    }
+    private Connection connection;
 
     public Genero buscarPorId(Long id) throws SQLException {
         Genero genero = null;

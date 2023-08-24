@@ -12,6 +12,6 @@ public class LogUtils {
     }
 
     public static void gerarLogInfo(String mensagem){
-        log.warn(mensagem);
+        log.info(mensagem);
     }
 }

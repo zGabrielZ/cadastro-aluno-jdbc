@@ -625,7 +625,7 @@ class UsuarioServiceTest {
             usuarioService.inserir(usuarioDTO);
             fail("Deveria ter lançado a exceção do tamanho número");
         } catch (Exception e){
-            assertTrue(e.getMessage().contains("É necessário informar o número do telefone do usuário até 255 caracteres"));
+            assertTrue(e.getMessage().contains("É necessário informar o número do telefone do usuário até 9 caracteres"));
         }
     }
 

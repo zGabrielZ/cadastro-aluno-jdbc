@@ -43,7 +43,7 @@ public class ValidarTelefone {
         validarCampoVazio(telefone.getNumero(), "É necessário informar o número do telefone do usuário");
         telefone.setNumero(telefone.getNumero().trim());
 
-        validarTamanho(telefone.getNumero(), 8, 9, "É necessário informar o número do telefone do usuário até 255 caracteres");
+        validarTamanho(telefone.getNumero(), 8, 9, "É necessário informar o número do telefone do usuário até 9 caracteres");
         validarTelefoneValido(telefone.getNumero());
     }
 

@@ -1,25 +1,25 @@
 package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.dao.UsuarioDAO;
-import br.com.gabrielferreira.exceptions.*;
-import br.com.gabrielferreira.modelo.Genero;
-import br.com.gabrielferreira.modelo.Telefone;
-import br.com.gabrielferreira.modelo.Usuario;
-import br.com.gabrielferreira.modelo.dto.TelefoneViewDTO;
-import br.com.gabrielferreira.modelo.dto.UsuarioAtualizarDTO;
-import br.com.gabrielferreira.modelo.dto.UsuarioDTO;
-import br.com.gabrielferreira.modelo.dto.UsuarioViewDTO;
+import br.com.gabrielferreira.exception.*;
+import br.com.gabrielferreira.model.Genero;
+import br.com.gabrielferreira.model.Telefone;
+import br.com.gabrielferreira.model.Usuario;
+import br.com.gabrielferreira.model.dto.TelefoneViewDTO;
+import br.com.gabrielferreira.model.dto.UsuarioAtualizarDTO;
+import br.com.gabrielferreira.model.dto.UsuarioDTO;
+import br.com.gabrielferreira.model.dto.UsuarioViewDTO;
 import lombok.AllArgsConstructor;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.gabrielferreira.modelo.factory.UsuarioFactory.*;
-import static br.com.gabrielferreira.modelo.dto.factory.UsuarioDTOFactory.*;
-import static br.com.gabrielferreira.validate.ValidarTelefone.*;
-import static br.com.gabrielferreira.validate.ValidarUsuario.*;
-import static br.com.gabrielferreira.utils.StringCriptografar.*;
-import static br.com.gabrielferreira.modelo.factory.TelefoneFactory.*;
-import static br.com.gabrielferreira.modelo.dto.factory.TelefoneDTOFactory.*;
+import static br.com.gabrielferreira.model.factory.UsuarioFactory.*;
+import static br.com.gabrielferreira.model.dto.factory.UsuarioDTOFactory.*;
+import static br.com.gabrielferreira.utils.ValidarTelefoneUtils.*;
+import static br.com.gabrielferreira.utils.ValidarUsuarioUtils.*;
+import static br.com.gabrielferreira.utils.StringCriptografarUtils.*;
+import static br.com.gabrielferreira.model.factory.TelefoneFactory.*;
+import static br.com.gabrielferreira.model.dto.factory.TelefoneDTOFactory.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
 @AllArgsConstructor

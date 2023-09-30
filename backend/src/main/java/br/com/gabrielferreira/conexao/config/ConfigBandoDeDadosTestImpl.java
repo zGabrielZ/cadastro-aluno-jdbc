@@ -1,7 +1,7 @@
 package br.com.gabrielferreira.conexao.config;
 
 import br.com.gabrielferreira.conexao.config.modelo.InformacaoBancoDeDados;
-import br.com.gabrielferreira.exceptions.BancoDeDadosException;
+import br.com.gabrielferreira.exception.BancoDeDadosException;
 
 import java.io.FileInputStream;
 import java.util.Properties;

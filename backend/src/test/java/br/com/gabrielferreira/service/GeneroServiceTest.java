@@ -3,9 +3,9 @@ package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.conexao.ConexaoBD;
 import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.dao.GeneroDAO;
-import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
-import br.com.gabrielferreira.modelo.Genero;
-import br.com.gabrielferreira.modelo.dto.GeneroViewDTO;
+import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
+import br.com.gabrielferreira.model.Genero;
+import br.com.gabrielferreira.model.dto.GeneroViewDTO;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

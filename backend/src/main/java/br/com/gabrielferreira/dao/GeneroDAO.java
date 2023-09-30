@@ -1,6 +1,6 @@
 package br.com.gabrielferreira.dao;
 
-import br.com.gabrielferreira.modelo.Genero;
+import br.com.gabrielferreira.model.Genero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

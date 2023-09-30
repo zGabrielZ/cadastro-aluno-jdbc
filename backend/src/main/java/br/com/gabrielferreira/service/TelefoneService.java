@@ -1,14 +1,14 @@
 package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.dao.TelefoneDAO;
-import br.com.gabrielferreira.exceptions.ErroException;
-import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
-import br.com.gabrielferreira.modelo.Telefone;
-import br.com.gabrielferreira.modelo.TipoTelefone;
-import br.com.gabrielferreira.modelo.dto.TelefoneViewDTO;
+import br.com.gabrielferreira.exception.ErroException;
+import br.com.gabrielferreira.exception.RegraDeNegocioException;
+import br.com.gabrielferreira.model.Telefone;
+import br.com.gabrielferreira.model.TipoTelefone;
+import br.com.gabrielferreira.model.dto.TelefoneViewDTO;
 import lombok.AllArgsConstructor;
 import java.util.List;
 
-import static br.com.gabrielferreira.modelo.dto.factory.TelefoneDTOFactory.*;
+import static br.com.gabrielferreira.model.dto.factory.TelefoneDTOFactory.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
 @AllArgsConstructor

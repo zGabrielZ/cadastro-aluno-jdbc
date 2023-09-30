@@ -1,13 +1,13 @@
 package br.com.gabrielferreira.service;
 
 import br.com.gabrielferreira.dao.GeneroDAO;
-import br.com.gabrielferreira.exceptions.ErroException;
-import br.com.gabrielferreira.exceptions.RegistroNaoEncontradoException;
-import br.com.gabrielferreira.modelo.Genero;
-import br.com.gabrielferreira.modelo.dto.GeneroViewDTO;
+import br.com.gabrielferreira.exception.ErroException;
+import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
+import br.com.gabrielferreira.model.Genero;
+import br.com.gabrielferreira.model.dto.GeneroViewDTO;
 import lombok.AllArgsConstructor;
 
-import static br.com.gabrielferreira.modelo.dto.factory.GeneroDTOFactory.*;
+import static br.com.gabrielferreira.model.dto.factory.GeneroDTOFactory.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
 @AllArgsConstructor

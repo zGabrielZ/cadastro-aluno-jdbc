@@ -2,7 +2,7 @@ package br.com.gabrielferreira.conexao;
 
 import br.com.gabrielferreira.conexao.config.ConfigBancoDeDados;
 import br.com.gabrielferreira.conexao.config.modelo.InformacaoBancoDeDados;
-import br.com.gabrielferreira.exceptions.BancoDeDadosException;
+import br.com.gabrielferreira.exception.BancoDeDadosException;
 import lombok.Getter;
 
 import java.sql.Connection;

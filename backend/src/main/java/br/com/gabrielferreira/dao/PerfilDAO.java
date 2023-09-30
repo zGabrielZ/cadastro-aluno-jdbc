@@ -1,5 +1,5 @@
 package br.com.gabrielferreira.dao;
-import br.com.gabrielferreira.modelo.Perfil;
+import br.com.gabrielferreira.model.Perfil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

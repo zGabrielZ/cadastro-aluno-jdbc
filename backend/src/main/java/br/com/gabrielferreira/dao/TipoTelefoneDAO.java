@@ -1,6 +1,6 @@
 package br.com.gabrielferreira.dao;
 
-import br.com.gabrielferreira.modelo.TipoTelefone;
+import br.com.gabrielferreira.model.TipoTelefone;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

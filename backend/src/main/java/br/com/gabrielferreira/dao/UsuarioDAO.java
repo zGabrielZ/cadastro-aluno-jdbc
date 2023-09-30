@@ -1,8 +1,8 @@
 package br.com.gabrielferreira.dao;
-import br.com.gabrielferreira.modelo.Genero;
-import br.com.gabrielferreira.modelo.Perfil;
-import br.com.gabrielferreira.modelo.Telefone;
-import br.com.gabrielferreira.modelo.Usuario;
+import br.com.gabrielferreira.model.Genero;
+import br.com.gabrielferreira.model.Perfil;
+import br.com.gabrielferreira.model.Telefone;
+import br.com.gabrielferreira.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

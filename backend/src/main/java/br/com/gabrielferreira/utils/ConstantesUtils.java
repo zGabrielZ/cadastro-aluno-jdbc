@@ -1,6 +1,6 @@
 package br.com.gabrielferreira.utils;
 
-import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
+import br.com.gabrielferreira.exception.RegraDeNegocioException;
 
 public class ConstantesUtils {
 

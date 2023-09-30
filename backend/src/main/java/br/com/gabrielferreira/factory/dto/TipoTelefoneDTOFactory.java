@@ -1,6 +1,6 @@
 package br.com.gabrielferreira.factory.dto;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.dto.TipoTelefoneViewDTO;
+import br.com.gabrielferreira.dto.view.TipoTelefoneViewDTO;
 
 public class TipoTelefoneDTOFactory {
 

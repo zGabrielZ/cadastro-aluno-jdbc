@@ -4,7 +4,7 @@ import br.com.gabrielferreira.dao.GeneroDAO;
 import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.Genero;
-import br.com.gabrielferreira.dto.GeneroViewDTO;
+import br.com.gabrielferreira.dto.view.GeneroViewDTO;
 import lombok.AllArgsConstructor;
 
 import static br.com.gabrielferreira.factory.dto.GeneroDTOFactory.*;

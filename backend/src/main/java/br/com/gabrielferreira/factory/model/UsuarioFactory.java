@@ -2,8 +2,8 @@ package br.com.gabrielferreira.factory.model;
 
 import br.com.gabrielferreira.model.Genero;
 import br.com.gabrielferreira.model.Usuario;
-import br.com.gabrielferreira.dto.UsuarioAtualizarDTO;
-import br.com.gabrielferreira.dto.UsuarioDTO;
+import br.com.gabrielferreira.dto.update.UsuarioUpdateDTO;
+import br.com.gabrielferreira.dto.create.UsuarioCreateDTO;
 
 import static br.com.gabrielferreira.factory.model.GeneroFactory.*;
 import static br.com.gabrielferreira.factory.model.PerfilFactory.*;
@@ -13,24 +13,24 @@ public class UsuarioFactory {
 
     private UsuarioFactory(){}
 
-    public static Usuario toUsuario(UsuarioDTO usuarioDTO){
+    public static Usuario toUsuario(UsuarioCreateDTO usuarioCreateDTO){
         return Usuario.builder()
-                .nome(usuarioDTO.getNome())
-                .email(usuarioDTO.getEmail())
-                .senha(usuarioDTO.getSenha())
-                .dataNascimento(usuarioDTO.getDataNascimento())
-                .cpf(usuarioDTO.getCpf())
-                .nomeSocial(usuarioDTO.getNomeSocial())
-                .genero(toGenero(usuarioDTO.getIdGenero()))
-                .perfil(toPerfil(usuarioDTO.getIdPerfil()))
+                .nome(usuarioCreateDTO.getNome())
+                .email(usuarioCreateDTO.getEmail())
+                .senha(usuarioCreateDTO.getSenha())
+                .dataNascimento(usuarioCreateDTO.getDataNascimento())
+                .cpf(usuarioCreateDTO.getCpf())
+                .nomeSocial(usuarioCreateDTO.getNomeSocial())
+                .genero(toGenero(usuarioCreateDTO.getIdGenero()))
+                .perfil(toPerfil(usuarioCreateDTO.getIdPerfil()))
                 .build();
     }
 
-    public static void toUsuarioAtualizar(Usuario usuario, Genero generoEncontrado, UsuarioAtualizarDTO usuarioAtualizarDTO){
+    public static void toUsuarioAtualizar(Usuario usuario, Genero generoEncontrado, UsuarioUpdateDTO usuarioUpdateDTO){
         if(usuario != null){
-            usuario.setNome(usuarioAtualizarDTO.getNome());
-            usuario.setDataNascimento(usuarioAtualizarDTO.getDataNascimento());
-            usuario.setNomeSocial(usuarioAtualizarDTO.getNomeSocial());
+            usuario.setNome(usuarioUpdateDTO.getNome());
+            usuario.setDataNascimento(usuarioUpdateDTO.getDataNascimento());
+            usuario.setNomeSocial(usuarioUpdateDTO.getNomeSocial());
             usuario.setGenero(generoEncontrado);
         }
     }

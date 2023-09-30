@@ -1,4 +1,4 @@
-package br.com.gabrielferreira.dto;
+package br.com.gabrielferreira.dto.view;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,16 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsuarioDTO implements Serializable {
+public class UsuarioViewDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 6730307453958143191L;
 
+    private Long id;
+
     private String nome;
 
     private String email;
-
-    private String senha;
 
     private LocalDate dataNascimento;
 
@@ -32,9 +32,9 @@ public class UsuarioDTO implements Serializable {
 
     private String nomeSocial;
 
-    private Long idGenero;
+    private GeneroViewDTO genero;
 
-    private Long idPerfil;
+    private PerfilViewDTO perfil;
 
-    private List<TelefoneDTO> telefones = new ArrayList<>();
+    private List<TelefoneViewDTO> telefones = new ArrayList<>();
 }

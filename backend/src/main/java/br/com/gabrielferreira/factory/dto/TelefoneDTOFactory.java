@@ -1,7 +1,7 @@
 package br.com.gabrielferreira.factory.dto;
 
 import br.com.gabrielferreira.model.Telefone;
-import br.com.gabrielferreira.dto.TelefoneViewDTO;
+import br.com.gabrielferreira.dto.view.TelefoneViewDTO;
 
 import java.util.List;
 

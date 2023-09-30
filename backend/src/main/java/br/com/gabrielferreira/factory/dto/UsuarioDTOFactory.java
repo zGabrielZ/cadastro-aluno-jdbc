@@ -1,7 +1,7 @@
 package br.com.gabrielferreira.factory.dto;
 
 import br.com.gabrielferreira.model.Usuario;
-import br.com.gabrielferreira.dto.UsuarioViewDTO;
+import br.com.gabrielferreira.dto.view.UsuarioViewDTO;
 
 import static br.com.gabrielferreira.factory.dto.GeneroDTOFactory.*;
 import static br.com.gabrielferreira.factory.dto.PerfilDTOFactory.*;

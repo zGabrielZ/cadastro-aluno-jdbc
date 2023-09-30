@@ -7,9 +7,9 @@ import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.model.Genero;
 import br.com.gabrielferreira.model.Perfil;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.dto.TelefoneDTO;
-import br.com.gabrielferreira.dto.UsuarioDTO;
-import br.com.gabrielferreira.dto.UsuarioViewDTO;
+import br.com.gabrielferreira.dto.create.TelefoneCreateDTO;
+import br.com.gabrielferreira.dto.create.UsuarioCreateDTO;
+import br.com.gabrielferreira.dto.view.UsuarioViewDTO;
 import br.com.gabrielferreira.service.*;
 import lombok.Generated;
 
@@ -88,7 +88,7 @@ public class AplicacaoUsuario {
     }
 
     private static UsuarioViewDTO gerarPrimeiroUsuario(Genero generoMasculino, Perfil perfilAdmin, UsuarioService usuarioService){
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+        UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("José da Silva")
                 .email("jose@email.com")
                 .senha("Jos123@")
@@ -100,13 +100,13 @@ public class AplicacaoUsuario {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
         imprimirDadosUsuarioEncontrado(usuarioResultado.getId(), usuarioService);
         return usuarioResultado;
     }
 
     private static UsuarioViewDTO gerarSegundoUsuario(Genero generoFeminino, Perfil perfilAluno, UsuarioService usuarioService){
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+        UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Mariana da Silva")
                 .email("mari@email.com")
                 .senha("Mari123@")
@@ -118,13 +118,13 @@ public class AplicacaoUsuario {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
         imprimirDadosUsuarioEncontrado(usuarioResultado.getId(), usuarioService);
         return usuarioResultado;
     }
 
     private static UsuarioViewDTO gerarTerceiroUsuario(Perfil perfilProfessor, UsuarioService usuarioService){
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+        UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Marcos da Silva")
                 .email("marcos@email.com")
                 .senha("Marcos3455@")
@@ -136,13 +136,13 @@ public class AplicacaoUsuario {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
         imprimirDadosUsuarioEncontrado(usuarioResultado.getId(), usuarioService);
         return usuarioResultado;
     }
 
     private static UsuarioViewDTO gerarQuartoUsuario(Perfil perfilProfessor, UsuarioService usuarioService){
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+        UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Leandro da Silva")
                 .email("leandro@email.com")
                 .senha("Lasddf4566@#")
@@ -154,18 +154,18 @@ public class AplicacaoUsuario {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
         imprimirDadosUsuarioEncontrado(usuarioResultado.getId(), usuarioService);
         return usuarioResultado;
     }
 
     private static UsuarioViewDTO gerarQuintoUsuario(Perfil perfilAluno, Genero generoFeminino, TipoTelefone tipoTelefoneResidencial, TipoTelefone tipoTelefoneCelular, UsuarioService usuarioService){
-        List<TelefoneDTO> telefoneDTOS = new ArrayList<>();
-        telefoneDTOS.add(TelefoneDTO.builder().ddd("11").numero("34421812").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
-        telefoneDTOS.add(TelefoneDTO.builder().ddd("11").numero("31242526").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
-        telefoneDTOS.add(TelefoneDTO.builder().ddd("11").numero("987685822").idTipoTelefone(tipoTelefoneCelular.getId()).build());
+        List<TelefoneCreateDTO> telefoneCreateDTOS = new ArrayList<>();
+        telefoneCreateDTOS.add(TelefoneCreateDTO.builder().ddd("11").numero("34421812").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+        telefoneCreateDTOS.add(TelefoneCreateDTO.builder().ddd("11").numero("31242526").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
+        telefoneCreateDTOS.add(TelefoneCreateDTO.builder().ddd("11").numero("987685822").idTipoTelefone(tipoTelefoneCelular.getId()).build());
 
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+        UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Joana da Silva")
                 .email("joana@email.com")
                 .senha("Joanahndfni123@#@")
@@ -174,10 +174,10 @@ public class AplicacaoUsuario {
                 .nomeSocial(null)
                 .idGenero(generoFeminino.getId())
                 .idPerfil(perfilAluno.getId())
-                .telefones(telefoneDTOS)
+                .telefones(telefoneCreateDTOS)
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioDTO);
+        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
         imprimirDadosUsuarioEncontrado(usuarioResultado.getId(), usuarioService);
         return usuarioResultado;
     }

@@ -4,10 +4,10 @@ import br.com.gabrielferreira.exception.*;
 import br.com.gabrielferreira.model.Genero;
 import br.com.gabrielferreira.model.Telefone;
 import br.com.gabrielferreira.model.Usuario;
-import br.com.gabrielferreira.dto.TelefoneViewDTO;
-import br.com.gabrielferreira.dto.UsuarioAtualizarDTO;
-import br.com.gabrielferreira.dto.UsuarioDTO;
-import br.com.gabrielferreira.dto.UsuarioViewDTO;
+import br.com.gabrielferreira.dto.view.TelefoneViewDTO;
+import br.com.gabrielferreira.dto.update.UsuarioUpdateDTO;
+import br.com.gabrielferreira.dto.create.UsuarioCreateDTO;
+import br.com.gabrielferreira.dto.view.UsuarioViewDTO;
 import lombok.AllArgsConstructor;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,17 +31,17 @@ public class UsuarioService {
 
     private GeneroService generoService;
 
-    public UsuarioViewDTO inserir(UsuarioDTO usuarioDTO){
+    public UsuarioViewDTO inserir(UsuarioCreateDTO usuarioCreateDTO){
         List<TelefoneViewDTO> telefoneViewDTOList = new ArrayList<>();
 
-        Usuario usuario = toUsuario(usuarioDTO);
+        Usuario usuario = toUsuario(usuarioCreateDTO);
         validarCamposNaoInformadosCadastroUsuario(usuario);
         usuario.setSenha(criptarCampo(usuario.getSenha()));
 
-        if(usuarioDTO.getTelefones().isEmpty()){
+        if(usuarioCreateDTO.getTelefones().isEmpty()){
             inserirUsuario(usuario);
         } else {
-            List<Telefone> telefones = toTelefones(usuarioDTO.getTelefones());
+            List<Telefone> telefones = toTelefones(usuarioCreateDTO.getTelefones());
 
             List<String> numeroDDD = new ArrayList<>();
             for (Telefone telefone : telefones) {
@@ -70,12 +70,12 @@ public class UsuarioService {
         return usuarioViewDTO;
     }
 
-    public UsuarioViewDTO atualizar(UsuarioAtualizarDTO usuarioAtualizarDTO, Long id){
+    public UsuarioViewDTO atualizar(UsuarioUpdateDTO usuarioUpdateDTO, Long id){
         Usuario usuario = buscarUsuarioPorId(id);
-        Genero generoEncontrado = generoService.buscarGeneroPorId(usuarioAtualizarDTO.getIdGenero());
+        Genero generoEncontrado = generoService.buscarGeneroPorId(usuarioUpdateDTO.getIdGenero());
 
         try {
-            toUsuarioAtualizar(usuario, generoEncontrado, usuarioAtualizarDTO);
+            toUsuarioAtualizar(usuario, generoEncontrado, usuarioUpdateDTO);
             validarCamposNaoInformadosAtualizarUsuario(usuario);
             usuarioDAO.atualizar(usuario, usuario.getId());
         } catch (Exception e){

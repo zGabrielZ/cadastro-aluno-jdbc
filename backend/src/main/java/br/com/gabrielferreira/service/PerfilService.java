@@ -4,7 +4,7 @@ import br.com.gabrielferreira.dao.PerfilDAO;
 import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.Perfil;
-import br.com.gabrielferreira.dto.PerfilViewDTO;
+import br.com.gabrielferreira.dto.view.PerfilViewDTO;
 import lombok.AllArgsConstructor;
 
 import static br.com.gabrielferreira.factory.dto.PerfilDTOFactory.*;

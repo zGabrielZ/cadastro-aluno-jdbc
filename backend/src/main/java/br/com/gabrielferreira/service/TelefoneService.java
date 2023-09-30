@@ -4,7 +4,7 @@ import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.model.Telefone;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.dto.TelefoneViewDTO;
+import br.com.gabrielferreira.dto.view.TelefoneViewDTO;
 import lombok.AllArgsConstructor;
 import java.util.List;
 

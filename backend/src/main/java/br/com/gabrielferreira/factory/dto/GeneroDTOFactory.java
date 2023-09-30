@@ -1,7 +1,7 @@
 package br.com.gabrielferreira.factory.dto;
 
 import br.com.gabrielferreira.model.Genero;
-import br.com.gabrielferreira.dto.GeneroViewDTO;
+import br.com.gabrielferreira.dto.view.GeneroViewDTO;
 
 public class GeneroDTOFactory {
 

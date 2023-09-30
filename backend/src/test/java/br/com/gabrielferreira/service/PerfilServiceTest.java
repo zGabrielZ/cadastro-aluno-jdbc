@@ -5,7 +5,7 @@ import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.dao.PerfilDAO;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.Perfil;
-import br.com.gabrielferreira.model.dto.PerfilViewDTO;
+import br.com.gabrielferreira.dto.PerfilViewDTO;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

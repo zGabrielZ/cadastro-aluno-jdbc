@@ -4,11 +4,11 @@ import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.model.Telefone;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.model.dto.TelefoneViewDTO;
+import br.com.gabrielferreira.dto.TelefoneViewDTO;
 import lombok.AllArgsConstructor;
 import java.util.List;
 
-import static br.com.gabrielferreira.model.dto.factory.TelefoneDTOFactory.*;
+import static br.com.gabrielferreira.factory.dto.TelefoneDTOFactory.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
 @AllArgsConstructor

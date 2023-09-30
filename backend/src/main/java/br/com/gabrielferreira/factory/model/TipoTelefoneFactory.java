@@ -1,4 +1,4 @@
-package br.com.gabrielferreira.model.factory;
+package br.com.gabrielferreira.factory.model;
 import br.com.gabrielferreira.model.TipoTelefone;
 
 public class TipoTelefoneFactory {

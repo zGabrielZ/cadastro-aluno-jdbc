@@ -1,10 +1,10 @@
-package br.com.gabrielferreira.model.factory;
+package br.com.gabrielferreira.factory.model;
 import br.com.gabrielferreira.model.Telefone;
-import br.com.gabrielferreira.model.dto.TelefoneDTO;
+import br.com.gabrielferreira.dto.TelefoneDTO;
 
 import java.util.List;
 
-import static br.com.gabrielferreira.model.factory.TipoTelefoneFactory.*;
+import static br.com.gabrielferreira.factory.model.TipoTelefoneFactory.*;
 
 public class TelefoneFactory {
 

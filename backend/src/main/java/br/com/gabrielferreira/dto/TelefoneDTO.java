@@ -1,4 +1,4 @@
-package br.com.gabrielferreira.model.dto;
+package br.com.gabrielferreira.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,14 +12,14 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TipoTelefoneViewDTO implements Serializable {
+public class TelefoneDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 6730307453958143191L;
 
-    private Long id;
+    private String ddd;
 
-    private String descricao;
+    private String numero;
 
-    private String codigo;
+    private Long idTipoTelefone;
 }

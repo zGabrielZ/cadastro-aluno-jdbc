@@ -1,12 +1,12 @@
-package br.com.gabrielferreira.model.factory;
+package br.com.gabrielferreira.factory.model;
 
 import br.com.gabrielferreira.model.Genero;
 import br.com.gabrielferreira.model.Usuario;
-import br.com.gabrielferreira.model.dto.UsuarioAtualizarDTO;
-import br.com.gabrielferreira.model.dto.UsuarioDTO;
+import br.com.gabrielferreira.dto.UsuarioAtualizarDTO;
+import br.com.gabrielferreira.dto.UsuarioDTO;
 
-import static br.com.gabrielferreira.model.factory.GeneroFactory.*;
-import static br.com.gabrielferreira.model.factory.PerfilFactory.*;
+import static br.com.gabrielferreira.factory.model.GeneroFactory.*;
+import static br.com.gabrielferreira.factory.model.PerfilFactory.*;
 
 
 public class UsuarioFactory {

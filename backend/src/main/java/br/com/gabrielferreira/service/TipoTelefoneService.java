@@ -3,10 +3,10 @@ import br.com.gabrielferreira.dao.TipoTelefoneDAO;
 import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.model.dto.TipoTelefoneViewDTO;
+import br.com.gabrielferreira.dto.TipoTelefoneViewDTO;
 import lombok.AllArgsConstructor;
 
-import static br.com.gabrielferreira.model.dto.factory.TipoTelefoneDTOFactory.*;
+import static br.com.gabrielferreira.factory.dto.TipoTelefoneDTOFactory.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
 @AllArgsConstructor

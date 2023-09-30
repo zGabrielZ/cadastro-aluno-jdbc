@@ -1,4 +1,4 @@
-package br.com.gabrielferreira.model.dto;
+package br.com.gabrielferreira.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,22 +7,19 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsuarioAtualizarDTO implements Serializable {
+public class GeneroViewDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 6730307453958143191L;
 
-    private String nome;
+    private Long id;
 
-    private LocalDate dataNascimento;
+    private String descricao;
 
-    private String nomeSocial;
-
-    private Long idGenero;
+    private String codigo;
 }

@@ -1,7 +1,7 @@
-package br.com.gabrielferreira.model.dto.factory;
+package br.com.gabrielferreira.factory.dto;
 
 import br.com.gabrielferreira.model.Perfil;
-import br.com.gabrielferreira.model.dto.PerfilViewDTO;
+import br.com.gabrielferreira.dto.PerfilViewDTO;
 
 public class PerfilDTOFactory {
 

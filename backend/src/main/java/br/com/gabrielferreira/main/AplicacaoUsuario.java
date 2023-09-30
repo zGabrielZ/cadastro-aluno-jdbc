@@ -7,9 +7,9 @@ import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.model.Genero;
 import br.com.gabrielferreira.model.Perfil;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.model.dto.TelefoneDTO;
-import br.com.gabrielferreira.model.dto.UsuarioDTO;
-import br.com.gabrielferreira.model.dto.UsuarioViewDTO;
+import br.com.gabrielferreira.dto.TelefoneDTO;
+import br.com.gabrielferreira.dto.UsuarioDTO;
+import br.com.gabrielferreira.dto.UsuarioViewDTO;
 import br.com.gabrielferreira.service.*;
 import lombok.Generated;
 

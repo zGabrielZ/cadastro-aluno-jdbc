@@ -1,10 +1,10 @@
-package br.com.gabrielferreira.model.dto.factory;
+package br.com.gabrielferreira.factory.dto;
 
 import br.com.gabrielferreira.model.Usuario;
-import br.com.gabrielferreira.model.dto.UsuarioViewDTO;
+import br.com.gabrielferreira.dto.UsuarioViewDTO;
 
-import static br.com.gabrielferreira.model.dto.factory.GeneroDTOFactory.*;
-import static br.com.gabrielferreira.model.dto.factory.PerfilDTOFactory.*;
+import static br.com.gabrielferreira.factory.dto.GeneroDTOFactory.*;
+import static br.com.gabrielferreira.factory.dto.PerfilDTOFactory.*;
 
 public class UsuarioDTOFactory {
 

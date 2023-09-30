@@ -1,4 +1,4 @@
-package br.com.gabrielferreira.model.dto;
+package br.com.gabrielferreira.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -5,7 +5,7 @@ import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.dao.TipoTelefoneDAO;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.model.dto.TipoTelefoneViewDTO;
+import br.com.gabrielferreira.dto.TipoTelefoneViewDTO;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -12,11 +12,11 @@ import java.sql.SQLException;
 import static br.com.gabrielferreira.utils.dao.TipoTelefoneEnumDao.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
+@Getter
 @AllArgsConstructor
 public class TipoTelefoneDAO {
 
-    @Getter
-    private final Connection connection;
+    private Connection connection;
 
     public TipoTelefone buscarPorId(Long id) throws SQLException {
         TipoTelefone tipoTelefone = null;

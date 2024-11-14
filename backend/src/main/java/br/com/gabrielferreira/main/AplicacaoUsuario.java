@@ -3,13 +3,13 @@ package br.com.gabrielferreira.main;
 import br.com.gabrielferreira.conexao.ConexaoBD;
 import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosDevImpl;
 import br.com.gabrielferreira.dao.*;
+import br.com.gabrielferreira.dto.UsuarioDTO;
+import br.com.gabrielferreira.dto.create.TelefoneCreateDTO;
+import br.com.gabrielferreira.dto.create.UsuarioCreateDTO;
 import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.model.Genero;
 import br.com.gabrielferreira.model.Perfil;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.dto.create.TelefoneCreateDTO;
-import br.com.gabrielferreira.dto.create.UsuarioCreateDTO;
-import br.com.gabrielferreira.dto.view.UsuarioViewDTO;
 import br.com.gabrielferreira.service.*;
 import lombok.Generated;
 
@@ -19,7 +19,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import static br.com.gabrielferreira.utils.LogUtils.*;
+
+import static br.com.gabrielferreira.utils.LogUtils.gerarLogWarn;
 
 @Generated
 public class AplicacaoUsuario {
@@ -57,23 +58,23 @@ public class AplicacaoUsuario {
 
         gerarDelecaoBase(usuarioService, telefoneService);
 
-        UsuarioViewDTO usuario1 = gerarPrimeiroUsuario(generoMasculino, perfilAdmin, usuarioService);
+        UsuarioDTO usuario1 = gerarPrimeiroUsuario(generoMasculino, perfilAdmin, usuarioService);
 
         System.out.println(MSG);
 
-        UsuarioViewDTO usuario2 = gerarSegundoUsuario(generoFeminino, perfilAluno, usuarioService);
+        UsuarioDTO usuario2 = gerarSegundoUsuario(generoFeminino, perfilAluno, usuarioService);
 
         System.out.println(MSG);
 
-        UsuarioViewDTO usuario3 = gerarTerceiroUsuario(perfilProfessor, usuarioService);
+        UsuarioDTO usuario3 = gerarTerceiroUsuario(perfilProfessor, usuarioService);
 
         System.out.println(MSG);
 
-        UsuarioViewDTO usuario4 = gerarQuartoUsuario(perfilProfessor, usuarioService);
+        UsuarioDTO usuario4 = gerarQuartoUsuario(perfilProfessor, usuarioService);
 
         System.out.println(MSG);
 
-        UsuarioViewDTO usuario5 = gerarQuintoUsuario(perfilAluno, generoFeminino, tipoTelefoneResidencial, tipoTelefoneCelular, usuarioService);
+        UsuarioDTO usuario5 = gerarQuintoUsuario(perfilAluno, generoFeminino, tipoTelefoneResidencial, tipoTelefoneCelular, usuarioService);
 
         System.out.println(MSG);
 
@@ -87,7 +88,7 @@ public class AplicacaoUsuario {
         System.out.println("Base limpa com sucesso");
     }
 
-    private static UsuarioViewDTO gerarPrimeiroUsuario(Genero generoMasculino, Perfil perfilAdmin, UsuarioService usuarioService){
+    private static UsuarioDTO gerarPrimeiroUsuario(Genero generoMasculino, Perfil perfilAdmin, UsuarioService usuarioService){
         UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("José da Silva")
                 .email("jose@email.com")
@@ -100,12 +101,12 @@ public class AplicacaoUsuario {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
-        imprimirDadosUsuarioEncontrado(usuarioResultado.getId(), usuarioService);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        imprimirDadosUsuarioEncontrado(usuarioResultado.id(), usuarioService);
         return usuarioResultado;
     }
 
-    private static UsuarioViewDTO gerarSegundoUsuario(Genero generoFeminino, Perfil perfilAluno, UsuarioService usuarioService){
+    private static UsuarioDTO gerarSegundoUsuario(Genero generoFeminino, Perfil perfilAluno, UsuarioService usuarioService){
         UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Mariana da Silva")
                 .email("mari@email.com")
@@ -118,12 +119,12 @@ public class AplicacaoUsuario {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
-        imprimirDadosUsuarioEncontrado(usuarioResultado.getId(), usuarioService);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        imprimirDadosUsuarioEncontrado(usuarioResultado.id(), usuarioService);
         return usuarioResultado;
     }
 
-    private static UsuarioViewDTO gerarTerceiroUsuario(Perfil perfilProfessor, UsuarioService usuarioService){
+    private static UsuarioDTO gerarTerceiroUsuario(Perfil perfilProfessor, UsuarioService usuarioService){
         UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Marcos da Silva")
                 .email("marcos@email.com")
@@ -136,12 +137,12 @@ public class AplicacaoUsuario {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
-        imprimirDadosUsuarioEncontrado(usuarioResultado.getId(), usuarioService);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        imprimirDadosUsuarioEncontrado(usuarioResultado.id(), usuarioService);
         return usuarioResultado;
     }
 
-    private static UsuarioViewDTO gerarQuartoUsuario(Perfil perfilProfessor, UsuarioService usuarioService){
+    private static UsuarioDTO gerarQuartoUsuario(Perfil perfilProfessor, UsuarioService usuarioService){
         UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Leandro da Silva")
                 .email("leandro@email.com")
@@ -154,12 +155,12 @@ public class AplicacaoUsuario {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
-        imprimirDadosUsuarioEncontrado(usuarioResultado.getId(), usuarioService);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        imprimirDadosUsuarioEncontrado(usuarioResultado.id(), usuarioService);
         return usuarioResultado;
     }
 
-    private static UsuarioViewDTO gerarQuintoUsuario(Perfil perfilAluno, Genero generoFeminino, TipoTelefone tipoTelefoneResidencial, TipoTelefone tipoTelefoneCelular, UsuarioService usuarioService){
+    private static UsuarioDTO gerarQuintoUsuario(Perfil perfilAluno, Genero generoFeminino, TipoTelefone tipoTelefoneResidencial, TipoTelefone tipoTelefoneCelular, UsuarioService usuarioService){
         List<TelefoneCreateDTO> telefoneCreateDTOS = new ArrayList<>();
         telefoneCreateDTOS.add(TelefoneCreateDTO.builder().ddd("11").numero("34421812").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
         telefoneCreateDTOS.add(TelefoneCreateDTO.builder().ddd("11").numero("31242526").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
@@ -177,40 +178,40 @@ public class AplicacaoUsuario {
                 .telefones(telefoneCreateDTOS)
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
-        imprimirDadosUsuarioEncontrado(usuarioResultado.getId(), usuarioService);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        imprimirDadosUsuarioEncontrado(usuarioResultado.id(), usuarioService);
         return usuarioResultado;
     }
 
     private static void imprimirDadosUsuarioEncontrado(Long idUsuario, UsuarioService usuarioService){
-        UsuarioViewDTO usuarioEncontrado = usuarioService.buscarPorId(idUsuario);
-        System.out.println("Dados do usuário do ID " + usuarioEncontrado.getId());
+        UsuarioDTO usuarioEncontrado = usuarioService.buscarPorId(idUsuario);
+        System.out.println("Dados do usuário do ID " + usuarioEncontrado.id());
 
-        String cpfFormatado = toCpfFormatado(usuarioEncontrado.getCpf());
-        String nomeSocial = usuarioEncontrado.getNomeSocial() != null ? usuarioEncontrado.getNomeSocial() : "";
-        String genero = usuarioEncontrado.getGenero() != null ? usuarioEncontrado.getGenero().getDescricao() : "";
+        String cpfFormatado = toCpfFormatado(usuarioEncontrado.cpf());
+        String nomeSocial = usuarioEncontrado.nomeSocial() != null ? usuarioEncontrado.nomeSocial() : "";
+        String genero = usuarioEncontrado.genero() != null ? usuarioEncontrado.genero().descricao() : "";
 
-        System.out.println("Nome : " + usuarioEncontrado.getNome());
-        System.out.println("E-mail : " + usuarioEncontrado.getEmail());
-        System.out.println("Data de Nascimento : " + DATA_FORMATTER.format(usuarioEncontrado.getDataNascimento()));
+        System.out.println("Nome : " + usuarioEncontrado.nome());
+        System.out.println("E-mail : " + usuarioEncontrado.email());
+        System.out.println("Data de Nascimento : " + DATA_FORMATTER.format(usuarioEncontrado.dataNascimento()));
         System.out.println("CPF : " + cpfFormatado);
         System.out.println("Nome social : " + nomeSocial);
         System.out.println("Gênero : " + genero);
-        System.out.println("Perfil : " + usuarioEncontrado.getPerfil().getDescricao());
+        System.out.println("Perfil : " + usuarioEncontrado.perfil().descricao());
 
         System.out.println("Telefones : ");
-        if(!usuarioEncontrado.getTelefones().isEmpty()){
-            usuarioEncontrado.getTelefones().forEach(telefone -> System.out.println(telefone.getDdd() + " - " + telefone.getNumero() + " - " + telefone.getTipoTelefone().getDescricao()));
+        if(!usuarioEncontrado.telefones().isEmpty()){
+            usuarioEncontrado.telefones().forEach(telefone -> System.out.println(telefone.ddd() + " - " + telefone.numero() + " - " + telefone.tipoTelefone().descricao()));
         } else {
-            System.out.println("Nenhum telefone cadastrado para este usuário " + usuarioEncontrado.getNome());
+            System.out.println("Nenhum telefone cadastrado para este usuário " + usuarioEncontrado.nome());
         }
     }
 
-    private static void gerarDelecaoUsuarios(List<UsuarioViewDTO> usuarios, UsuarioService usuarioService){
+    private static void gerarDelecaoUsuarios(List<UsuarioDTO> usuarios, UsuarioService usuarioService){
         System.out.println("Deletando os usuários");
         usuarios.forEach(usuario -> {
-            usuarioService.deletarTelefonesPorIdUsuario(usuario.getId());
-            usuarioService.deletarPorId(usuario.getId());
+            usuarioService.deletarTelefonesPorIdUsuario(usuario.id());
+            usuarioService.deletarPorId(usuario.id());
         });
     }
 

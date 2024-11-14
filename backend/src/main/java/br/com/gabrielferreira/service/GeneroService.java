@@ -1,23 +1,23 @@
 package br.com.gabrielferreira.service;
 
 import br.com.gabrielferreira.dao.GeneroDAO;
+import br.com.gabrielferreira.dto.GeneroDTO;
 import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.Genero;
-import br.com.gabrielferreira.dto.view.GeneroViewDTO;
 import lombok.AllArgsConstructor;
 
-import static br.com.gabrielferreira.factory.dto.GeneroDTOFactory.*;
-import static br.com.gabrielferreira.utils.LogUtils.*;
+import static br.com.gabrielferreira.dto.factory.GeneroDTOFactory.toGeneroDTO;
+import static br.com.gabrielferreira.utils.LogUtils.gerarLogWarn;
 
 @AllArgsConstructor
 public class GeneroService {
 
     private GeneroDAO generoDAO;
 
-    public GeneroViewDTO buscarPorId(Long id){
+    public GeneroDTO buscarPorId(Long id){
         Genero genero = buscarGeneroPorId(id);
-        return toGeneroViewDTO(genero);
+        return toGeneroDTO(genero);
     }
 
     public Genero buscarGeneroPorCodigo(String codigo){

@@ -1,15 +1,17 @@
 package br.com.gabrielferreira.service;
+
 import br.com.gabrielferreira.dao.TelefoneDAO;
+import br.com.gabrielferreira.dto.TelefoneDTO;
 import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.model.Telefone;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.dto.view.TelefoneViewDTO;
 import lombok.AllArgsConstructor;
+
 import java.util.List;
 
-import static br.com.gabrielferreira.factory.dto.TelefoneDTOFactory.*;
-import static br.com.gabrielferreira.utils.LogUtils.*;
+import static br.com.gabrielferreira.dto.factory.TelefoneDTOFactory.toTelefonesDTO;
+import static br.com.gabrielferreira.utils.LogUtils.gerarLogWarn;
 
 @AllArgsConstructor
 public class TelefoneService {
@@ -21,9 +23,9 @@ public class TelefoneService {
 
     private TipoTelefoneService tipoTelefoneService;
 
-    public List<TelefoneViewDTO> buscarTelefonesPorIdUsuario(Long idUsuario){
+    public List<TelefoneDTO> buscarTelefonesPorIdUsuario(Long idUsuario){
         List<Telefone> telefones = buscarTelefones(idUsuario);
-        return toTelefonesViewDTO(telefones);
+        return toTelefonesDTO(telefones);
     }
 
     public void deletarTudo(){

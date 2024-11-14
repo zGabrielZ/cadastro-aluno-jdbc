@@ -1,14 +1,14 @@
-package br.com.gabrielferreira.factory.dto;
+package br.com.gabrielferreira.dto.factory;
+import br.com.gabrielferreira.dto.TipoTelefoneDTO;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.dto.view.TipoTelefoneViewDTO;
 
 public class TipoTelefoneDTOFactory {
 
     private TipoTelefoneDTOFactory(){}
 
-    public static TipoTelefoneViewDTO toTipoTelefoneViewDTO(TipoTelefone tipoTelefone){
+    public static TipoTelefoneDTO toTipoTelefoneDTO(TipoTelefone tipoTelefone){
         if(tipoTelefone != null){
-            return TipoTelefoneViewDTO.builder()
+            return TipoTelefoneDTO.builder()
                     .id(tipoTelefone.getId())
                     .descricao(tipoTelefone.getDescricao())
                     .codigo(tipoTelefone.getCodigo())

@@ -1,14 +1,14 @@
 package br.com.gabrielferreira.service;
 
 import br.com.gabrielferreira.dao.PerfilDAO;
+import br.com.gabrielferreira.dto.PerfilDTO;
 import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.Perfil;
-import br.com.gabrielferreira.dto.view.PerfilViewDTO;
 import lombok.AllArgsConstructor;
 
-import static br.com.gabrielferreira.factory.dto.PerfilDTOFactory.*;
-import static br.com.gabrielferreira.utils.LogUtils.*;
+import static br.com.gabrielferreira.dto.factory.PerfilDTOFactory.toPerfilDTO;
+import static br.com.gabrielferreira.utils.LogUtils.gerarLogWarn;
 
 
 @AllArgsConstructor
@@ -16,9 +16,9 @@ public class PerfilService {
 
     private PerfilDAO perfilDAO;
 
-    public PerfilViewDTO buscarPorId(Long id){
+    public PerfilDTO buscarPorId(Long id){
         Perfil perfil = buscarPerfilPorId(id);
-        return toPerfilViewDTO(perfil);
+        return toPerfilDTO(perfil);
     }
 
     public Perfil buscarPerfilPorCodigo(String codigo){

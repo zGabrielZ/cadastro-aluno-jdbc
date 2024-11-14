@@ -9,13 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static br.com.gabrielferreira.utils.dao.GeneroEnumDao.*;
-import static br.com.gabrielferreira.utils.LogUtils.*;
+import static br.com.gabrielferreira.utils.LogUtils.gerarLogWarn;
+import static br.com.gabrielferreira.utils.dao.GeneroEnumDao.FIND_BY_CODIGO_SQL;
+import static br.com.gabrielferreira.utils.dao.GeneroEnumDao.FIND_BY_ID_SQL;
 
+@Getter
 @AllArgsConstructor
 public class GeneroDAO {
 
-    @Getter
     private Connection connection;
 
     public Genero buscarPorId(Long id) throws SQLException {

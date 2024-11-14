@@ -3,9 +3,9 @@ package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.conexao.ConexaoBD;
 import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.dao.TipoTelefoneDAO;
+import br.com.gabrielferreira.dto.TipoTelefoneDTO;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.dto.view.TipoTelefoneViewDTO;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,11 +44,11 @@ class TipoTelefoneServiceTest {
     @DisplayName("Deve encontrar tipo telefone por id")
     @Order(3)
     void deveEncontrarTipoTelefonePorId(){
-        TipoTelefoneViewDTO tipoTelefoneViewDTO = tipoTelefoneService.buscarPorId(1L);
+        TipoTelefoneDTO tipoTelefoneViewDTO = tipoTelefoneService.buscarPorId(1L);
 
-        assertNotNull(tipoTelefoneViewDTO.getId());
-        assertEquals("Residencial", tipoTelefoneViewDTO.getDescricao());
-        assertEquals("RESIDENCIAL", tipoTelefoneViewDTO.getCodigo());
+        assertNotNull(tipoTelefoneViewDTO.id());
+        assertEquals("Residencial", tipoTelefoneViewDTO.descricao());
+        assertEquals("RESIDENCIAL", tipoTelefoneViewDTO.codigo());
     }
 
     @Test

@@ -10,10 +10,10 @@ import java.util.List;
 import static br.com.gabrielferreira.utils.dao.TelefoneEnumDao.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
+@Getter
 @AllArgsConstructor
 public class TelefoneDAO {
 
-    @Getter
     private Connection connection;
 
     public void inserirTelefone(Telefone telefone) throws SQLException {

@@ -3,9 +3,9 @@ package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.conexao.ConexaoBD;
 import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.dao.PerfilDAO;
+import br.com.gabrielferreira.dto.PerfilDTO;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.Perfil;
-import br.com.gabrielferreira.dto.view.PerfilViewDTO;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,11 +26,11 @@ class PerfilServiceTest {
     @DisplayName("Deve encontrar perfil por id")
     @Order(1)
     void deveEncontrarPerfilPorId(){
-        PerfilViewDTO perfilEncontrado = perfilService.buscarPorId(1L);
+        PerfilDTO perfilEncontrado = perfilService.buscarPorId(1L);
 
-        assertNotNull(perfilEncontrado.getId());
-        assertEquals("Administrador", perfilEncontrado.getDescricao());
-        assertEquals("ADMINISTRADOR", perfilEncontrado.getCodigo());
+        assertNotNull(perfilEncontrado.id());
+        assertEquals("Administrador", perfilEncontrado.descricao());
+        assertEquals("ADMINISTRADOR", perfilEncontrado.codigo());
     }
 
     @Test

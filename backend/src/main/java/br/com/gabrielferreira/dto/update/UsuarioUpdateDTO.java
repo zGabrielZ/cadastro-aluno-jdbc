@@ -1,28 +1,15 @@
 package br.com.gabrielferreira.dto.update;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class UsuarioUpdateDTO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 6730307453958143191L;
-
-    private String nome;
-
-    private LocalDate dataNascimento;
-
-    private String nomeSocial;
-
-    private Long idGenero;
+public record UsuarioUpdateDTO(
+        String nome,
+        LocalDate dataNascimento,
+        String nomeSocial,
+        Long idGenero
+) implements Serializable {
 }

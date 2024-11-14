@@ -3,9 +3,9 @@ package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.conexao.ConexaoBD;
 import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.dao.GeneroDAO;
+import br.com.gabrielferreira.dto.GeneroDTO;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.Genero;
-import br.com.gabrielferreira.dto.view.GeneroViewDTO;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,11 +26,11 @@ class GeneroServiceTest {
     @DisplayName("Deve encontrar gênero por id")
     @Order(1)
     void deveEncontrarGeneroPorId(){
-        GeneroViewDTO generoEncontrado = generoService.buscarPorId(1L);
+        GeneroDTO generoEncontrado = generoService.buscarPorId(1L);
 
-        assertNotNull(generoEncontrado.getId());
-        assertEquals("Masculino", generoEncontrado.getDescricao());
-        assertEquals("MASCULINO", generoEncontrado.getCodigo());
+        assertNotNull(generoEncontrado.id());
+        assertEquals("Masculino", generoEncontrado.descricao());
+        assertEquals("MASCULINO", generoEncontrado.codigo());
     }
 
     @Test

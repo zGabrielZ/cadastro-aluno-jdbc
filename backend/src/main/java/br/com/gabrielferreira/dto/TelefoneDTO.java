@@ -1,13 +1,14 @@
-package br.com.gabrielferreira.dto.create;
+package br.com.gabrielferreira.dto;
 
 import lombok.Builder;
 
 import java.io.Serializable;
 
 @Builder
-public record TelefoneCreateDTO(
+public record TelefoneDTO(
+        Long id,
         String ddd,
         String numero,
-        Long idTipoTelefone
+        TipoTelefoneDTO tipoTelefone
 ) implements Serializable {
 }

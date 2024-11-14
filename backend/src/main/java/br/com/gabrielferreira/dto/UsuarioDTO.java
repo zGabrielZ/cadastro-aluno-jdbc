@@ -1,4 +1,4 @@
-package br.com.gabrielferreira.dto.create;
+package br.com.gabrielferreira.dto;
 
 import lombok.Builder;
 
@@ -8,20 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-public record UsuarioCreateDTO(
+public record UsuarioDTO(
+        Long id,
         String nome,
         String email,
-        String senha,
         LocalDate dataNascimento,
         String cpf,
         String nomeSocial,
-        Long idGenero,
-        Long idPerfil,
-        List<TelefoneCreateDTO> telefones
+        GeneroDTO genero,
+        PerfilDTO perfil,
+        List<TelefoneDTO> telefones
 ) implements Serializable {
 
     @Override
-    public List<TelefoneCreateDTO> telefones() {
+    public List<TelefoneDTO> telefones() {
         return telefones == null ? new ArrayList<>() : telefones;
     }
 }

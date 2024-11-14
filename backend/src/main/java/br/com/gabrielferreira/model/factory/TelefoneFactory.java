@@ -1,10 +1,11 @@
-package br.com.gabrielferreira.factory.model;
-import br.com.gabrielferreira.model.Telefone;
+package br.com.gabrielferreira.model.factory;
+
 import br.com.gabrielferreira.dto.create.TelefoneCreateDTO;
+import br.com.gabrielferreira.model.Telefone;
 
 import java.util.List;
 
-import static br.com.gabrielferreira.factory.model.TipoTelefoneFactory.*;
+import static br.com.gabrielferreira.model.factory.TipoTelefoneFactory.toTipoTelefone;
 
 public class TelefoneFactory {
 
@@ -16,9 +17,9 @@ public class TelefoneFactory {
 
     public static Telefone toTelefone(TelefoneCreateDTO telefoneCreateDTO){
         return Telefone.builder()
-                .ddd(telefoneCreateDTO.getDdd())
-                .numero(telefoneCreateDTO.getNumero())
-                .tipoTelefone(toTipoTelefone(telefoneCreateDTO.getIdTipoTelefone()))
+                .ddd(telefoneCreateDTO.ddd())
+                .numero(telefoneCreateDTO.numero())
+                .tipoTelefone(toTipoTelefone(telefoneCreateDTO.idTipoTelefone()))
                 .build();
     }
 }

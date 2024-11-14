@@ -13,13 +13,13 @@ import java.util.List;
 import static br.com.gabrielferreira.utils.dao.UsuarioEnumDao.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
+@Getter
 @AllArgsConstructor
 public class UsuarioDAO {
 
-    @Getter
-    private final Connection connection;
+    private Connection connection;
 
-    private final TelefoneDAO telefoneDAO;
+    private TelefoneDAO telefoneDAO;
 
     public void inserir(Usuario usuario) throws SQLException {
         try {

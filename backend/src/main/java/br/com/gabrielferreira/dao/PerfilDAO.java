@@ -11,10 +11,10 @@ import java.sql.SQLException;
 import static br.com.gabrielferreira.utils.dao.PerfilEnumDao.*;
 import static br.com.gabrielferreira.utils.LogUtils.*;
 
+@Getter
 @AllArgsConstructor
 public class PerfilDAO {
 
-    @Getter
     private Connection connection;
 
     public Perfil buscarPorId(Long id) throws SQLException {

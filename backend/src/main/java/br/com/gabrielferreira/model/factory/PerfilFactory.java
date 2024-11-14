@@ -1,4 +1,4 @@
-package br.com.gabrielferreira.factory.model;
+package br.com.gabrielferreira.model.factory;
 import br.com.gabrielferreira.model.Perfil;
 
 public class PerfilFactory {

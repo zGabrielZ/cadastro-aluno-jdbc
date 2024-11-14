@@ -8,7 +8,6 @@ public class LogUtils {
 
     public static void gerarLogWarn(String mensagem, Exception exception){
         log.warn(mensagem, exception.getMessage());
-        exception.printStackTrace();
     }
 
     public static void gerarLogInfo(String mensagem){

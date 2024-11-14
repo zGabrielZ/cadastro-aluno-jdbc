@@ -3,16 +3,16 @@ package br.com.gabrielferreira.service;
 import br.com.gabrielferreira.conexao.ConexaoBD;
 import br.com.gabrielferreira.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.dao.*;
+import br.com.gabrielferreira.dto.UsuarioDTO;
+import br.com.gabrielferreira.dto.create.TelefoneCreateDTO;
+import br.com.gabrielferreira.dto.create.UsuarioCreateDTO;
+import br.com.gabrielferreira.dto.update.UsuarioUpdateDTO;
 import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.model.Genero;
 import br.com.gabrielferreira.model.Perfil;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.dto.create.TelefoneCreateDTO;
-import br.com.gabrielferreira.dto.update.UsuarioUpdateDTO;
-import br.com.gabrielferreira.dto.create.UsuarioCreateDTO;
-import br.com.gabrielferreira.dto.view.UsuarioViewDTO;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -62,6 +62,15 @@ class UsuarioServiceTest {
 
         tipoTelefoneResidencial = tipoTelefoneService.buscarTipoTelefonePorCodigo("RESIDENCIAL");
         tipoTelefoneCelular = tipoTelefoneService.buscarTipoTelefonePorCodigo("CELULAR");
+    }
+
+    @AfterAll
+    static void finalizarInstancias() throws Exception{
+        ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
+        TelefoneDAO telefoneDAO = new TelefoneDAO(conexaoBD.getConnection());
+
+        UsuarioDAO usuarioDAO = new UsuarioDAO(conexaoBD.getConnection(), telefoneDAO);
+        usuarioDAO.deleteTudo();
     }
 
     @Test
@@ -407,7 +416,7 @@ class UsuarioServiceTest {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
 
         UsuarioCreateDTO usuarioCreateDTO2 = UsuarioCreateDTO.builder()
                 .nome("Teste 12334")
@@ -428,7 +437,7 @@ class UsuarioServiceTest {
             assertTrue(e.getMessage().contains("Este e-mail informado já foi cadastrado"));
         }
 
-        usuarioService.deletarPorId(usuarioResultado.getId());
+        usuarioService.deletarPorId(usuarioResultado.id());
     }
 
     @Test
@@ -447,7 +456,7 @@ class UsuarioServiceTest {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
 
         UsuarioCreateDTO usuarioCreateDTO2 = UsuarioCreateDTO.builder()
                 .nome("Teste 12334")
@@ -468,7 +477,7 @@ class UsuarioServiceTest {
             assertTrue(e.getMessage().contains("Este CPF informado já foi cadastrado"));
         }
 
-        usuarioService.deletarPorId(usuarioResultado.getId());
+        usuarioService.deletarPorId(usuarioResultado.id());
     }
 
     @Test
@@ -809,19 +818,19 @@ class UsuarioServiceTest {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
 
-        assertNotNull(usuarioResultado.getId());
-        assertEquals(usuarioCreateDTO.getNome(), usuarioResultado.getNome());
-        assertEquals(usuarioCreateDTO.getEmail(), usuarioResultado.getEmail());
-        assertEquals(usuarioCreateDTO.getDataNascimento(), usuarioResultado.getDataNascimento());
-        assertEquals(usuarioCreateDTO.getCpf(), usuarioResultado.getCpf());
-        assertNull(usuarioResultado.getNomeSocial());
-        assertNull(usuarioResultado.getGenero());
-        assertEquals(usuarioCreateDTO.getIdPerfil(), usuarioResultado.getPerfil().getId());
-        assertTrue(usuarioCreateDTO.getTelefones().isEmpty());
+        assertNotNull(usuarioResultado.id());
+        assertEquals(usuarioCreateDTO.nome(), usuarioResultado.nome());
+        assertEquals(usuarioCreateDTO.email(), usuarioResultado.email());
+        assertEquals(usuarioCreateDTO.dataNascimento(), usuarioResultado.dataNascimento());
+        assertEquals(usuarioCreateDTO.cpf(), usuarioResultado.cpf());
+        assertNull(usuarioResultado.nomeSocial());
+        assertNull(usuarioResultado.genero());
+        assertEquals(usuarioCreateDTO.idPerfil(), usuarioResultado.perfil().id());
+        assertTrue(usuarioCreateDTO.telefones().isEmpty());
 
-        usuarioService.deletarPorId(usuarioResultado.getId());
+        usuarioService.deletarPorId(usuarioResultado.id());
     }
 
     @Test
@@ -840,20 +849,20 @@ class UsuarioServiceTest {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
-        UsuarioViewDTO usuarioEncontrado = usuarioService.buscarPorId(usuarioResultado.getId());
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        UsuarioDTO usuarioEncontrado = usuarioService.buscarPorId(usuarioResultado.id());
 
-        assertEquals(usuarioResultado.getId(), usuarioEncontrado.getId());
-        assertEquals(usuarioResultado.getNome(), usuarioEncontrado.getNome());
-        assertEquals(usuarioResultado.getEmail(), usuarioEncontrado.getEmail());
-        assertEquals(usuarioResultado.getDataNascimento(), usuarioEncontrado.getDataNascimento());
-        assertEquals(usuarioResultado.getCpf(), usuarioEncontrado.getCpf());
-        assertNull(usuarioResultado.getNomeSocial());
-        assertNull(usuarioResultado.getGenero());
-        assertEquals(usuarioResultado.getPerfil().getId(), usuarioEncontrado.getPerfil().getId());
-        assertTrue(usuarioEncontrado.getTelefones().isEmpty());
+        assertEquals(usuarioResultado.id(), usuarioEncontrado.id());
+        assertEquals(usuarioResultado.nome(), usuarioEncontrado.nome());
+        assertEquals(usuarioResultado.email(), usuarioEncontrado.email());
+        assertEquals(usuarioResultado.dataNascimento(), usuarioEncontrado.dataNascimento());
+        assertEquals(usuarioResultado.cpf(), usuarioEncontrado.cpf());
+        assertNull(usuarioResultado.nomeSocial());
+        assertNull(usuarioResultado.genero());
+        assertEquals(usuarioResultado.perfil().id(), usuarioEncontrado.perfil().id());
+        assertTrue(usuarioEncontrado.telefones().isEmpty());
 
-        usuarioService.deletarPorId(usuarioResultado.getId());
+        usuarioService.deletarPorId(usuarioResultado.id());
     }
 
     @Test
@@ -882,22 +891,22 @@ class UsuarioServiceTest {
                 .telefones(telefones)
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
 
-        assertNotNull(usuarioResultado.getId());
-        assertEquals(usuarioCreateDTO.getNome(), usuarioResultado.getNome());
-        assertEquals(usuarioCreateDTO.getEmail(), usuarioResultado.getEmail());
-        assertEquals(usuarioCreateDTO.getDataNascimento(), usuarioResultado.getDataNascimento());
-        assertEquals(usuarioCreateDTO.getCpf(), usuarioResultado.getCpf());
-        assertEquals(usuarioCreateDTO.getNomeSocial(), usuarioResultado.getNomeSocial());
-        assertEquals(usuarioCreateDTO.getIdGenero(), usuarioResultado.getGenero().getId());
-        assertEquals(usuarioCreateDTO.getIdPerfil(), usuarioResultado.getPerfil().getId());
-        assertEquals(usuarioCreateDTO.getTelefones().get(0).getDdd(), usuarioCreateDTO.getTelefones().get(0).getDdd());
-        assertEquals(usuarioCreateDTO.getTelefones().get(0).getNumero(), usuarioCreateDTO.getTelefones().get(0).getNumero());
-        assertEquals(usuarioCreateDTO.getTelefones().get(0).getIdTipoTelefone(), usuarioCreateDTO.getTelefones().get(0).getIdTipoTelefone());
+        assertNotNull(usuarioResultado.id());
+        assertEquals(usuarioCreateDTO.nome(), usuarioResultado.nome());
+        assertEquals(usuarioCreateDTO.email(), usuarioResultado.email());
+        assertEquals(usuarioCreateDTO.dataNascimento(), usuarioResultado.dataNascimento());
+        assertEquals(usuarioCreateDTO.cpf(), usuarioResultado.cpf());
+        assertEquals(usuarioCreateDTO.nomeSocial(), usuarioResultado.nomeSocial());
+        assertEquals(usuarioCreateDTO.idGenero(), usuarioResultado.genero().id());
+        assertEquals(usuarioCreateDTO.idPerfil(), usuarioResultado.perfil().id());
+        assertEquals(usuarioCreateDTO.telefones().get(0).ddd(), usuarioResultado.telefones().get(0).ddd());
+        assertEquals(usuarioCreateDTO.telefones().get(0).numero(), usuarioResultado.telefones().get(0).numero());
+        assertEquals(usuarioCreateDTO.telefones().get(0).idTipoTelefone(), usuarioResultado.telefones().get(0).tipoTelefone().id());
 
-        usuarioService.deletarTelefonesPorIdUsuario(usuarioResultado.getId());
-        usuarioService.deletarPorId(usuarioResultado.getId());
+        usuarioService.deletarTelefonesPorIdUsuario(usuarioResultado.id());
+        usuarioService.deletarPorId(usuarioResultado.id());
     }
 
     @Test
@@ -919,26 +928,26 @@ class UsuarioServiceTest {
                 .telefones(telefones)
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
-        UsuarioViewDTO usuarioEncontrado = usuarioService.buscarPorId(usuarioResultado.getId());
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        UsuarioDTO usuarioEncontrado = usuarioService.buscarPorId(usuarioResultado.id());
 
-        assertEquals(usuarioResultado.getId(), usuarioEncontrado.getId());
-        assertEquals(usuarioResultado.getNome(), usuarioEncontrado.getNome());
-        assertEquals(usuarioResultado.getEmail(), usuarioEncontrado.getEmail());
-        assertEquals(usuarioResultado.getDataNascimento(), usuarioEncontrado.getDataNascimento());
-        assertEquals(usuarioResultado.getCpf(), usuarioEncontrado.getCpf());
-        assertEquals(usuarioResultado.getNomeSocial(), usuarioEncontrado.getNomeSocial());
-        assertEquals(usuarioResultado.getGenero().getId(), usuarioEncontrado.getGenero().getId());
-        assertEquals(usuarioResultado.getPerfil().getId(), usuarioEncontrado.getPerfil().getId());
-        assertNotNull(usuarioEncontrado.getTelefones().get(0).getId());
-        assertEquals(usuarioResultado.getTelefones().get(0).getDdd(), usuarioEncontrado.getTelefones().get(0).getDdd());
-        assertEquals(usuarioResultado.getTelefones().get(0).getNumero(), usuarioEncontrado.getTelefones().get(0).getNumero());
-        assertEquals(usuarioResultado.getTelefones().get(0).getTipoTelefone().getId(), usuarioEncontrado.getTelefones().get(0).getTipoTelefone().getId());
-        assertEquals("RESIDENCIAL", usuarioEncontrado.getTelefones().get(0).getTipoTelefone().getCodigo());
-        assertEquals("Residencial", usuarioEncontrado.getTelefones().get(0).getTipoTelefone().getDescricao());
+        assertEquals(usuarioResultado.id(), usuarioEncontrado.id());
+        assertEquals(usuarioResultado.nome(), usuarioEncontrado.nome());
+        assertEquals(usuarioResultado.email(), usuarioEncontrado.email());
+        assertEquals(usuarioResultado.dataNascimento(), usuarioEncontrado.dataNascimento());
+        assertEquals(usuarioResultado.cpf(), usuarioEncontrado.cpf());
+        assertEquals(usuarioResultado.nomeSocial(), usuarioEncontrado.nomeSocial());
+        assertEquals(usuarioResultado.genero().id(), usuarioEncontrado.genero().id());
+        assertEquals(usuarioResultado.perfil().id(), usuarioEncontrado.perfil().id());
+        assertNotNull(usuarioEncontrado.telefones().get(0).id());
+        assertEquals(usuarioResultado.telefones().get(0).ddd(), usuarioEncontrado.telefones().get(0).ddd());
+        assertEquals(usuarioResultado.telefones().get(0).numero(), usuarioEncontrado.telefones().get(0).numero());
+        assertEquals(usuarioResultado.telefones().get(0).tipoTelefone().id(), usuarioEncontrado.telefones().get(0).tipoTelefone().id());
+        assertEquals("RESIDENCIAL", usuarioEncontrado.telefones().get(0).tipoTelefone().codigo());
+        assertEquals("Residencial", usuarioEncontrado.telefones().get(0).tipoTelefone().descricao());
 
-        usuarioService.deletarTelefonesPorIdUsuario(usuarioResultado.getId());
-        usuarioService.deletarPorId(usuarioResultado.getId());
+        usuarioService.deletarTelefonesPorIdUsuario(usuarioResultado.id());
+        usuarioService.deletarPorId(usuarioResultado.id());
     }
 
     @Test
@@ -971,7 +980,7 @@ class UsuarioServiceTest {
                 .telefones(new ArrayList<>())
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
 
         UsuarioUpdateDTO usuarioUpdateDTO = UsuarioUpdateDTO.builder()
                         .nome("Teste 123 Atualizado")
@@ -980,14 +989,14 @@ class UsuarioServiceTest {
                         .idGenero(generoMasculino.getId())
                         .build();
 
-        UsuarioViewDTO usuarioAtualizadoResultado = usuarioService.atualizar(usuarioUpdateDTO, usuarioResultado.getId());
-        assertEquals(usuarioResultado.getId(), usuarioAtualizadoResultado.getId());
-        assertEquals("Teste 123 Atualizado", usuarioAtualizadoResultado.getNome());
-        assertEquals(LocalDate.of(2000, 12, 20), usuarioAtualizadoResultado.getDataNascimento());
-        assertEquals("Teste 123 social atualizando", usuarioAtualizadoResultado.getNomeSocial());
-        assertEquals(generoMasculino.getId(), usuarioAtualizadoResultado.getGenero().getId());
+        UsuarioDTO usuarioAtualizadoResultado = usuarioService.atualizar(usuarioUpdateDTO, usuarioResultado.id());
+        assertEquals(usuarioResultado.id(), usuarioAtualizadoResultado.id());
+        assertEquals("Teste 123 Atualizado", usuarioAtualizadoResultado.nome());
+        assertEquals(LocalDate.of(2000, 12, 20), usuarioAtualizadoResultado.dataNascimento());
+        assertEquals("Teste 123 social atualizando", usuarioAtualizadoResultado.nomeSocial());
+        assertEquals(generoMasculino.getId(), usuarioAtualizadoResultado.genero().id());
 
-        usuarioService.deletarPorId(usuarioResultado.getId());
+        usuarioService.deletarPorId(usuarioResultado.id());
     }
 
     @Test
@@ -1009,12 +1018,12 @@ class UsuarioServiceTest {
                 .telefones(telefones)
                 .build();
 
-        UsuarioViewDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
+        UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
         telefoneService.deletarTudo();
         usuarioService.deletarTudo();
 
         try {
-            usuarioService.buscarPorId(usuarioResultado.getId());
+            usuarioService.buscarPorId(usuarioResultado.id());
         } catch (Exception e){
             assertTrue(e.getMessage().contains("Usuário não encontrado"));
         }

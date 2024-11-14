@@ -1,26 +1,34 @@
 package br.com.gabrielferreira.service;
+
 import br.com.gabrielferreira.dao.UsuarioDAO;
-import br.com.gabrielferreira.exception.*;
+import br.com.gabrielferreira.dto.TelefoneDTO;
+import br.com.gabrielferreira.dto.UsuarioDTO;
+import br.com.gabrielferreira.dto.create.UsuarioCreateDTO;
+import br.com.gabrielferreira.dto.update.UsuarioUpdateDTO;
+import br.com.gabrielferreira.exception.ErroException;
+import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
+import br.com.gabrielferreira.exception.TelefoneException;
+import br.com.gabrielferreira.exception.UsuarioException;
 import br.com.gabrielferreira.model.Genero;
 import br.com.gabrielferreira.model.Telefone;
 import br.com.gabrielferreira.model.Usuario;
-import br.com.gabrielferreira.dto.view.TelefoneViewDTO;
-import br.com.gabrielferreira.dto.update.UsuarioUpdateDTO;
-import br.com.gabrielferreira.dto.create.UsuarioCreateDTO;
-import br.com.gabrielferreira.dto.view.UsuarioViewDTO;
 import lombok.AllArgsConstructor;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.gabrielferreira.factory.model.UsuarioFactory.*;
-import static br.com.gabrielferreira.factory.dto.UsuarioDTOFactory.*;
-import static br.com.gabrielferreira.utils.ValidarTelefoneUtils.*;
-import static br.com.gabrielferreira.utils.ValidarUsuarioUtils.*;
-import static br.com.gabrielferreira.utils.StringCriptografarUtils.*;
-import static br.com.gabrielferreira.factory.model.TelefoneFactory.*;
-import static br.com.gabrielferreira.factory.dto.TelefoneDTOFactory.*;
-import static br.com.gabrielferreira.utils.LogUtils.*;
+import static br.com.gabrielferreira.dto.factory.TelefoneDTOFactory.toTelefonesDTO;
+import static br.com.gabrielferreira.dto.factory.UsuarioDTOFactory.toUsuarioDTO;
+import static br.com.gabrielferreira.model.factory.TelefoneFactory.toTelefones;
+import static br.com.gabrielferreira.model.factory.UsuarioFactory.toUsuario;
+import static br.com.gabrielferreira.model.factory.UsuarioFactory.toUsuarioAtualizar;
+import static br.com.gabrielferreira.utils.LogUtils.gerarLogWarn;
+import static br.com.gabrielferreira.utils.StringCriptografarUtils.criptarCampo;
+import static br.com.gabrielferreira.utils.ValidarTelefoneUtils.validarCamposNaoInformadosCadastroTelefone;
+import static br.com.gabrielferreira.utils.ValidarTelefoneUtils.validarNumeroDDDRepetido;
+import static br.com.gabrielferreira.utils.ValidarUsuarioUtils.validarCamposNaoInformadosAtualizarUsuario;
+import static br.com.gabrielferreira.utils.ValidarUsuarioUtils.validarCamposNaoInformadosCadastroUsuario;
 
 @AllArgsConstructor
 public class UsuarioService {
@@ -31,17 +39,17 @@ public class UsuarioService {
 
     private GeneroService generoService;
 
-    public UsuarioViewDTO inserir(UsuarioCreateDTO usuarioCreateDTO){
-        List<TelefoneViewDTO> telefoneViewDTOList = new ArrayList<>();
+    public UsuarioDTO inserir(UsuarioCreateDTO usuarioCreateDTO){
+        List<TelefoneDTO> telefoneViewDTOList = new ArrayList<>();
 
         Usuario usuario = toUsuario(usuarioCreateDTO);
         validarCamposNaoInformadosCadastroUsuario(usuario);
         usuario.setSenha(criptarCampo(usuario.getSenha()));
 
-        if(usuarioCreateDTO.getTelefones().isEmpty()){
+        if(usuarioCreateDTO.telefones().isEmpty()){
             inserirUsuario(usuario);
         } else {
-            List<Telefone> telefones = toTelefones(usuarioCreateDTO.getTelefones());
+            List<Telefone> telefones = toTelefones(usuarioCreateDTO.telefones());
 
             List<String> numeroDDD = new ArrayList<>();
             for (Telefone telefone : telefones) {
@@ -53,26 +61,22 @@ public class UsuarioService {
             validarNumeroDDDRepetido(numeroDDD);
 
             inserirUsuarioComTelefones(usuario, telefones);
-            telefoneViewDTOList = toTelefonesViewDTO(telefones);
+            telefoneViewDTOList = toTelefonesDTO(telefones);
         }
 
-        UsuarioViewDTO usuarioViewDTO = toUsuarioViewDTO(usuario);
-        usuarioViewDTO.setTelefones(telefoneViewDTOList);
-        return usuarioViewDTO;
+        return toUsuarioDTO(usuario, telefoneViewDTOList);
     }
 
-    public UsuarioViewDTO buscarPorId(Long id){
+    public UsuarioDTO buscarPorId(Long id){
         Usuario usuario = buscarUsuarioPorId(id);
-        List<TelefoneViewDTO> telefones = telefoneService.buscarTelefonesPorIdUsuario(usuario.getId());
-
-        UsuarioViewDTO usuarioViewDTO = toUsuarioViewDTO(usuario);
-        usuarioViewDTO.setTelefones(telefones);
-        return usuarioViewDTO;
+        List<TelefoneDTO> telefones = telefoneService.buscarTelefonesPorIdUsuario(usuario.getId());
+        return toUsuarioDTO(usuario, telefones);
     }
 
-    public UsuarioViewDTO atualizar(UsuarioUpdateDTO usuarioUpdateDTO, Long id){
+    public UsuarioDTO atualizar(UsuarioUpdateDTO usuarioUpdateDTO, Long id){
         Usuario usuario = buscarUsuarioPorId(id);
-        Genero generoEncontrado = generoService.buscarGeneroPorId(usuarioUpdateDTO.getIdGenero());
+        Genero generoEncontrado = generoService.buscarGeneroPorId(usuarioUpdateDTO.idGenero());
+        List<TelefoneDTO> telefones = telefoneService.buscarTelefonesPorIdUsuario(usuario.getId());
 
         try {
             toUsuarioAtualizar(usuario, generoEncontrado, usuarioUpdateDTO);
@@ -83,7 +87,7 @@ public class UsuarioService {
             throw new ErroException("Erro ao atualizar o usuário, tente mais tarde.");
         }
 
-        return toUsuarioViewDTO(usuario);
+        return toUsuarioDTO(usuario, telefones);
     }
 
     public void deletarPorId(Long id){

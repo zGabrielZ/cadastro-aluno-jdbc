@@ -1,15 +1,15 @@
-package br.com.gabrielferreira.factory.dto;
+package br.com.gabrielferreira.dto.factory;
 
+import br.com.gabrielferreira.dto.PerfilDTO;
 import br.com.gabrielferreira.model.Perfil;
-import br.com.gabrielferreira.dto.view.PerfilViewDTO;
 
 public class PerfilDTOFactory {
 
     private PerfilDTOFactory(){}
 
-    public static PerfilViewDTO toPerfilViewDTO(Perfil perfil){
+    public static PerfilDTO toPerfilDTO(Perfil perfil){
         if(perfil != null){
-            return PerfilViewDTO.builder()
+            return PerfilDTO.builder()
                     .id(perfil.getId())
                     .descricao(perfil.getDescricao())
                     .codigo(perfil.getCodigo())

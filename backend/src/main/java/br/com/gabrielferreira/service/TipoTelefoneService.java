@@ -1,22 +1,23 @@
 package br.com.gabrielferreira.service;
+
 import br.com.gabrielferreira.dao.TipoTelefoneDAO;
+import br.com.gabrielferreira.dto.TipoTelefoneDTO;
 import br.com.gabrielferreira.exception.ErroException;
 import br.com.gabrielferreira.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.model.TipoTelefone;
-import br.com.gabrielferreira.dto.view.TipoTelefoneViewDTO;
 import lombok.AllArgsConstructor;
 
-import static br.com.gabrielferreira.factory.dto.TipoTelefoneDTOFactory.*;
-import static br.com.gabrielferreira.utils.LogUtils.*;
+import static br.com.gabrielferreira.dto.factory.TipoTelefoneDTOFactory.toTipoTelefoneDTO;
+import static br.com.gabrielferreira.utils.LogUtils.gerarLogWarn;
 
 @AllArgsConstructor
 public class TipoTelefoneService {
 
     private TipoTelefoneDAO tipoTelefoneDAO;
 
-    public TipoTelefoneViewDTO buscarPorId(Long id){
+    public TipoTelefoneDTO buscarPorId(Long id){
         TipoTelefone tipoTelefone = buscarTipoTelefonePorId(id);
-        return toTipoTelefoneViewDTO(tipoTelefone);
+        return toTipoTelefoneDTO(tipoTelefone);
     }
 
     public TipoTelefone buscarTipoTelefonePorCodigo(String codigo){

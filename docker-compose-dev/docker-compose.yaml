@@ -10,7 +10,6 @@ services:
      - POSTGRES_DB=alunojdbc
    ports:
      - 5000:5432
-   restart: always
    volumes:
      - ./vol-db:/var/lib/postgresql/data
    networks:

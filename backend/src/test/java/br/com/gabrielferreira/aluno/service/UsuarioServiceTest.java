@@ -3,7 +3,6 @@ package br.com.gabrielferreira.aluno.service;
 import br.com.gabrielferreira.aluno.conexao.ConexaoBD;
 import br.com.gabrielferreira.aluno.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.aluno.dao.*;
-import br.com.gabrielferreira.aluno.service.*;
 import br.com.gabrielferreira.aluno.dto.UsuarioDTO;
 import br.com.gabrielferreira.aluno.dto.create.TelefoneCreateDTO;
 import br.com.gabrielferreira.aluno.dto.create.UsuarioCreateDTO;

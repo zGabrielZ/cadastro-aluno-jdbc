@@ -6,7 +6,6 @@ import br.com.gabrielferreira.aluno.dao.PerfilDAO;
 import br.com.gabrielferreira.aluno.dto.PerfilDTO;
 import br.com.gabrielferreira.aluno.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.aluno.model.Perfil;
-import br.com.gabrielferreira.aluno.service.PerfilService;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

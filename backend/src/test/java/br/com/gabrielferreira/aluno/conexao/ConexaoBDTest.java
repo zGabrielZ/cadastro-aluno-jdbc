@@ -1,5 +1,5 @@
 package br.com.gabrielferreira.aluno.conexao;
-import br.com.gabrielferreira.aluno.conexao.ConexaoBD;
+
 import br.com.gabrielferreira.aluno.conexao.config.ConfigBandoDeDadosDevImpl;
 import br.com.gabrielferreira.aluno.conexao.config.ConfigBandoDeDadosTestImpl;
 import org.junit.jupiter.api.*;

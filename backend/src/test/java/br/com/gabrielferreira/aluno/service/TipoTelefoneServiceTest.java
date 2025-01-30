@@ -6,7 +6,6 @@ import br.com.gabrielferreira.aluno.dao.TipoTelefoneDAO;
 import br.com.gabrielferreira.aluno.dto.TipoTelefoneDTO;
 import br.com.gabrielferreira.aluno.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.aluno.model.TipoTelefone;
-import br.com.gabrielferreira.aluno.service.TipoTelefoneService;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

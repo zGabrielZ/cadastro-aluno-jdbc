@@ -6,7 +6,6 @@ import br.com.gabrielferreira.aluno.dao.GeneroDAO;
 import br.com.gabrielferreira.aluno.dto.GeneroDTO;
 import br.com.gabrielferreira.aluno.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.aluno.model.Genero;
-import br.com.gabrielferreira.aluno.service.GeneroService;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

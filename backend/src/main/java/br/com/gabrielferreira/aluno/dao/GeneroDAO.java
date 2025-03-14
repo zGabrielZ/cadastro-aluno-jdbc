@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static br.com.gabrielferreira.aluno.dao.factory.GeneroDAOFactory.toFromModel;
 import static br.com.gabrielferreira.aluno.utils.LogUtils.gerarLogWarn;
 import static br.com.gabrielferreira.aluno.utils.dao.GeneroEnumDao.FIND_BY_CODIGO_SQL;
 import static br.com.gabrielferreira.aluno.utils.dao.GeneroEnumDao.FIND_BY_ID_SQL;
@@ -59,13 +60,5 @@ public class GeneroDAO {
         }
 
         return genero;
-    }
-
-    private Genero toFromModel(ResultSet resultSet) throws SQLException {
-        return Genero.builder()
-                .id(resultSet.getLong("ID"))
-                .descricao(resultSet.getString("DESCRICAO"))
-                .codigo(resultSet.getString("CODIGO"))
-                .build();
     }
 }

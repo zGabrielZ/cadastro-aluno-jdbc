@@ -1,4 +1,5 @@
 package br.com.gabrielferreira.aluno.dao;
+
 import br.com.gabrielferreira.aluno.model.Perfil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,8 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static br.com.gabrielferreira.aluno.utils.dao.PerfilEnumDao.*;
-import static br.com.gabrielferreira.aluno.utils.LogUtils.*;
+import static br.com.gabrielferreira.aluno.dao.factory.PerfilDAOFactory.toFromModel;
+import static br.com.gabrielferreira.aluno.utils.LogUtils.gerarLogWarn;
+import static br.com.gabrielferreira.aluno.utils.dao.PerfilEnumDao.FIND_BY_CODIGO_SQL;
+import static br.com.gabrielferreira.aluno.utils.dao.PerfilEnumDao.FIND_BY_ID_SQL;
 
 @Getter
 @AllArgsConstructor
@@ -57,13 +60,5 @@ public class PerfilDAO {
         }
 
         return perfil;
-    }
-
-    private Perfil toFromModel(ResultSet resultSet) throws SQLException {
-        return Perfil.builder()
-                .id(resultSet.getLong("ID"))
-                .descricao(resultSet.getString("DESCRICAO"))
-                .codigo(resultSet.getString("CODIGO"))
-                .build();
     }
 }

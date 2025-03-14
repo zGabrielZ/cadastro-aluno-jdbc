@@ -1,7 +1,6 @@
 package br.com.gabrielferreira.aluno.dao;
 
 import br.com.gabrielferreira.aluno.model.Telefone;
-import br.com.gabrielferreira.aluno.model.TipoTelefone;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,6 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static br.com.gabrielferreira.aluno.dao.factory.TelefoneDAOFactory.toFromModel;
 import static br.com.gabrielferreira.aluno.utils.LogUtils.gerarLogInfo;
 import static br.com.gabrielferreira.aluno.utils.LogUtils.gerarLogWarn;
 import static br.com.gabrielferreira.aluno.utils.dao.TelefoneEnumDao.*;
@@ -81,25 +81,6 @@ public class TelefoneDAO {
         if(id != null){
             preparedStatement.setLong(5, id);
         }
-    }
-
-    private Telefone toFromModel(ResultSet resultSet) throws SQLException {
-        TipoTelefone tipoTelefone = toTipoTelefone(resultSet);
-
-        return Telefone.builder()
-                .id(resultSet.getLong("ID"))
-                .ddd(resultSet.getString("DDD"))
-                .numero(resultSet.getString("NUMERO"))
-                .tipoTelefone(tipoTelefone)
-                .build();
-    }
-
-    private TipoTelefone toTipoTelefone(ResultSet resultSet) throws SQLException {
-        return TipoTelefone.builder()
-                .id(resultSet.getLong("ID_TIPO_TELEFONE"))
-                .descricao(resultSet.getString("DESCRICAO_TIPO_TELEFONE"))
-                .codigo(resultSet.getString("CODIGO_TIPO_TELEFONE"))
-                .build();
     }
 
     private void gerarRollback() throws SQLException {

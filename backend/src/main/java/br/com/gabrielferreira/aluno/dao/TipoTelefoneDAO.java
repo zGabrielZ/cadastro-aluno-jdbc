@@ -9,8 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static br.com.gabrielferreira.aluno.utils.dao.TipoTelefoneEnumDao.*;
-import static br.com.gabrielferreira.aluno.utils.LogUtils.*;
+import static br.com.gabrielferreira.aluno.dao.factory.TipoTelefoneDAOFactory.toFromModel;
+import static br.com.gabrielferreira.aluno.utils.LogUtils.gerarLogWarn;
+import static br.com.gabrielferreira.aluno.utils.dao.TipoTelefoneEnumDao.FIND_BY_CODIGO_SQL;
+import static br.com.gabrielferreira.aluno.utils.dao.TipoTelefoneEnumDao.FIND_BY_ID_SQL;
 
 @Getter
 @AllArgsConstructor
@@ -58,13 +60,5 @@ public class TipoTelefoneDAO {
         }
 
         return tipoTelefone;
-    }
-
-    private TipoTelefone toFromModel(ResultSet resultSet) throws SQLException{
-        return TipoTelefone.builder()
-                .id(resultSet.getLong("ID"))
-                .descricao(resultSet.getString("DESCRICAO"))
-                .codigo(resultSet.getString("CODIGO"))
-                .build();
     }
 }

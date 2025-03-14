@@ -1,17 +1,17 @@
 package br.com.gabrielferreira.aluno.dao;
-import br.com.gabrielferreira.aluno.model.Genero;
-import br.com.gabrielferreira.aluno.model.Perfil;
+
 import br.com.gabrielferreira.aluno.model.Telefone;
 import br.com.gabrielferreira.aluno.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.List;
 
+import static br.com.gabrielferreira.aluno.dao.factory.UsuarioDAOFactory.toFromModel;
+import static br.com.gabrielferreira.aluno.utils.LogUtils.gerarLogInfo;
+import static br.com.gabrielferreira.aluno.utils.LogUtils.gerarLogWarn;
 import static br.com.gabrielferreira.aluno.utils.dao.UsuarioEnumDao.*;
-import static br.com.gabrielferreira.aluno.utils.LogUtils.*;
 
 @Getter
 @AllArgsConstructor
@@ -170,55 +170,6 @@ public class UsuarioDAO {
         if(id != null){
             preparedStatement.setLong(9, id);
         }
-    }
-
-    private Usuario toFromModel(ResultSet resultSet) throws SQLException {
-        LocalDate dataNascimento = toLocalDateDataNascimento(resultSet.getObject("DATA_NASCIMENTO", LocalDate.class));
-        Genero genero = toGenero(resultSet);
-        Perfil perfil = toPerfil(resultSet);
-
-        return Usuario.builder()
-                .id(resultSet.getLong("ID"))
-                .nome(resultSet.getString("NOME"))
-                .email(resultSet.getString("EMAIL"))
-                .senha(resultSet.getString("EMAIL"))
-                .dataNascimento(dataNascimento)
-                .cpf(resultSet.getString("CPF"))
-                .nomeSocial(resultSet.getString("NOME_SOCIAL"))
-                .genero(genero)
-                .perfil(perfil)
-                .build();
-    }
-
-    private LocalDate toLocalDateDataNascimento(Object dataNascimento){
-        if(dataNascimento instanceof LocalDate dataConvertida){
-            return dataConvertida;
-        }
-        return null;
-    }
-
-    private Genero toGenero(ResultSet resultSet) throws SQLException{
-        long idGenero = resultSet.getLong("ID_GENERO");
-        if(idGenero != 0){
-            return Genero.builder()
-                    .id(idGenero)
-                    .descricao(resultSet.getString("DESCRICAO_GENERO"))
-                    .codigo(resultSet.getString("CODIGO_GENERO"))
-                    .build();
-        }
-        return null;
-    }
-
-    private Perfil toPerfil(ResultSet resultSet) throws SQLException{
-        long idPerfil = resultSet.getLong("ID_PERFIL");
-        if(idPerfil != 0){
-            return Perfil.builder()
-                    .id(idPerfil)
-                    .descricao(resultSet.getString("DESCRICAO_PERFIL"))
-                    .codigo(resultSet.getString("CODIGO_PERFIL"))
-                    .build();
-        }
-        return null;
     }
 
     private void gerarRollback() throws SQLException {

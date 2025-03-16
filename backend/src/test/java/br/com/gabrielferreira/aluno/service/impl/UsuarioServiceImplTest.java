@@ -1,8 +1,9 @@
-package br.com.gabrielferreira.aluno.service;
+package br.com.gabrielferreira.aluno.service.impl;
 
 import br.com.gabrielferreira.aluno.conexao.ConexaoBD;
 import br.com.gabrielferreira.aluno.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.aluno.dao.*;
+import br.com.gabrielferreira.aluno.dao.impl.*;
 import br.com.gabrielferreira.aluno.dto.UsuarioDTO;
 import br.com.gabrielferreira.aluno.dto.create.TelefoneCreateDTO;
 import br.com.gabrielferreira.aluno.dto.create.UsuarioCreateDTO;
@@ -13,6 +14,7 @@ import br.com.gabrielferreira.aluno.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.aluno.model.Genero;
 import br.com.gabrielferreira.aluno.model.Perfil;
 import br.com.gabrielferreira.aluno.model.TipoTelefone;
+import br.com.gabrielferreira.aluno.service.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -24,7 +26,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UsuarioServiceTest {
+class UsuarioServiceImplTest {
 
     private UsuarioService usuarioService;
 
@@ -42,20 +44,20 @@ class UsuarioServiceTest {
     public void criarInstancias(){
         ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
 
-        TelefoneDAO telefoneDAO = new TelefoneDAO(conexaoBD.getConnection());
-        UsuarioDAO usuarioDAO = new UsuarioDAO(conexaoBD.getConnection(), telefoneDAO);
+        TelefoneDAO telefoneDAO = new TelefoneDAOImpl(conexaoBD.getConnection());
+        UsuarioDAO usuarioDAO = new UsuarioDAOImpl(conexaoBD.getConnection(), telefoneDAO);
 
-        GeneroDAO generoDAO = new GeneroDAO(conexaoBD.getConnection());
-        GeneroService generoService = new GeneroService(generoDAO);
+        GeneroDAO generoDAO = new GeneroDAOImpl(conexaoBD.getConnection());
+        GeneroService generoService = new GeneroServiceImpl(generoDAO);
 
-        TipoTelefoneDAO tipoTelefoneDAO = new TipoTelefoneDAO(conexaoBD.getConnection());
-        TipoTelefoneService tipoTelefoneService = new TipoTelefoneService(tipoTelefoneDAO);
+        TipoTelefoneDAO tipoTelefoneDAO = new TipoTelefoneDAOImpl(conexaoBD.getConnection());
+        TipoTelefoneService tipoTelefoneService = new TipoTelefoneServiceImpl(tipoTelefoneDAO);
 
-        PerfilDAO perfilDAO = new PerfilDAO(conexaoBD.getConnection());
-        PerfilService perfilService = new PerfilService(perfilDAO);
+        PerfilDAO perfilDAO = new PerfilDAOImpl(conexaoBD.getConnection());
+        PerfilService perfilService = new PerfilServiceImpl(perfilDAO);
 
-        telefoneService = new TelefoneService(telefoneDAO, tipoTelefoneService);
-        usuarioService = new UsuarioService(usuarioDAO, telefoneService, generoService);
+        telefoneService = new TelefoneServiceImpl(telefoneDAO, tipoTelefoneService);
+        usuarioService = new UsuarioServiceImpl(usuarioDAO, telefoneService, generoService);
 
         generoMasculino = generoService.buscarGeneroPorCodigo("MASCULINO");
         perfilAluno = perfilService.buscarPerfilPorCodigo("ALUNO");
@@ -67,9 +69,9 @@ class UsuarioServiceTest {
     @AfterAll
     static void finalizarInstancias() throws Exception{
         ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
-        TelefoneDAO telefoneDAO = new TelefoneDAO(conexaoBD.getConnection());
+        TelefoneDAO telefoneDAO = new TelefoneDAOImpl(conexaoBD.getConnection());
 
-        UsuarioDAO usuarioDAO = new UsuarioDAO(conexaoBD.getConnection(), telefoneDAO);
+        UsuarioDAO usuarioDAO = new UsuarioDAOImpl(conexaoBD.getConnection(), telefoneDAO);
         usuarioDAO.deleteTudo();
     }
 

@@ -1,25 +1,27 @@
-package br.com.gabrielferreira.aluno.service;
+package br.com.gabrielferreira.aluno.service.impl;
 
 import br.com.gabrielferreira.aluno.conexao.ConexaoBD;
 import br.com.gabrielferreira.aluno.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.aluno.dao.TipoTelefoneDAO;
+import br.com.gabrielferreira.aluno.dao.impl.TipoTelefoneDAOImpl;
 import br.com.gabrielferreira.aluno.dto.TipoTelefoneDTO;
 import br.com.gabrielferreira.aluno.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.aluno.model.TipoTelefone;
+import br.com.gabrielferreira.aluno.service.TipoTelefoneService;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class TipoTelefoneServiceTest {
+class TipoTelefoneServiceImplImplTest {
 
     private TipoTelefoneService tipoTelefoneService;
 
     @BeforeEach
     public void criarInstancias(){
         ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
-        TipoTelefoneDAO tipoTelefoneDAO = new TipoTelefoneDAO(conexaoBD.getConnection());
-        tipoTelefoneService = new TipoTelefoneService(tipoTelefoneDAO);
+        TipoTelefoneDAO tipoTelefoneDAO = new TipoTelefoneDAOImpl(conexaoBD.getConnection());
+        tipoTelefoneService = new TipoTelefoneServiceImpl(tipoTelefoneDAO);
     }
 
     @Test

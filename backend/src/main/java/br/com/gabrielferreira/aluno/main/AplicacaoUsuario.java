@@ -3,6 +3,7 @@ package br.com.gabrielferreira.aluno.main;
 import br.com.gabrielferreira.aluno.conexao.ConexaoBD;
 import br.com.gabrielferreira.aluno.conexao.config.ConfigBandoDeDadosDevImpl;
 import br.com.gabrielferreira.aluno.dao.*;
+import br.com.gabrielferreira.aluno.dao.impl.*;
 import br.com.gabrielferreira.aluno.dto.UsuarioDTO;
 import br.com.gabrielferreira.aluno.dto.create.TelefoneCreateDTO;
 import br.com.gabrielferreira.aluno.dto.create.UsuarioCreateDTO;
@@ -11,6 +12,7 @@ import br.com.gabrielferreira.aluno.model.Genero;
 import br.com.gabrielferreira.aluno.model.Perfil;
 import br.com.gabrielferreira.aluno.model.TipoTelefone;
 import br.com.gabrielferreira.aluno.service.*;
+import br.com.gabrielferreira.aluno.service.impl.*;
 import lombok.Generated;
 
 import javax.swing.text.MaskFormatter;
@@ -31,20 +33,20 @@ public class AplicacaoUsuario {
 
     public static void main(String[] args) {
         ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosDevImpl());
-        TipoTelefoneDAO tipoTelefoneDAO = new TipoTelefoneDAO(conexaoBD.getConnection());
-        TipoTelefoneService tipoTelefoneService = new TipoTelefoneService(tipoTelefoneDAO);
+        TipoTelefoneDAO tipoTelefoneDAO = new TipoTelefoneDAOImpl(conexaoBD.getConnection());
+        TipoTelefoneService tipoTelefoneService = new TipoTelefoneServiceImpl(tipoTelefoneDAO);
 
-        TelefoneDAO telefoneDAO = new TelefoneDAO(conexaoBD.getConnection());
-        TelefoneService telefoneService = new TelefoneService(telefoneDAO, tipoTelefoneService);
+        TelefoneDAO telefoneDAO = new TelefoneDAOImpl(conexaoBD.getConnection());
+        TelefoneService telefoneService = new TelefoneServiceImpl(telefoneDAO, tipoTelefoneService);
 
-        GeneroDAO generoDAO = new GeneroDAO(conexaoBD.getConnection());
-        GeneroService generoService = new GeneroService(generoDAO);
+        GeneroDAO generoDAO = new GeneroDAOImpl(conexaoBD.getConnection());
+        GeneroService generoService = new GeneroServiceImpl(generoDAO);
 
-        UsuarioDAO usuarioDAO = new UsuarioDAO(conexaoBD.getConnection(), telefoneDAO);
-        UsuarioService usuarioService = new UsuarioService(usuarioDAO, telefoneService, generoService);
+        UsuarioDAO usuarioDAO = new UsuarioDAOImpl(conexaoBD.getConnection(), telefoneDAO);
+        UsuarioService usuarioService = new UsuarioServiceImpl(usuarioDAO, telefoneService, generoService);
 
-        PerfilDAO perfilDAO = new PerfilDAO(conexaoBD.getConnection());
-        PerfilService perfilService = new PerfilService(perfilDAO);
+        PerfilDAO perfilDAO = new PerfilDAOImpl(conexaoBD.getConnection());
+        PerfilService perfilService = new PerfilServiceImpl(perfilDAO);
 
         Genero generoMasculino = generoService.buscarGeneroPorCodigo("MASCULINO");
         Genero generoFeminino = generoService.buscarGeneroPorCodigo("FEMININO");
@@ -160,7 +162,8 @@ public class AplicacaoUsuario {
         return usuarioResultado;
     }
 
-    private static UsuarioDTO gerarQuintoUsuario(Perfil perfilAluno, Genero generoFeminino, TipoTelefone tipoTelefoneResidencial, TipoTelefone tipoTelefoneCelular, UsuarioService usuarioService){
+    private static UsuarioDTO gerarQuintoUsuario(Perfil perfilAluno, Genero generoFeminino, TipoTelefone tipoTelefoneResidencial,
+                                                 TipoTelefone tipoTelefoneCelular, UsuarioService usuarioService){
         List<TelefoneCreateDTO> telefoneCreateDTOS = new ArrayList<>();
         telefoneCreateDTOS.add(TelefoneCreateDTO.builder().ddd("11").numero("34421812").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
         telefoneCreateDTOS.add(TelefoneCreateDTO.builder().ddd("11").numero("31242526").idTipoTelefone(tipoTelefoneResidencial.getId()).build());

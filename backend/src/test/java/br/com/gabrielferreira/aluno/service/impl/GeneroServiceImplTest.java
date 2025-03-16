@@ -1,25 +1,27 @@
-package br.com.gabrielferreira.aluno.service;
+package br.com.gabrielferreira.aluno.service.impl;
 
 import br.com.gabrielferreira.aluno.conexao.ConexaoBD;
 import br.com.gabrielferreira.aluno.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.aluno.dao.GeneroDAO;
+import br.com.gabrielferreira.aluno.dao.impl.GeneroDAOImpl;
 import br.com.gabrielferreira.aluno.dto.GeneroDTO;
 import br.com.gabrielferreira.aluno.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.aluno.model.Genero;
+import br.com.gabrielferreira.aluno.service.GeneroService;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class GeneroServiceTest {
+class GeneroServiceImplTest {
 
     private GeneroService generoService;
 
     @BeforeEach
     public void criarInstancias(){
         ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
-        GeneroDAO generoDAO = new GeneroDAO(conexaoBD.getConnection());
-        generoService = new GeneroService(generoDAO);
+        GeneroDAO generoDAO = new GeneroDAOImpl(conexaoBD.getConnection());
+        generoService = new GeneroServiceImpl(generoDAO);
     }
 
     @Test

@@ -3,7 +3,7 @@ package br.com.gabrielferreira.aluno.conexao.config;
 import br.com.gabrielferreira.aluno.conexao.config.modelo.InformacaoBancoDeDados;
 import br.com.gabrielferreira.aluno.exception.BancoDeDadosException;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Properties;
 
 import static br.com.gabrielferreira.aluno.utils.LogUtils.gerarLogWarn;
@@ -15,9 +15,17 @@ public class ConfigBandoDeDadosTestImpl implements ConfigBancoDeDados {
     @Override
     public InformacaoBancoDeDados getRecuperarDadosBanco() {
         String nomeArquivoBancoDados = "db-".concat(AMBIENTE_TESTE).concat(".properties");
-        try(FileInputStream fileInputStream = new FileInputStream(nomeArquivoBancoDados)) {
+        try {
+            ClassLoader classLoader = ConfigBandoDeDadosTestImpl.class.getClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream(nomeArquivoBancoDados);
+
+            if (inputStream == null) {
+                throw new BancoDeDadosException("Ocorreu um erro ao recuperar os dados do banco de dados do ambiente de teste");
+            }
+
             Properties properties = new Properties();
-            properties.load(fileInputStream);
+            properties.load(inputStream);
+
             return InformacaoBancoDeDados.builder()
                     .url(properties.getProperty("url"))
                     .usuario(properties.getProperty("user"))

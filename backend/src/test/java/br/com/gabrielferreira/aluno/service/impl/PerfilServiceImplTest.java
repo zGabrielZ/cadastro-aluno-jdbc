@@ -1,25 +1,27 @@
-package br.com.gabrielferreira.aluno.service;
+package br.com.gabrielferreira.aluno.service.impl;
 
 import br.com.gabrielferreira.aluno.conexao.ConexaoBD;
 import br.com.gabrielferreira.aluno.conexao.config.ConfigBandoDeDadosTestImpl;
 import br.com.gabrielferreira.aluno.dao.PerfilDAO;
+import br.com.gabrielferreira.aluno.dao.impl.PerfilDAOImpl;
 import br.com.gabrielferreira.aluno.dto.PerfilDTO;
 import br.com.gabrielferreira.aluno.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.aluno.model.Perfil;
+import br.com.gabrielferreira.aluno.service.PerfilService;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PerfilServiceTest {
+class PerfilServiceImplTest {
 
     private PerfilService perfilService;
 
     @BeforeEach
     public void criarInstancias(){
         ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
-        PerfilDAO perfilDAO = new PerfilDAO(conexaoBD.getConnection());
-        perfilService = new PerfilService(perfilDAO);
+        PerfilDAO perfilDAO = new PerfilDAOImpl(conexaoBD.getConnection());
+        perfilService = new PerfilServiceImpl(perfilDAO);
     }
 
     @Test

@@ -1,33 +1,32 @@
 package br.com.gabrielferreira.aluno.service.impl;
 
-import br.com.gabrielferreira.aluno.conexao.ConexaoBD;
-import br.com.gabrielferreira.aluno.conexao.config.ConfigBandoDeDadosTestImpl;
+import br.com.gabrielferreira.aluno.ServiceIntegration;
 import br.com.gabrielferreira.aluno.dao.PerfilDAO;
-import br.com.gabrielferreira.aluno.dao.impl.PerfilDAOImpl;
+import br.com.gabrielferreira.aluno.dao.factory.DaoFactory;
 import br.com.gabrielferreira.aluno.dto.PerfilDTO;
 import br.com.gabrielferreira.aluno.exception.RegistroNaoEncontradoException;
 import br.com.gabrielferreira.aluno.model.Perfil;
 import br.com.gabrielferreira.aluno.service.PerfilService;
+import br.com.gabrielferreira.aluno.service.factory.ServiceFactory;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PerfilServiceImplTest {
+class PerfilServiceImplTest extends ServiceIntegration {
 
     private PerfilService perfilService;
 
     @BeforeEach
-    public void criarInstancias(){
-        ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
-        PerfilDAO perfilDAO = new PerfilDAOImpl(conexaoBD.getConnection());
-        perfilService = new PerfilServiceImpl(perfilDAO);
+    public void criarInstancias() {
+        PerfilDAO perfilDAO = DaoFactory.criarPerfilDao();
+        perfilService = ServiceFactory.criarPerfilService(perfilDAO);
     }
 
     @Test
     @DisplayName("Deve encontrar perfil por id")
     @Order(1)
-    void deveEncontrarPerfilPorId(){
+    void deveEncontrarPerfilPorId() {
         PerfilDTO perfilEncontrado = perfilService.buscarPorId(1L);
 
         assertNotNull(perfilEncontrado.id());
@@ -38,14 +37,14 @@ class PerfilServiceImplTest {
     @Test
     @DisplayName("Não deve encontrar perfil por id")
     @Order(2)
-    void naoDeveEncontrarPerfilPorId(){
+    void naoDeveEncontrarPerfilPorId() {
         assertThrows(RegistroNaoEncontradoException.class, () -> perfilService.buscarPorId(-1L));
     }
 
     @Test
     @DisplayName("Deve encontrar perfil quando informar o código")
     @Order(3)
-    void deveEncontrarGeneroPorCodigo(){
+    void deveEncontrarGeneroPorCodigo() {
         Perfil perfil = perfilService.buscarPerfilPorCodigo("ADMINISTRADOR");
 
         assertNotNull(perfil.getId());
@@ -56,7 +55,7 @@ class PerfilServiceImplTest {
     @Test
     @DisplayName("Não deve encontrar perfil quando informar código errado")
     @Order(4)
-    void naoDeveEncontrarPerfilPorCodigo(){
+    void naoDeveEncontrarPerfilPorCodigo() {
         assertThrows(RegistroNaoEncontradoException.class, () -> perfilService.buscarPerfilPorCodigo("TESTE"));
     }
 }

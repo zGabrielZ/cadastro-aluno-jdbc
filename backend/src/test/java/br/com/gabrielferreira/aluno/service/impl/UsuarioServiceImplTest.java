@@ -1,9 +1,8 @@
 package br.com.gabrielferreira.aluno.service.impl;
 
-import br.com.gabrielferreira.aluno.conexao.ConexaoBD;
-import br.com.gabrielferreira.aluno.conexao.config.ConfigBandoDeDadosTestImpl;
+import br.com.gabrielferreira.aluno.ServiceIntegration;
 import br.com.gabrielferreira.aluno.dao.*;
-import br.com.gabrielferreira.aluno.dao.impl.*;
+import br.com.gabrielferreira.aluno.dao.factory.DaoFactory;
 import br.com.gabrielferreira.aluno.dto.UsuarioDTO;
 import br.com.gabrielferreira.aluno.dto.create.TelefoneCreateDTO;
 import br.com.gabrielferreira.aluno.dto.create.UsuarioCreateDTO;
@@ -15,6 +14,7 @@ import br.com.gabrielferreira.aluno.model.Genero;
 import br.com.gabrielferreira.aluno.model.Perfil;
 import br.com.gabrielferreira.aluno.model.TipoTelefone;
 import br.com.gabrielferreira.aluno.service.*;
+import br.com.gabrielferreira.aluno.service.factory.ServiceFactory;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -26,7 +26,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UsuarioServiceImplTest {
+class UsuarioServiceImplTest extends ServiceIntegration {
 
     private UsuarioService usuarioService;
 
@@ -41,23 +41,21 @@ class UsuarioServiceImplTest {
     private TipoTelefone tipoTelefoneCelular;
 
     @BeforeEach
-    public void criarInstancias(){
-        ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
+    public void criarInstancias() {
+        TelefoneDAO telefoneDAO = DaoFactory.criarTelefoneDao();
+        UsuarioDAO usuarioDAO = DaoFactory.criarUsuarioDao();
 
-        TelefoneDAO telefoneDAO = new TelefoneDAOImpl(conexaoBD.getConnection());
-        UsuarioDAO usuarioDAO = new UsuarioDAOImpl(conexaoBD.getConnection(), telefoneDAO);
+        GeneroDAO generoDAO = DaoFactory.criarGeneroDao();
+        GeneroService generoService = ServiceFactory.criarGeneroService(generoDAO);
 
-        GeneroDAO generoDAO = new GeneroDAOImpl(conexaoBD.getConnection());
-        GeneroService generoService = new GeneroServiceImpl(generoDAO);
+        TipoTelefoneDAO tipoTelefoneDAO = DaoFactory.criarTipoTelefoneDao();
+        TipoTelefoneService tipoTelefoneService = ServiceFactory.criarTipoTelefoneService(tipoTelefoneDAO);
 
-        TipoTelefoneDAO tipoTelefoneDAO = new TipoTelefoneDAOImpl(conexaoBD.getConnection());
-        TipoTelefoneService tipoTelefoneService = new TipoTelefoneServiceImpl(tipoTelefoneDAO);
+        PerfilDAO perfilDAO = DaoFactory.criarPerfilDao();
+        PerfilService perfilService = ServiceFactory.criarPerfilService(perfilDAO);
 
-        PerfilDAO perfilDAO = new PerfilDAOImpl(conexaoBD.getConnection());
-        PerfilService perfilService = new PerfilServiceImpl(perfilDAO);
-
-        telefoneService = new TelefoneServiceImpl(telefoneDAO, tipoTelefoneService);
-        usuarioService = new UsuarioServiceImpl(usuarioDAO, telefoneService, generoService);
+        telefoneService = ServiceFactory.criarTelefoneService(telefoneDAO, tipoTelefoneDAO);
+        usuarioService = ServiceFactory.criarUsuarioService(usuarioDAO, telefoneDAO, tipoTelefoneDAO, generoDAO);
 
         generoMasculino = generoService.buscarGeneroPorCodigo("MASCULINO");
         perfilAluno = perfilService.buscarPerfilPorCodigo("ALUNO");
@@ -67,18 +65,15 @@ class UsuarioServiceImplTest {
     }
 
     @AfterAll
-    static void finalizarInstancias() throws Exception{
-        ConexaoBD conexaoBD = new ConexaoBD(new ConfigBandoDeDadosTestImpl());
-        TelefoneDAO telefoneDAO = new TelefoneDAOImpl(conexaoBD.getConnection());
-
-        UsuarioDAO usuarioDAO = new UsuarioDAOImpl(conexaoBD.getConnection(), telefoneDAO);
+    static void finalizarInstancias() throws Exception {
+        UsuarioDAO usuarioDAO = DaoFactory.criarUsuarioDao();
         usuarioDAO.deleteTudo();
     }
 
     @Test
     @DisplayName("Deve validar o nome quando for cadastrar o usuário")
     @Order(1)
-    void deveValidarNomeCadastroUsuario(){
+    void deveValidarNomeCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome(null)
@@ -92,7 +87,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do nome nulo");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o nome do usuário"));
         }
     }
@@ -100,7 +95,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o tamanho do nome quando for cadastrar o usuário")
     @Order(2)
-    void deveValidarNomeTamanhoCadastroUsuario(){
+    void deveValidarNomeTamanhoCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome(gerarStringGrande())
@@ -114,7 +109,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do tamanho do nome");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o nome do usuário até 255 caracteres"));
         }
     }
@@ -122,7 +117,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o email quando for cadastrar o usuário")
     @Order(3)
-    void deveValidarEmailCadastroUsuario(){
+    void deveValidarEmailCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -136,7 +131,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do email nulo");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o e-mail do usuário"));
         }
     }
@@ -144,7 +139,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o tamanho do email quando for cadastrar o usuário")
     @Order(4)
-    void deveValidarEmailTamanhoCadastroUsuario(){
+    void deveValidarEmailTamanhoCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -158,7 +153,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do tamanho do email");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o e-mail do usuário até 255 caracteres"));
         }
     }
@@ -167,7 +162,7 @@ class UsuarioServiceImplTest {
     @ValueSource(strings = {"teste.com.br", "teste", "teste123.com", "teste123321email.com"})
     @DisplayName("Deve validar o email válido quando for cadastrar o usuário")
     @Order(5)
-    void deveValidarEmailValidoCadastroUsuario(String email){
+    void deveValidarEmailValidoCadastroUsuario(String email) {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -181,7 +176,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do email inválido");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("Digite um endereço do e-mail válido para o usuário"));
         }
     }
@@ -189,7 +184,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar a senha quando for cadastrar o usuário")
     @Order(6)
-    void deveValidarSenhaCadastroUsuario(){
+    void deveValidarSenhaCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -203,7 +198,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção da senha nulo");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar a senha do usuário"));
         }
     }
@@ -211,7 +206,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o tamanho da senha quando for cadastrar o usuário")
     @Order(7)
-    void deveValidarSenhaTamanhoCadastroUsuario(){
+    void deveValidarSenhaTamanhoCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -225,7 +220,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do tamanho da senha");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar a senha do usuário até 20 caracteres"));
         }
     }
@@ -234,7 +229,7 @@ class UsuarioServiceImplTest {
     @ValueSource(strings = {"t1@", "T1@", "Tt@", "Tt1"})
     @DisplayName("Deve validar a senha fraca quando for cadastrar o usuário")
     @Order(8)
-    void deveValidarSenhaFracaCadastroUsuario(String senha){
+    void deveValidarSenhaFracaCadastroUsuario(String senha) {
         UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Teste 123")
                 .email("teste@email.com")
@@ -251,7 +246,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar a data de nascimento quando for cadastrar o usuário")
     @Order(9)
-    void deveValidarDataNascimentoCadastroUsuario(){
+    void deveValidarDataNascimentoCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -265,7 +260,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção da data de nascimento nulo");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar a data de nascimento do usuário"));
         }
     }
@@ -273,7 +268,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar a data de nascimento após data atual quando for cadastrar o usuário")
     @Order(10)
-    void deveValidarDataNascimentoDepoisDataAtualCadastroUsuario(){
+    void deveValidarDataNascimentoDepoisDataAtualCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -287,7 +282,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção da data de nascimento depois da data atual");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("A data do nascimento informado é maior que a data atual"));
         }
     }
@@ -295,7 +290,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o cpf quando for cadastrar o usuário")
     @Order(11)
-    void deveValidarCpfCadastroUsuario(){
+    void deveValidarCpfCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -309,7 +304,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do cpf nulo");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o CPF do usuário"));
         }
     }
@@ -317,7 +312,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o cpf sem dígito quando for cadastrar o usuário")
     @Order(12)
-    void deveValidarCpfSemDigitoCadastroUsuario(){
+    void deveValidarCpfSemDigitoCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -331,7 +326,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do cpf sem dígito");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("Digite o CPF com apenas dígitos do usuário"));
         }
     }
@@ -339,7 +334,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o cpf inválido quando for cadastrar o usuário")
     @Order(13)
-    void deveValidarCpfInvalidoCadastroUsuario(){
+    void deveValidarCpfInvalidoCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -353,7 +348,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do cpf inválido");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("CPF do usuário informado é inválido"));
         }
     }
@@ -361,7 +356,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o tamanho do nome social quando for cadastrar o usuário")
     @Order(14)
-    void deveValidarNomeSocialTamanhoCadastroUsuario(){
+    void deveValidarNomeSocialTamanhoCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -375,7 +370,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do tamanho do nome social");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o nome social do usuário até 255 caracteres"));
         }
     }
@@ -383,7 +378,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o perfil quando for cadastrar o usuário")
     @Order(15)
-    void deveValidarPerfilCadastroUsuario(){
+    void deveValidarPerfilCadastroUsuario() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -397,7 +392,7 @@ class UsuarioServiceImplTest {
                     .build();
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do perfil nulo");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o perfil do usuário"));
         }
     }
@@ -405,7 +400,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar cadastro de usuário quando ocorrer e-mail já cadastrado")
     @Order(16)
-    void deveValidarCadastroUsuarioEmailRepetido(){
+    void deveValidarCadastroUsuarioEmailRepetido() {
         UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Teste 123")
                 .email("teste@email.com")
@@ -435,7 +430,7 @@ class UsuarioServiceImplTest {
         try {
             usuarioService.inserir(usuarioCreateDTO2);
             fail("Deveria ter lançado a exceção do email já cadastrado");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("Este e-mail informado já foi cadastrado"));
         }
 
@@ -445,7 +440,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar cadastro de usuário quando ocorrer cpf já cadastrado")
     @Order(17)
-    void deveValidarCadastroUsuarioCpfRepetido(){
+    void deveValidarCadastroUsuarioCpfRepetido() {
         UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Teste 123")
                 .email("teste123@email.com")
@@ -475,7 +470,7 @@ class UsuarioServiceImplTest {
         try {
             usuarioService.inserir(usuarioCreateDTO2);
             fail("Deveria ter lançado a exceção do cpf já cadastrado");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("Este CPF informado já foi cadastrado"));
         }
 
@@ -485,7 +480,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar cadastro de usuário quando não encontrar gênero")
     @Order(18)
-    void deveValidarCadastroUsuarioGeneroNaoEncontrado(){
+    void deveValidarCadastroUsuarioGeneroNaoEncontrado() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -501,7 +496,7 @@ class UsuarioServiceImplTest {
 
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do gênero não encontrado");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("Gênero informado não encontrado"));
         }
     }
@@ -509,7 +504,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar cadastro de usuário quando não encontrar perfil")
     @Order(19)
-    void deveValidarCadastroUsuarioPerfilNaoEncontrado(){
+    void deveValidarCadastroUsuarioPerfilNaoEncontrado() {
         try {
             UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                     .nome("Teste 123")
@@ -525,7 +520,7 @@ class UsuarioServiceImplTest {
 
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do perfil não encontrado");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("Perfil informado não encontrado"));
         }
     }
@@ -561,7 +556,7 @@ class UsuarioServiceImplTest {
     @ValueSource(strings = {"1", "111", "1111"})
     @DisplayName("Deve validar o tamanho do ddd quando for cadastrar o telefone")
     @Order(21)
-    void deveValidarDDDTamanhoCadastroTelefone(String ddd){
+    void deveValidarDDDTamanhoCadastroTelefone(String ddd) {
         try {
             List<TelefoneCreateDTO> telefones = new ArrayList<>();
             telefones.add(TelefoneCreateDTO.builder().ddd(ddd).numero("38508777").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
@@ -580,7 +575,7 @@ class UsuarioServiceImplTest {
 
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do tamanho ddd");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o ddd do telefone do usuário até 2 caracteres"));
         }
     }
@@ -588,7 +583,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o número quando for cadastrar o telefone")
     @Order(22)
-    void deveValidarNumeroCadastroTelefone(){
+    void deveValidarNumeroCadastroTelefone() {
         try {
             List<TelefoneCreateDTO> telefones = new ArrayList<>();
             telefones.add(TelefoneCreateDTO.builder().ddd("11").numero(null).idTipoTelefone(tipoTelefoneResidencial.getId()).build());
@@ -607,7 +602,7 @@ class UsuarioServiceImplTest {
 
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do número nulo");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o número do telefone do usuário"));
         }
     }
@@ -616,7 +611,7 @@ class UsuarioServiceImplTest {
     @ValueSource(strings = {"1", "11", "111", "1111", "22222", "333333", "7777777", "7777777888"})
     @DisplayName("Deve validar o tamanho do número quando for cadastrar o telefone")
     @Order(23)
-    void deveValidarNumeroTamanhoCadastroTelefone(String numero){
+    void deveValidarNumeroTamanhoCadastroTelefone(String numero) {
         try {
             List<TelefoneCreateDTO> telefones = new ArrayList<>();
             telefones.add(TelefoneCreateDTO.builder().ddd("11").numero(numero).idTipoTelefone(tipoTelefoneResidencial.getId()).build());
@@ -635,7 +630,7 @@ class UsuarioServiceImplTest {
 
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do tamanho número");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o número do telefone do usuário até 9 caracteres"));
         }
     }
@@ -644,7 +639,7 @@ class UsuarioServiceImplTest {
     @ValueSource(strings = {"3583954A", "abcdefgf", "3583-9545", "abcdefgff"})
     @DisplayName("Deve validar o número válido quando for cadastrar o telefone")
     @Order(24)
-    void deveValidarNumeroValidoCadastroTelefone(String numero){
+    void deveValidarNumeroValidoCadastroTelefone(String numero) {
         try {
             List<TelefoneCreateDTO> telefones = new ArrayList<>();
             telefones.add(TelefoneCreateDTO.builder().ddd("11").numero(numero).idTipoTelefone(tipoTelefoneResidencial.getId()).build());
@@ -663,7 +658,7 @@ class UsuarioServiceImplTest {
 
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do dígito número");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("Digite um número com apenas dígitos do telefone para o usuário"));
         }
     }
@@ -671,7 +666,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar o tipo de telefone quando for cadastrar o telefone")
     @Order(25)
-    void deveValidarTipoTelefoneCadastroTelefone(){
+    void deveValidarTipoTelefoneCadastroTelefone() {
         try {
             List<TelefoneCreateDTO> telefones = new ArrayList<>();
             telefones.add(TelefoneCreateDTO.builder().ddd("11").numero("35839545").idTipoTelefone(null).build());
@@ -690,7 +685,7 @@ class UsuarioServiceImplTest {
 
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do tipo de telefone nulo");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("É necessário informar o tipo de telefone"));
         }
     }
@@ -698,7 +693,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve validar quando tiver numero de telefone e ddd repetidos")
     @Order(26)
-    void deveValidarNumeroDDDRepetidos(){
+    void deveValidarNumeroDDDRepetidos() {
         try {
             List<TelefoneCreateDTO> telefones = new ArrayList<>();
             telefones.add(TelefoneCreateDTO.builder().ddd("11").numero("35839545").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
@@ -718,7 +713,7 @@ class UsuarioServiceImplTest {
 
             usuarioService.inserir(usuarioCreateDTO);
             fail("Deveria ter lançado a exceção do número repetido");
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("Este DDD 11 e número 35839545 já foi inserido, você está repetindo números"));
         }
     }
@@ -807,7 +802,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve cadastrar usuário sem nome social e sem gênero e sem telefones")
     @Order(30)
-    void deveCadastrarUsuarioSemNomeSocialSemGeneroSemTelefones(){
+    void deveCadastrarUsuarioSemNomeSocialSemGeneroSemTelefones() {
         UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Teste 123")
                 .email("teste@email.com")
@@ -838,7 +833,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve buscar usuário sem nome social e sem gênero e sem telefones")
     @Order(31)
-    void deveBuscarUsuarioSemNomeSocialSemGeneroSemTelefones(){
+    void deveBuscarUsuarioSemNomeSocialSemGeneroSemTelefones() {
         UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Teste 123")
                 .email("teste@email.com")
@@ -870,14 +865,14 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Não deve encontrar usuário por id")
     @Order(32)
-    void naoDeveEncontrarUsuarioPorId(){
+    void naoDeveEncontrarUsuarioPorId() {
         assertThrows(RegistroNaoEncontradoException.class, () -> usuarioService.buscarPorId(-1L));
     }
 
     @Test
     @DisplayName("Deve cadastrar usuário com nome social e com gênero e com telefones")
     @Order(33)
-    void deveCadastrarUsuarioComNomeSocialComGeneroComTelefones(){
+    void deveCadastrarUsuarioComNomeSocialComGeneroComTelefones() {
         List<TelefoneCreateDTO> telefones = new ArrayList<>();
         telefones.add(TelefoneCreateDTO.builder().ddd("11").numero("36228681").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
 
@@ -914,7 +909,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve encontrar usuário com nome social e com gênero e com telefones")
     @Order(34)
-    void deveEncontrarUsuarioComNomeSocialComGeneroComTelefones(){
+    void deveEncontrarUsuarioComNomeSocialComGeneroComTelefones() {
         List<TelefoneCreateDTO> telefones = new ArrayList<>();
         telefones.add(TelefoneCreateDTO.builder().ddd("11").numero("36228681").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
 
@@ -955,21 +950,21 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Não deve encontrar usuário por id quando for deletar")
     @Order(35)
-    void naoDeveEncontrarUsuarioPorIdQuandoForDeletar(){
+    void naoDeveEncontrarUsuarioPorIdQuandoForDeletar() {
         assertThrows(ErroException.class, () -> usuarioService.deletarPorId(-1L));
     }
 
     @Test
     @DisplayName("Não deve encontrar usuário por id quando for deletarTelefones")
     @Order(36)
-    void naoDeveEncontrarUsuarioPorIdQuandoForDeletarTelefones(){
+    void naoDeveEncontrarUsuarioPorIdQuandoForDeletarTelefones() {
         assertThrows(ErroException.class, () -> usuarioService.deletarTelefonesPorIdUsuario(-100L));
     }
 
     @Test
     @DisplayName("Deve atualizar usuário")
     @Order(37)
-    void deveAtualizarUsuario(){
+    void deveAtualizarUsuario() {
         UsuarioCreateDTO usuarioCreateDTO = UsuarioCreateDTO.builder()
                 .nome("Teste 123")
                 .email("teste@email.com")
@@ -985,11 +980,11 @@ class UsuarioServiceImplTest {
         UsuarioDTO usuarioResultado = usuarioService.inserir(usuarioCreateDTO);
 
         UsuarioUpdateDTO usuarioUpdateDTO = UsuarioUpdateDTO.builder()
-                        .nome("Teste 123 Atualizado")
-                        .dataNascimento(LocalDate.of(2000, 12, 20))
-                        .nomeSocial("Teste 123 social atualizando")
-                        .idGenero(generoMasculino.getId())
-                        .build();
+                .nome("Teste 123 Atualizado")
+                .dataNascimento(LocalDate.of(2000, 12, 20))
+                .nomeSocial("Teste 123 social atualizando")
+                .idGenero(generoMasculino.getId())
+                .build();
 
         UsuarioDTO usuarioAtualizadoResultado = usuarioService.atualizar(usuarioUpdateDTO, usuarioResultado.id());
         assertEquals(usuarioResultado.id(), usuarioAtualizadoResultado.id());
@@ -1004,7 +999,7 @@ class UsuarioServiceImplTest {
     @Test
     @DisplayName("Deve deletar tudo de telefone e usuário")
     @Order(38)
-    void deveDeletarUsuarioETelefone(){
+    void deveDeletarUsuarioETelefone() {
         List<TelefoneCreateDTO> telefones = new ArrayList<>();
         telefones.add(TelefoneCreateDTO.builder().ddd("11").numero("36228681").idTipoTelefone(tipoTelefoneResidencial.getId()).build());
 
@@ -1026,12 +1021,12 @@ class UsuarioServiceImplTest {
 
         try {
             usuarioService.buscarPorId(usuarioResultado.id());
-        } catch (Exception e){
+        } catch (Exception e) {
             assertTrue(e.getMessage().contains("Usuário não encontrado"));
         }
     }
 
-    private String gerarStringGrande(){
+    private String gerarStringGrande() {
         return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a ultricies elit. Etiam iaculis sem in lorem aliquet fermentum. " +
                 "In et sodales diam, eu pharetra magna. Donec vel lorem tempor, facilisis augue in, aliquam tellus. " +
                 "Sed a ligula volutpat, aliquam metus id, ullamcorper velit. Nam quam elit, feugiat quis libero et, venenatis vulputate metus. " +
